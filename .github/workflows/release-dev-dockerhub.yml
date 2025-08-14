@@ -1,0 +1,33 @@
+name: release-dev-dockerhub
+on:
+  workflow_dispatch:
+
+env:
+  IMAGE_NAME: wemeet-api
+  IMAGE_TAG: dev
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      # Login (bật khi đã tạo secrets)
+      # - name: Login to DockerHub
+      #   uses: docker/login-action@v3
+      #   with:
+      #     username: ${{ secrets.DOCKERHUB_USERNAME }}
+      #     password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: Dockerfile.dev
+          push: false        # đổi thành true khi đã login
+          tags: |
+            ${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
