@@ -1,0 +1,31 @@
+client:
+  path: "/app/client/dist"
+  port: 8080
+
+database_info:
+  driver: "mysql"
+  host: "wemeet-mysql"
+  port: 3306
+  user: "root"
+  password: "changeme"
+  name: "wemeet"
+  charset: "utf8mb4"
+
+redis_info:
+  host: "wemeet-redis"
+  port: 6379
+  db: 0
+
+nats_info:
+  nats_urls:
+    - "nats://wemeet-nats:4222"
+  nats_ws_urls:
+    - "ws://wemeet-nats:8222"
+
+livekit_info:
+  host: "http://wemeet-livekit:7880"
+  api_key: "CHANGE_ME"
+  secret: "CHANGE_ME"
+
+etherpad:
+  host: "http://wemeet-etherpad:9001"

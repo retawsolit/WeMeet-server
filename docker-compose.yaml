@@ -1,0 +1,63 @@
+version: "3.9"
+services:
+  wemeet-redis:
+    image: redis:7
+    container_name: wemeet-redis
+    ports: ["6379:6379"]
+
+  wemeet-mysql:
+    image: mysql:8
+    container_name: wemeet-mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=changeme
+      - MYSQL_DATABASE=wemeet
+    volumes:
+      - ./mysql-data:/var/lib/mysql
+      - ./sql_dump:/docker-entrypoint-initdb.d
+    ports: ["3306:3306"]
+
+  wemeet-nats:
+    image: nats:2
+    container_name: wemeet-nats
+    command: ["-c", "/etc/nats/nats_server.conf"]
+    volumes:
+      - ./nats_server_sample.conf:/etc/nats/nats_server.conf
+    ports:
+      - "4222:4222"
+      - "8222:8222"
+      - "8223:8223"
+
+  wemeet-livekit:
+    image: livekit/livekit-server:latest
+    container_name: wemeet-livekit
+    volumes:
+      - ./livekit_sample.yaml:/livekit.yaml
+    command: ["--config", "/livekit.yaml"]
+    ports:
+      - "7880:7880"
+      - "7881:7881"
+      - "50000-50050:50000-50050/udp"
+
+  wemeet-etherpad:
+    image: etherpad/etherpad:latest
+    container_name: wemeet-etherpad
+    ports: ["9001:9001"]
+
+  wemeet-api:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev   # sẽ thêm sau
+    container_name: wemeet-api
+    volumes:
+      - ./config_sample.yaml:/app/config.yaml
+      - ./client/dist:/app/client/dist
+      - ./recording_files:/app/recording_files
+      - ./log:/app/log
+    depends_on:
+      - wemeet-redis
+      - wemeet-mysql
+      - wemeet-nats
+      - wemeet-livekit
+      - wemeet-etherpad
+    ports:
+      - "8080:8080"
