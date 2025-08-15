@@ -5,11 +5,11 @@ import (
 	"time"
 
 	"github.com/goccy/go-json"
-	"github.com/mynaparrot/plugnmeet-protocol/plugnmeet"
-	"github.com/mynaparrot/plugnmeet-protocol/webhook"
-	"github.com/mynaparrot/plugnmeet-server/pkg/config"
-	natsservice "github.com/mynaparrot/plugnmeet-server/pkg/services/nats"
 	"github.com/nats-io/nats.go"
+	"github.com/retawsolit/plugnmeet-server/pkg/config"
+	natsservice "github.com/retawsolit/plugnmeet-server/pkg/services/nats"
+	"github.com/retawsolit/wemeet-protocol/plugnmeet"
+	"github.com/retawsolit/wemeet-protocol/webhook"
 	log "github.com/sirupsen/logrus"
 )
 
