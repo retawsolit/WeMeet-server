@@ -3,15 +3,16 @@ package models
 import (
 	"database/sql"
 	"fmt"
-	"github.com/google/uuid"
-	"github.com/mynaparrot/plugnmeet-server/helpers"
-	"github.com/mynaparrot/plugnmeet-server/pkg/config"
-	"github.com/mynaparrot/plugnmeet-server/pkg/dbmodels"
-	dbservice "github.com/mynaparrot/plugnmeet-server/pkg/services/db"
 	"path/filepath"
 	"runtime"
 	"testing"
 	"time"
+
+	"github.com/google/uuid"
+	"github.com/retawsolit/WeMeet-server/helpers"
+	"github.com/retawsolit/WeMeet-server/pkg/config"
+	"github.com/retawsolit/WeMeet-server/pkg/dbmodels"
+	dbservice "github.com/retawsolit/WeMeet-server/pkg/services/db"
 )
 
 var (
