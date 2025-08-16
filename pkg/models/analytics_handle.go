@@ -2,9 +2,10 @@ package models
 
 import (
 	"fmt"
-	"github.com/mynaparrot/plugnmeet-protocol/plugnmeet"
-	"github.com/mynaparrot/plugnmeet-server/pkg/config"
 	"time"
+
+	"github.com/retawsolit/WeMeet-server/pkg/config"
+	"github.com/retawsolit/plugnmeet-protocol/plugnmeet"
 )
 
 const (

@@ -2,11 +2,12 @@ package models
 
 import (
 	"fmt"
-	"github.com/gofiber/fiber/v2"
-	"github.com/mynaparrot/plugnmeet-protocol/plugnmeet"
 	"os"
 	"testing"
 	"time"
+
+	"github.com/gofiber/fiber/v2"
+	"github.com/retawsolit/plugnmeet-protocol/plugnmeet"
 )
 
 var analyticsModel *AnalyticsModel

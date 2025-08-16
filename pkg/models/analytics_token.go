@@ -3,13 +3,14 @@ package models
 import (
 	"errors"
 	"fmt"
-	"github.com/go-jose/go-jose/v4"
-	"github.com/go-jose/go-jose/v4/jwt"
-	"github.com/gofiber/fiber/v2"
-	"github.com/mynaparrot/plugnmeet-protocol/plugnmeet"
 	"os"
 	"strings"
 	"time"
+
+	"github.com/go-jose/go-jose/v4"
+	"github.com/go-jose/go-jose/v4/jwt"
+	"github.com/gofiber/fiber/v2"
+	"github.com/retawsolit/plugnmeet-protocol/plugnmeet"
 )
 
 // GetAnalyticsDownloadToken will use the same JWT token generator as plugNmeet is using

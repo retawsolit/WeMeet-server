@@ -3,10 +3,11 @@ package models
 import (
 	"errors"
 	"fmt"
-	"github.com/mynaparrot/plugnmeet-protocol/plugnmeet"
-	"github.com/mynaparrot/plugnmeet-server/pkg/config"
 	"os"
 	"strings"
+
+	"github.com/retawsolit/WeMeet-server/pkg/config"
+	"github.com/retawsolit/plugnmeet-protocol/plugnmeet"
 )
 
 func (m *AnalyticsModel) DeleteAnalytics(r *plugnmeet.DeleteAnalyticsReq) error {
