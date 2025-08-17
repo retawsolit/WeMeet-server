@@ -1,33 +1,33 @@
-name: release-dev-dockerhub
+name: Release to DockerHub as Dev
 on:
-  workflow_dispatch:
-
-env:
-  IMAGE_NAME: wemeet-api
-  IMAGE_TAG: dev
-
+  push:
+    branches:
+      - 'main'
 jobs:
-  build-and-push:
+  build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_ACCESS_TOKEN }}
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+        with:
+          image: tonistiigi/binfmt:latest
+          platforms: all
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
-
-      # Login (bật khi đã tạo secrets)
-      # - name: Login to DockerHub
-      #   uses: docker/login-action@v3
-      #   with:
-      #     username: ${{ secrets.DOCKERHUB_USERNAME }}
-      #     password: ${{ secrets.DOCKERHUB_TOKEN }}
-
-      - name: Build image
-        uses: docker/build-push-action@v5
+      - name: Build and push
+        uses: docker/build-push-action@v6
         with:
           context: .
-          file: Dockerfile.dev
-          push: false        # đổi thành true khi đã login
-          tags: |
-            ${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
+          file: ./Dockerfile
+          push: true
+          platforms: linux/amd64
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/WeMeet-server:dev
+          cache-from: type=registry,ref=${{ secrets.DOCKERHUB_USERNAME }}/WeMeet-server:buildcache
+          cache-to: type=registry,ref=${{ secrets.DOCKERHUB_USERNAME }}/WeMeet-server:buildcache,mode=max
