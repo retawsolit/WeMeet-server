@@ -28,7 +28,7 @@ func New(appConfig *config.AppConfig, ctrl *factory.ApplicationControllers) *fib
 		JSONEncoder: json.Marshal,
 		JSONDecoder: json.Unmarshal,
 		Views:       templateEngine,
-		AppName:     "plugNmeet version: " + version.Version + " runtime: " + runtime.Version(),
+		AppName:     "WeMeet version: " + version.Version + " runtime: " + runtime.Version(),
 	}
 
 	if appConfig.Client.ProxyHeader != "" {
@@ -41,7 +41,7 @@ func New(appConfig *config.AppConfig, ctrl *factory.ApplicationControllers) *fib
 		app.Use(logger.New())
 	}
 	if appConfig.Client.PrometheusConf.Enable {
-		prometheus := fiberprometheus.New("plugNmeet")
+		prometheus := fiberprometheus.New("wemeet")
 		prometheus.RegisterAt(app, appConfig.Client.PrometheusConf.MetricsPath)
 		app.Use(prometheus.Middleware)
 	}
@@ -107,7 +107,7 @@ func New(appConfig *config.AppConfig, ctrl *factory.ApplicationControllers) *fib
 	recorder := auth.Group("/recorder")
 	recorder.Post("/notify", ctrl.RecorderController.HandleRecorderEvents)
 
-	// for convert BBB request to PlugNmeet
+	// for convert BBB request to WeMeet
 	bbb := app.Group("/:apiKey/bigbluebutton/api", ctrl.BBBController.HandleVerifyApiRequest)
 	bbb.All("/create", ctrl.BBBController.HandleBBBCreate)
 	bbb.All("/join", ctrl.BBBController.HandleBBBJoin)
