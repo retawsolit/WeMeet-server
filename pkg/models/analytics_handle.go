@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/retawsolit/WeMeet-protocol/wemeet"
 	"github.com/retawsolit/WeMeet-server/pkg/config"
-	"github.com/retawsolit/plugnmeet-protocol/plugnmeet"
 )
 
 const (
@@ -13,7 +13,7 @@ const (
 	analyticsUserKey = analyticsRoomKey + ":user:%s"
 )
 
-func (m *AnalyticsModel) HandleEvent(d *plugnmeet.AnalyticsDataMsg) {
+func (m *AnalyticsModel) HandleEvent(d *wemeet.AnalyticsDataMsg) {
 	if config.GetConfig().AnalyticsSettings == nil ||
 		!config.GetConfig().AnalyticsSettings.Enabled {
 		return
@@ -25,21 +25,21 @@ func (m *AnalyticsModel) HandleEvent(d *plugnmeet.AnalyticsDataMsg) {
 	m.data = d
 
 	switch d.EventType {
-	case plugnmeet.AnalyticsEventType_ANALYTICS_EVENT_TYPE_ROOM:
+	case wemeet.AnalyticsEventType_ANALYTICS_EVENT_TYPE_ROOM:
 		m.handleRoomTypeEvents()
-	case plugnmeet.AnalyticsEventType_ANALYTICS_EVENT_TYPE_USER:
+	case wemeet.AnalyticsEventType_ANALYTICS_EVENT_TYPE_USER:
 		m.handleUserTypeEvents()
 	}
 }
 
 func (m *AnalyticsModel) handleRoomTypeEvents() {
-	if m.data.EventName == plugnmeet.AnalyticsEvents_ANALYTICS_EVENT_UNKNOWN {
+	if m.data.EventName == wemeet.AnalyticsEvents_ANALYTICS_EVENT_UNKNOWN {
 		return
 	}
 	key := fmt.Sprintf(analyticsRoomKey+":room", m.data.RoomId)
 
 	switch m.data.GetEventName() {
-	case plugnmeet.AnalyticsEvents_ANALYTICS_EVENT_USER_JOINED:
+	case wemeet.AnalyticsEvents_ANALYTICS_EVENT_USER_JOINED:
 		m.handleFirstTimeUserJoined(key)
 		// we still need to run as the user type too
 		m.handleUserTypeEvents()
@@ -49,7 +49,7 @@ func (m *AnalyticsModel) handleRoomTypeEvents() {
 }
 
 func (m *AnalyticsModel) handleUserTypeEvents() {
-	if m.data.EventName == plugnmeet.AnalyticsEvents_ANALYTICS_EVENT_UNKNOWN {
+	if m.data.EventName == wemeet.AnalyticsEvents_ANALYTICS_EVENT_UNKNOWN {
 		return
 	}
 	key := fmt.Sprintf(analyticsUserKey, m.data.RoomId, m.data.GetUserId())

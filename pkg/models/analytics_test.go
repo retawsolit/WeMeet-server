@@ -7,7 +7,6 @@ import (
 	"time"
 
 	"github.com/gofiber/fiber/v2"
-	"github.com/retawsolit/plugnmeet-protocol/plugnmeet"
 )
 
 var analyticsModel *AnalyticsModel
@@ -30,7 +29,7 @@ func TestAnalyticsAuthModel_AddAnalyticsFileToDB(t *testing.T) {
 }
 
 func TestAnalyticsAuthModel_FetchAnalytics(t *testing.T) {
-	result, err := analyticsModel.FetchAnalytics(&plugnmeet.FetchAnalyticsReq{
+	result, err := analyticsModel.FetchAnalytics(&wemeet.FetchAnalyticsReq{
 		RoomIds: []string{roomId},
 	})
 	if err != nil {
@@ -81,7 +80,7 @@ func TestAnalyticsAuthModel_getAnalyticByRoomTableId(t *testing.T) {
 }
 
 func TestAnalyticsAuthModel_DeleteAnalytics(t *testing.T) {
-	err := analyticsModel.DeleteAnalytics(&plugnmeet.DeleteAnalyticsReq{
+	err := analyticsModel.DeleteAnalytics(&wemeet.DeleteAnalyticsReq{
 		FileId: fileId,
 	})
 	if err != nil {

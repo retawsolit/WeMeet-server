@@ -13,7 +13,6 @@ import (
 	"github.com/retawsolit/WeMeet-server/pkg/config"
 	"github.com/retawsolit/WeMeet-server/pkg/dbmodels"
 	"github.com/retawsolit/WeMeet-server/pkg/helpers"
-	"github.com/retawsolit/plugnmeet-protocol/plugnmeet"
 	log "github.com/sirupsen/logrus"
 	"google.golang.org/protobuf/encoding/protojson"
 )
@@ -98,29 +97,29 @@ func (m *AnalyticsModel) PrepareToExportAnalytics(roomId, sid, meta string) {
 	}
 }
 
-func (m *AnalyticsModel) exportAnalyticsToFile(room *dbmodels.RoomInfo, path string, metadata *plugnmeet.RoomMetadata) (os.FileInfo, error) {
-	roomInfo := &plugnmeet.AnalyticsRoomInfo{
+func (m *AnalyticsModel) exportAnalyticsToFile(room *dbmodels.RoomInfo, path string, metadata *wemeet.RoomMetadata) (os.FileInfo, error) {
+	roomInfo := &wemeet.AnalyticsRoomInfo{
 		RoomId:       room.RoomId,
 		RoomTitle:    room.RoomTitle,
 		RoomCreation: room.Created.Unix(),
 		RoomEnded:    room.Ended.Unix(),
 		EnabledE2Ee:  metadata.GetRoomFeatures().GetEndToEndEncryptionFeatures().GetIsEnabled(),
-		Events:       []*plugnmeet.AnalyticsEventData{},
+		Events:       []*wemeet.AnalyticsEventData{},
 	}
-	var usersInfo []*plugnmeet.AnalyticsUserInfo
+	var usersInfo []*wemeet.AnalyticsUserInfo
 	var allKeys []string
 
 	key := fmt.Sprintf(analyticsRoomKey+":room", room.RoomId)
 	// we can store all users' type key to make things faster
 	var userRedisKeys []string
 	// we'll collect all room related events
-	for _, ev := range plugnmeet.AnalyticsEvents_name {
+	for _, ev := range wemeet.AnalyticsEvents_name {
 		if strings.Contains(ev, "ANALYTICS_EVENT_ROOM_") {
 			ekey := fmt.Sprintf(key+":%s", ev)
 			allKeys = append(allKeys, ekey)
 
 			ev = strings.ToLower(strings.Replace(ev, "ANALYTICS_EVENT_ROOM_", "", 1))
-			eventInfo := &plugnmeet.AnalyticsEventData{
+			eventInfo := &wemeet.AnalyticsEventData{
 				Name:  ev,
 				Total: 0,
 			}
@@ -150,14 +149,14 @@ func (m *AnalyticsModel) exportAnalyticsToFile(room *dbmodels.RoomInfo, path str
 
 	// now users related events
 	for i, n := range users {
-		uf := new(plugnmeet.AnalyticsRedisUserInfo)
+		uf := new(wemeet.AnalyticsRedisUserInfo)
 		_ = protojson.Unmarshal([]byte(n), uf)
-		userInfo := &plugnmeet.AnalyticsUserInfo{
+		userInfo := &wemeet.AnalyticsUserInfo{
 			UserId:   i,
 			Name:     *uf.Name,
 			IsAdmin:  uf.IsAdmin,
 			ExUserId: uf.ExUserId,
-			Events:   []*plugnmeet.AnalyticsEventData{},
+			Events:   []*wemeet.AnalyticsEventData{},
 		}
 
 		for _, ev := range userRedisKeys {
@@ -167,7 +166,7 @@ func (m *AnalyticsModel) exportAnalyticsToFile(room *dbmodels.RoomInfo, path str
 				allKeys = append(allKeys, ekey)
 
 				ev = strings.ToLower(strings.Replace(ev, "ANALYTICS_EVENT_USER_", "", 1))
-				eventInfo := &plugnmeet.AnalyticsEventData{
+				eventInfo := &wemeet.AnalyticsEventData{
 					Name:  ev,
 					Total: 0,
 				}
@@ -187,7 +186,7 @@ func (m *AnalyticsModel) exportAnalyticsToFile(room *dbmodels.RoomInfo, path str
 	// so, if room didn't have activated analytics feature,
 	// we will simply won't create the file & delete all records
 	if metadata.RoomFeatures.EnableAnalytics {
-		result := &plugnmeet.AnalyticsResult{
+		result := &wemeet.AnalyticsResult{
 			Room:  roomInfo,
 			Users: usersInfo,
 		}
@@ -223,7 +222,7 @@ func (m *AnalyticsModel) exportAnalyticsToFile(room *dbmodels.RoomInfo, path str
 	return stat, err
 }
 
-func (m *AnalyticsModel) buildEventInfo(ekey string, eventInfo *plugnmeet.AnalyticsEventData) error {
+func (m *AnalyticsModel) buildEventInfo(ekey string, eventInfo *wemeet.AnalyticsEventData) error {
 	// we'll check type first
 	rType, err := m.rs.AnalyticsGetKeyType(ekey)
 	if err != nil {
@@ -231,7 +230,7 @@ func (m *AnalyticsModel) buildEventInfo(ekey string, eventInfo *plugnmeet.Analyt
 		return err
 	}
 	if rType == "hash" {
-		var evals []*plugnmeet.AnalyticsEventValue
+		var evals []*wemeet.AnalyticsEventValue
 		result, err := m.rs.GetAnalyticsAllHashTypeVals(ekey)
 		if err != nil {
 			log.Errorln(err)
@@ -239,7 +238,7 @@ func (m *AnalyticsModel) buildEventInfo(ekey string, eventInfo *plugnmeet.Analyt
 		}
 		for kk, rv := range result {
 			tt, _ := strconv.ParseInt(kk, 10, 64)
-			val := &plugnmeet.AnalyticsEventValue{
+			val := &wemeet.AnalyticsEventValue{
 				Time:  tt,
 				Value: rv,
 			}
@@ -258,7 +257,7 @@ func (m *AnalyticsModel) buildEventInfo(ekey string, eventInfo *plugnmeet.Analyt
 			if err != nil {
 				// we are assuming that we want to get the value as it
 				eventInfo.Total = 1
-				val := &plugnmeet.AnalyticsEventValue{
+				val := &wemeet.AnalyticsEventValue{
 					Value: result,
 				}
 				eventInfo.Values = append(eventInfo.Values, val)
@@ -273,13 +272,13 @@ func (m *AnalyticsModel) buildEventInfo(ekey string, eventInfo *plugnmeet.Analyt
 func (m *AnalyticsModel) sendToWebhookNotifier(roomId, roomSid, task, fileId string) {
 	n := helpers.GetWebhookNotifier(m.app)
 	if n != nil {
-		msg := &plugnmeet.CommonNotifyEvent{
+		msg := &wemeet.CommonNotifyEvent{
 			Event: &task,
-			Room: &plugnmeet.NotifyEventRoom{
+			Room: &wemeet.NotifyEventRoom{
 				Sid:    &roomSid,
 				RoomId: &roomId,
 			},
-			Analytics: &plugnmeet.AnalyticsEvent{
+			Analytics: &wemeet.AnalyticsEvent{
 				FileId: &fileId,
 			},
 		}

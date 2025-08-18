@@ -2,11 +2,9 @@ package models
 
 import (
 	"errors"
-
-	"github.com/retawsolit/plugnmeet-protocol/plugnmeet"
 )
 
-func (m *AnalyticsModel) FetchAnalytics(r *plugnmeet.FetchAnalyticsReq) (*plugnmeet.FetchAnalyticsResult, error) {
+func (m *AnalyticsModel) FetchAnalytics(r *wemeet.FetchAnalyticsReq) (*wemeet.FetchAnalyticsResult, error) {
 	if r.Limit <= 0 {
 		r.Limit = 20
 	}
@@ -18,9 +16,9 @@ func (m *AnalyticsModel) FetchAnalytics(r *plugnmeet.FetchAnalyticsReq) (*plugnm
 		return nil, err
 	}
 
-	var analytics []*plugnmeet.AnalyticsInfo
+	var analytics []*wemeet.AnalyticsInfo
 	for _, v := range data {
-		analytic := &plugnmeet.AnalyticsInfo{
+		analytic := &wemeet.AnalyticsInfo{
 			RoomId:           v.RoomID,
 			FileId:           v.FileID,
 			FileSize:         v.FileSize,
@@ -31,7 +29,7 @@ func (m *AnalyticsModel) FetchAnalytics(r *plugnmeet.FetchAnalyticsReq) (*plugnm
 		analytics = append(analytics, analytic)
 	}
 
-	result := &plugnmeet.FetchAnalyticsResult{
+	result := &wemeet.FetchAnalyticsResult{
 		TotalAnalytics: total,
 		From:           r.From,
 		Limit:          r.Limit,
@@ -42,7 +40,7 @@ func (m *AnalyticsModel) FetchAnalytics(r *plugnmeet.FetchAnalyticsReq) (*plugnm
 	return result, nil
 }
 
-func (m *AnalyticsModel) fetchAnalytic(fileId string) (*plugnmeet.AnalyticsInfo, error) {
+func (m *AnalyticsModel) fetchAnalytic(fileId string) (*wemeet.AnalyticsInfo, error) {
 	v, err := m.ds.GetAnalyticByFileId(fileId)
 	if err != nil {
 		return nil, err
@@ -50,7 +48,7 @@ func (m *AnalyticsModel) fetchAnalytic(fileId string) (*plugnmeet.AnalyticsInfo,
 	if v == nil {
 		return nil, errors.New("no info found")
 	}
-	analytic := &plugnmeet.AnalyticsInfo{
+	analytic := &wemeet.AnalyticsInfo{
 		RoomId:           v.RoomID,
 		FileId:           v.FileID,
 		FileSize:         v.FileSize,
@@ -62,7 +60,7 @@ func (m *AnalyticsModel) fetchAnalytic(fileId string) (*plugnmeet.AnalyticsInfo,
 	return analytic, nil
 }
 
-func (m *AnalyticsModel) getAnalyticByRoomTableId(roomTableId uint64) (*plugnmeet.AnalyticsInfo, error) {
+func (m *AnalyticsModel) getAnalyticByRoomTableId(roomTableId uint64) (*wemeet.AnalyticsInfo, error) {
 	v, err := m.ds.GetAnalyticByRoomTableId(roomTableId)
 	if err != nil {
 		return nil, err
@@ -70,7 +68,7 @@ func (m *AnalyticsModel) getAnalyticByRoomTableId(roomTableId uint64) (*plugnmee
 	if v == nil {
 		return nil, errors.New("no info found")
 	}
-	analytic := &plugnmeet.AnalyticsInfo{
+	analytic := &wemeet.AnalyticsInfo{
 		RoomId:           v.RoomID,
 		FileId:           v.FileID,
 		FileName:         v.FileName,

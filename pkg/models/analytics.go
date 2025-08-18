@@ -5,12 +5,11 @@ import (
 
 	"github.com/retawsolit/WeMeet-server/pkg/config"
 	natsservice "github.com/retawsolit/WeMeet-server/pkg/services/nats"
-	"github.com/retawsolit/plugnmeet-protocol/plugnmeet"
 )
 
 type AnalyticsModel struct {
 	sync.RWMutex
-	data        *plugnmeet.AnalyticsDataMsg
+	data        *wemeet.AnalyticsDataMsg
 	app         *config.AppConfig
 	ds          *dbservice.DatabaseService
 	rs          *redisservice.RedisService

@@ -3,18 +3,17 @@ package models
 import (
 	"fmt"
 
-	"github.com/retawsolit/plugnmeet-protocol/plugnmeet"
 	log "github.com/sirupsen/logrus"
 	"google.golang.org/protobuf/encoding/protojson"
 )
 
 func (m *AnalyticsModel) handleFirstTimeUserJoined(key string) {
-	umeta := new(plugnmeet.UserMetadata)
+	umeta := new(wemeet.UserMetadata)
 	if m.data.ExtraData != nil && *m.data.ExtraData != "" {
 		umeta, _ = m.natsService.UnmarshalUserMetadata(*m.data.ExtraData)
 	}
 
-	uInfo := &plugnmeet.AnalyticsRedisUserInfo{
+	uInfo := &wemeet.AnalyticsRedisUserInfo{
 		Name:     m.data.UserName,
 		IsAdmin:  umeta.IsAdmin,
 		ExUserId: umeta.ExUserId,

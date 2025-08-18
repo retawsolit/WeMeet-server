@@ -10,11 +10,10 @@ import (
 	"github.com/go-jose/go-jose/v4"
 	"github.com/go-jose/go-jose/v4/jwt"
 	"github.com/gofiber/fiber/v2"
-	"github.com/retawsolit/plugnmeet-protocol/plugnmeet"
 )
 
-// GetAnalyticsDownloadToken will use the same JWT token generator as plugNmeet is using
-func (m *AnalyticsModel) GetAnalyticsDownloadToken(r *plugnmeet.GetAnalyticsDownloadTokenReq) (string, error) {
+// GetAnalyticsDownloadToken will use the same JWT token generator as wemeet is using
+func (m *AnalyticsModel) GetAnalyticsDownloadToken(r *wemeet.GetAnalyticsDownloadTokenReq) (string, error) {
 	analytic, err := m.fetchAnalytic(r.FileId)
 	if err != nil {
 		return "", err

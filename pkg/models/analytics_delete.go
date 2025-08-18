@@ -7,10 +7,9 @@ import (
 	"strings"
 
 	"github.com/retawsolit/WeMeet-server/pkg/config"
-	"github.com/retawsolit/plugnmeet-protocol/plugnmeet"
 )
 
-func (m *AnalyticsModel) DeleteAnalytics(r *plugnmeet.DeleteAnalyticsReq) error {
+func (m *AnalyticsModel) DeleteAnalytics(r *wemeet.DeleteAnalyticsReq) error {
 	analytic, err := m.fetchAnalytic(r.FileId)
 	if err != nil {
 		return err
