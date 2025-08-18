@@ -6,10 +6,10 @@ import (
 
 	"github.com/goccy/go-json"
 	"github.com/nats-io/nats.go"
-	"github.com/retawsolit/plugnmeet-server/pkg/config"
-	natsservice "github.com/retawsolit/plugnmeet-server/pkg/services/nats"
-	"github.com/retawsolit/wemeet-protocol/plugnmeet"
-	"github.com/retawsolit/wemeet-protocol/webhook"
+	"github.com/retawsolit/WeMeet-protocol/webhook"
+	"github.com/retawsolit/WeMeet-protocol/wemeet"
+	"github.com/retawsolit/WeMeet-server/pkg/config"
+	natsservice "github.com/retawsolit/WeMeet-server/pkg/services/nats"
 	log "github.com/sirupsen/logrus"
 )
 
@@ -152,7 +152,7 @@ func (w *WebhookNotifier) DeleteWebhook(roomId string) error {
 	return w.natsService.DeleteWebhookData(roomId)
 }
 
-func (w *WebhookNotifier) SendWebhookEvent(event *plugnmeet.CommonNotifyEvent) error {
+func (w *WebhookNotifier) SendWebhookEvent(event *wemeet.CommonNotifyEvent) error {
 	if !w.isEnabled || event.Room.GetRoomId() == "" {
 		return nil
 	}
@@ -196,7 +196,7 @@ func (w *WebhookNotifier) SendWebhookEvent(event *plugnmeet.CommonNotifyEvent) e
 // ForceToPutInQueue sends a webhook event synchronously without using the room's queue.
 // This method should be used for one-shot events outside the normal room lifecycle.
 // It directly queries the database for webhook URLs.
-func (w *WebhookNotifier) ForceToPutInQueue(event *plugnmeet.CommonNotifyEvent) {
+func (w *WebhookNotifier) ForceToPutInQueue(event *wemeet.CommonNotifyEvent) {
 	if !w.isEnabled {
 		return
 	}
