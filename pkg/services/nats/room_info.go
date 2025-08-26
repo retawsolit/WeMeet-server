@@ -2,7 +2,6 @@ package natsservice
 
 import (
 	"fmt"
-
 	"github.com/mynaparrot/plugnmeet-protocol/plugnmeet"
 )
 
