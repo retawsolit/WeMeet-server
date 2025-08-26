@@ -2,27 +2,47 @@ package factory
 
 import (
 	"context"
-	"fmt"
-	"time"
-
+	"crypto/tls"
+	"github.com/mynaparrot/plugnmeet-server/pkg/config"
 	"github.com/redis/go-redis/v9"
-	"github.com/retawsolit/WeMeet-server/pkg/config"
 )
 
-func NewRedisConnection(cfg *config.AppConfig) error {
-	rdb := redis.NewClient(&redis.Options{
-		Addr: fmt.Sprintf("%s:%d", cfg.Redis.Host, cfg.Redis.Port),
-		DB:   cfg.Redis.DB,
-	})
+func NewRedisConnection(appCnf *config.AppConfig) error {
+	rf := appCnf.RedisInfo
+	var rdb *redis.Client
+	var tlsConfig *tls.Config
 
-	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
-	defer cancel()
-
-	_, err := rdb.Ping(ctx).Result()
-	if err != nil {
-		return fmt.Errorf("failed to connect redis: %v", err)
+	if rf.UseTLS {
+		tlsConfig = &tls.Config{
+			MinVersion: tls.VersionTLS12,
+		}
+	}
+	if rf.SentinelAddresses != nil {
+		rdb = redis.NewFailoverClient(&redis.FailoverOptions{
+			SentinelAddrs:    rf.SentinelAddresses,
+			SentinelUsername: rf.SentinelUsername,
+			SentinelPassword: rf.SentinelPassword,
+			MasterName:       rf.MasterName,
+			Username:         rf.Username,
+			Password:         rf.Password,
+			DB:               rf.DBName,
+			TLSConfig:        tlsConfig,
+		})
+	} else {
+		rdb = redis.NewClient(&redis.Options{
+			Addr:      rf.Host,
+			Username:  rf.Username,
+			Password:  rf.Password,
+			DB:        rf.DBName,
+			TLSConfig: tlsConfig,
+		})
 	}
 
-	cfg.RDS = rdb
+	_, err := rdb.Ping(context.Background()).Result()
+	if err != nil {
+		return err
+	}
+
+	appCnf.RDS = rdb
 	return nil
 }

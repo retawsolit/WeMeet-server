@@ -1,22 +1,38 @@
 package factory
 
 import (
-	"fmt"
-
+	"github.com/mynaparrot/plugnmeet-protocol/utils"
+	"github.com/mynaparrot/plugnmeet-server/pkg/config"
 	"github.com/nats-io/nats.go"
-	"github.com/retawsolit/WeMeet-server/pkg/config"
+	"github.com/nats-io/nats.go/jetstream"
+	"strings"
 )
 
-func NewNatsConnection(cfg *config.AppConfig) error {
-	if len(cfg.NATS.NatsUrls) == 0 {
-		return fmt.Errorf("no NATS URLs provided")
+func NewNatsConnection(appCnf *config.AppConfig) error {
+	info := appCnf.NatsInfo
+	var opt nats.Option
+	var err error
+
+	if info.Nkey != nil {
+		opt, err = utils.NkeyOptionFromSeedText(*info.Nkey)
+		if err != nil {
+			return err
+		}
+	} else {
+		opt = nats.UserInfo(info.User, info.Password)
 	}
 
-	nc, err := nats.Connect(cfg.NATS.NatsUrls[0])
+	nc, err := nats.Connect(strings.Join(info.NatsUrls, ","), opt)
 	if err != nil {
-		return fmt.Errorf("failed to connect NATS: %v", err)
+		return err
 	}
+	appCnf.NatsConn = nc
 
-	cfg.NatsConn = nc
+	js, err := jetstream.New(nc)
+	if err != nil {
+		return err
+	}
+	appCnf.JetStream = js
+
 	return nil
 }
