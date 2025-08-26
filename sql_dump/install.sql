@@ -1,6 +1,6 @@
-CREATE DATABASE IF NOT EXISTS `plugnmeet` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+CREATE DATABASE IF NOT EXISTS `wemeet` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
-USE `plugnmeet`;
+USE `wemeet`;
 
 CREATE TABLE IF NOT EXISTS `pnm_room_info` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
