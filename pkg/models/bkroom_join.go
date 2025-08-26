@@ -3,11 +3,12 @@ package models
 import (
 	"context"
 	"errors"
-	"github.com/mynaparrot/plugnmeet-protocol/plugnmeet"
+
 	natsservice "github.com/mynaparrot/plugnmeet-server/pkg/services/nats"
+	"github.com/retawsolit/!we!meet-protocol/wemeet backup moi"
 )
 
-func (m *BreakoutRoomModel) JoinBreakoutRoom(ctx context.Context, r *plugnmeet.JoinBreakoutRoomReq) (string, error) {
+func (m *BreakoutRoomModel) JoinBreakoutRoom(ctx context.Context, r *wemeet.JoinBreakoutRoomReq) (string, error) {
 	status, err := m.natsService.GetRoomUserStatus(r.BreakoutRoomId, r.UserId)
 	if err != nil {
 		return "", err
@@ -38,9 +39,9 @@ func (m *BreakoutRoomModel) JoinBreakoutRoom(ctx context.Context, r *plugnmeet.J
 		return "", err
 	}
 
-	req := &plugnmeet.GenerateTokenReq{
+	req := &wemeet.GenerateTokenReq{
 		RoomId: r.BreakoutRoomId,
-		UserInfo: &plugnmeet.UserInfo{
+		UserInfo: &wemeet.UserInfo{
 			UserId:       r.UserId,
 			Name:         p.Name,
 			IsAdmin:      meta.IsAdmin,

@@ -4,16 +4,17 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"github.com/mynaparrot/plugnmeet-protocol/plugnmeet"
-	"github.com/mynaparrot/plugnmeet-server/pkg/config"
+	"time"
+
+	"github.com/retawsolit/WeMeet-protocol/wemeet"
+	"github.com/retawsolit/WeMeet-server/pkg/config"
 	log "github.com/sirupsen/logrus"
 	"google.golang.org/protobuf/encoding/protojson"
-	"time"
 )
 
 const BreakoutRoomFormat = "%s-%s"
 
-func (m *BreakoutRoomModel) CreateBreakoutRooms(ctx context.Context, r *plugnmeet.CreateBreakoutRoomsReq) error {
+func (m *BreakoutRoomModel) CreateBreakoutRooms(ctx context.Context, r *wemeet.CreateBreakoutRoomsReq) error {
 	mainRoom, meta, err := m.natsService.GetRoomInfoWithMetadata(r.RoomId)
 	if err != nil {
 		return err
@@ -53,7 +54,7 @@ func (m *BreakoutRoomModel) CreateBreakoutRooms(ctx context.Context, r *plugnmee
 	e := make(map[string]bool)
 
 	for _, room := range r.Rooms {
-		bRoom := new(plugnmeet.CreateRoomReq)
+		bRoom := new(wemeet.CreateRoomReq)
 		bRoom.RoomId = fmt.Sprintf(BreakoutRoomFormat, r.RoomId, room.Id)
 		meta.RoomTitle = room.Title
 		bRoom.Metadata = meta
@@ -84,7 +85,7 @@ func (m *BreakoutRoomModel) CreateBreakoutRooms(ctx context.Context, r *plugnmee
 
 		// now send invitation notification
 		for _, u := range room.Users {
-			err = m.natsService.BroadcastSystemEventToRoom(plugnmeet.NatsMsgServerToClientEvents_JOIN_BREAKOUT_ROOM, r.RoomId, bRoom.RoomId, &u.Id)
+			err = m.natsService.BroadcastSystemEventToRoom(wemeet.NatsMsgServerToClientEvents_JOIN_BREAKOUT_ROOM, r.RoomId, bRoom.RoomId, &u.Id)
 			if err != nil {
 				log.Error(err)
 				continue
@@ -106,16 +107,16 @@ func (m *BreakoutRoomModel) CreateBreakoutRooms(ctx context.Context, r *plugnmee
 
 	// send analytics
 	analyticsModel := NewAnalyticsModel(m.app, m.ds, m.rs)
-	analyticsModel.HandleEvent(&plugnmeet.AnalyticsDataMsg{
-		EventType: plugnmeet.AnalyticsEventType_ANALYTICS_EVENT_TYPE_ROOM,
-		EventName: plugnmeet.AnalyticsEvents_ANALYTICS_EVENT_ROOM_BREAKOUT_ROOM,
+	analyticsModel.HandleEvent(&wemeet.AnalyticsDataMsg{
+		EventType: wemeet.AnalyticsEventType_ANALYTICS_EVENT_TYPE_ROOM,
+		EventName: wemeet.AnalyticsEvents_ANALYTICS_EVENT_ROOM_BREAKOUT_ROOM,
 		RoomId:    r.RoomId,
 	})
 
 	return err
 }
 
-func (m *BreakoutRoomModel) PostTaskAfterRoomStartWebhook(roomId string, metadata *plugnmeet.RoomMetadata) error {
+func (m *BreakoutRoomModel) PostTaskAfterRoomStartWebhook(roomId string, metadata *wemeet.RoomMetadata) error {
 	// now in livekit rooms are created almost instantly & sending webhook response
 	// if this happened then we'll have to wait few seconds otherwise room info can't be found
 	time.Sleep(config.WaitBeforeBreakoutRoomOnAfterRoomStart)

@@ -3,11 +3,12 @@ package models
 import (
 	"context"
 	"errors"
-	"github.com/mynaparrot/plugnmeet-protocol/plugnmeet"
+
+	"github.com/retawsolit/!we!meet-protocol/wemeet backup moi"
 	log "github.com/sirupsen/logrus"
 )
 
-func (m *BreakoutRoomModel) EndBreakoutRoom(ctx context.Context, r *plugnmeet.EndBreakoutRoomReq) error {
+func (m *BreakoutRoomModel) EndBreakoutRoom(ctx context.Context, r *wemeet.EndBreakoutRoomReq) error {
 	rm, err := m.natsService.GetBreakoutRoom(r.RoomId, r.BreakoutRoomId)
 	if err != nil {
 		return err
@@ -36,7 +37,7 @@ func (m *BreakoutRoomModel) EndAllBreakoutRoomsByParentRoomId(ctx context.Contex
 }
 
 func (m *BreakoutRoomModel) proceedToEndBkRoom(ctx context.Context, bkRoomId, parentRoomId string) {
-	ok, msg := m.rm.EndRoom(ctx, &plugnmeet.RoomEndReq{RoomId: bkRoomId})
+	ok, msg := m.rm.EndRoom(ctx, &wemeet.RoomEndReq{RoomId: bkRoomId})
 	if !ok {
 		log.Errorln(msg)
 	}
@@ -56,7 +57,7 @@ func (m *BreakoutRoomModel) onAfterBkRoomEnded(parentRoomId, bkRoomId string) {
 		_ = m.updateParentRoomMetadata(parentRoomId)
 	}
 	// notify to the room for updating list
-	_ = m.natsService.BroadcastSystemEventToRoom(plugnmeet.NatsMsgServerToClientEvents_BREAKOUT_ROOM_ENDED, parentRoomId, bkRoomId, nil)
+	_ = m.natsService.BroadcastSystemEventToRoom(wemeet.NatsMsgServerToClientEvents_BREAKOUT_ROOM_ENDED, parentRoomId, bkRoomId, nil)
 }
 
 func (m *BreakoutRoomModel) updateParentRoomMetadata(parentRoomId string) error {

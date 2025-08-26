@@ -1,11 +1,11 @@
 package models
 
 import (
-	"github.com/mynaparrot/plugnmeet-protocol/plugnmeet"
+	"github.com/retawsolit/!we!meet-protocol/wemeet backup moi"
 	"google.golang.org/protobuf/encoding/protojson"
 )
 
-func (m *BreakoutRoomModel) IncreaseBreakoutRoomDuration(r *plugnmeet.IncreaseBreakoutRoomDurationReq) error {
+func (m *BreakoutRoomModel) IncreaseBreakoutRoomDuration(r *wemeet.IncreaseBreakoutRoomDurationReq) error {
 	room, err := m.fetchBreakoutRoom(r.RoomId, r.BreakoutRoomId)
 	if err != nil {
 		return err

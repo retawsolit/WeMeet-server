@@ -2,8 +2,6 @@ package models
 
 import (
 	"github.com/mynaparrot/plugnmeet-server/pkg/config"
-	"github.com/mynaparrot/plugnmeet-server/pkg/services/db"
-	"github.com/mynaparrot/plugnmeet-server/pkg/services/redis"
 )
 
 type BBBApiWrapperModel struct {

@@ -2,12 +2,14 @@ package models
 
 import (
 	"errors"
+
 	"github.com/mynaparrot/plugnmeet-protocol/plugnmeet"
 	natsservice "github.com/mynaparrot/plugnmeet-server/pkg/services/nats"
+	"github.com/retawsolit/!we!meet-protocol/wemeet backup moi"
 	"google.golang.org/protobuf/encoding/protojson"
 )
 
-func (m *BreakoutRoomModel) GetBreakoutRooms(roomId string) ([]*plugnmeet.BreakoutRoom, error) {
+func (m *BreakoutRoomModel) GetBreakoutRooms(roomId string) ([]*wemeet.BreakoutRoom, error) {
 	breakoutRooms, err := m.fetchBreakoutRooms(roomId)
 	if err != nil {
 		return nil, err
@@ -20,7 +22,7 @@ func (m *BreakoutRoomModel) GetBreakoutRooms(roomId string) ([]*plugnmeet.Breako
 	return breakoutRooms, nil
 }
 
-func (m *BreakoutRoomModel) GetMyBreakoutRooms(roomId, userId string) (*plugnmeet.BreakoutRoom, error) {
+func (m *BreakoutRoomModel) GetMyBreakoutRooms(roomId, userId string) (*wemeet.BreakoutRoom, error) {
 	breakoutRooms, err := m.fetchBreakoutRooms(roomId)
 	if err != nil {
 		return nil, err
@@ -41,7 +43,7 @@ func (m *BreakoutRoomModel) GetMyBreakoutRooms(roomId, userId string) (*plugnmee
 	return nil, errors.New("not found")
 }
 
-func (m *BreakoutRoomModel) fetchBreakoutRoom(roomId, breakoutRoomId string) (*plugnmeet.BreakoutRoom, error) {
+func (m *BreakoutRoomModel) fetchBreakoutRoom(roomId, breakoutRoomId string) (*wemeet.BreakoutRoom, error) {
 	result, err := m.natsService.GetBreakoutRoom(roomId, breakoutRoomId)
 	if err != nil {
 		return nil, err
@@ -59,7 +61,7 @@ func (m *BreakoutRoomModel) fetchBreakoutRoom(roomId, breakoutRoomId string) (*p
 	return room, nil
 }
 
-func (m *BreakoutRoomModel) fetchBreakoutRooms(roomId string) ([]*plugnmeet.BreakoutRoom, error) {
+func (m *BreakoutRoomModel) fetchBreakoutRooms(roomId string) ([]*wemeet.BreakoutRoom, error) {
 	rooms, err := m.natsService.GetAllBreakoutRoomsByParentRoomId(roomId)
 	if err != nil {
 		return nil, err
@@ -68,7 +70,7 @@ func (m *BreakoutRoomModel) fetchBreakoutRooms(roomId string) ([]*plugnmeet.Brea
 		return nil, nil
 	}
 
-	var breakoutRooms []*plugnmeet.BreakoutRoom
+	var breakoutRooms []*wemeet.BreakoutRoom
 	for i, r := range rooms {
 		room := new(plugnmeet.BreakoutRoom)
 		err := protojson.Unmarshal(r, room)

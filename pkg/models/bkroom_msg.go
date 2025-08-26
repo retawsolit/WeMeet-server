@@ -1,7 +1,7 @@
 package models
 
 import (
-	"github.com/mynaparrot/plugnmeet-protocol/plugnmeet"
+	"github.com/retawsolit/!we!meet-protocol/wemeet backup moi"
 	log "github.com/sirupsen/logrus"
 )
 
@@ -10,7 +10,7 @@ type SendBreakoutRoomMsgReq struct {
 	Msg    string `json:"msg" validate:"required"`
 }
 
-func (m *BreakoutRoomModel) SendBreakoutRoomMsg(r *plugnmeet.BroadcastBreakoutRoomMsgReq) error {
+func (m *BreakoutRoomModel) SendBreakoutRoomMsg(r *wemeet.BroadcastBreakoutRoomMsgReq) error {
 	rooms, err := m.fetchBreakoutRooms(r.RoomId)
 	if err != nil {
 		return err
@@ -21,7 +21,7 @@ func (m *BreakoutRoomModel) SendBreakoutRoomMsg(r *plugnmeet.BroadcastBreakoutRo
 	}
 
 	for _, rr := range rooms {
-		err = m.natsService.BroadcastSystemEventToRoom(plugnmeet.NatsMsgServerToClientEvents_SYSTEM_CHAT_MSG, rr.Id, r.Msg, nil)
+		err = m.natsService.BroadcastSystemEventToRoom(wemeet.NatsMsgServerToClientEvents_SYSTEM_CHAT_MSG, rr.Id, r.Msg, nil)
 		if err != nil {
 			log.Errorln(err)
 		}
