@@ -9,7 +9,9 @@ import (
 	"github.com/retawsolit/WeMeet-protocol/webhook"
 	"github.com/retawsolit/WeMeet-protocol/wemeet"
 	"github.com/retawsolit/WeMeet-server/pkg/config"
+	dbservice "github.com/retawsolit/WeMeet-server/pkg/services/db"
 	natsservice "github.com/retawsolit/WeMeet-server/pkg/services/nats"
+	redisservice "github.com/retawsolit/WeMeet-server/pkg/services/redis"
 	log "github.com/sirupsen/logrus"
 )
 
