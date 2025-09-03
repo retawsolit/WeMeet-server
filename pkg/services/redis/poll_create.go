@@ -3,10 +3,11 @@ package redisservice
 import (
 	"errors"
 	"fmt"
-	"github.com/goccy/go-json"
-	"github.com/mynaparrot/plugnmeet-protocol/plugnmeet"
-	"github.com/redis/go-redis/v9"
 	"strings"
+
+	"github.com/goccy/go-json"
+	"github.com/redis/go-redis/v9"
+	"github.com/retawsolit/WeMeet-protocol/wemeet"
 )
 
 func (s *RedisService) CreateRoomPoll(roomId string, val map[string]string) error {
@@ -31,7 +32,7 @@ type userResponseCommonFields struct {
 	AllRespondents string `redis:"all_respondents"`
 }
 
-func (s *RedisService) AddPollResponse(r *plugnmeet.SubmitPollResponseReq) error {
+func (s *RedisService) AddPollResponse(r *wemeet.SubmitPollResponseReq) error {
 	key := fmt.Sprintf("%s%s:respondents:%s", pollsKey, r.RoomId, r.PollId)
 
 	err := s.rc.Watch(s.ctx, func(tx *redis.Tx) error {

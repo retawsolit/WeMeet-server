@@ -2,13 +2,14 @@ package dbservice
 
 import (
 	"fmt"
-	"github.com/mynaparrot/plugnmeet-server/helpers"
-	"github.com/mynaparrot/plugnmeet-server/pkg/config"
-	"github.com/mynaparrot/plugnmeet-server/pkg/dbmodels"
 	"path/filepath"
 	"runtime"
 	"testing"
 	"time"
+
+	"github.com/retawsolit/WeMeet-server/helpers"
+	"github.com/retawsolit/WeMeet-server/pkg/config"
+	"github.com/retawsolit/WeMeet-server/pkg/dbmodels"
 )
 
 var (

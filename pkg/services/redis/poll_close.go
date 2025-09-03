@@ -3,12 +3,13 @@ package redisservice
 import (
 	"errors"
 	"fmt"
-	"github.com/mynaparrot/plugnmeet-protocol/plugnmeet"
+
 	"github.com/redis/go-redis/v9"
+	"github.com/retawsolit/WeMeet-protocol/wemeet"
 	"google.golang.org/protobuf/encoding/protojson"
 )
 
-func (s *RedisService) ClosePoll(r *plugnmeet.ClosePollReq) error {
+func (s *RedisService) ClosePoll(r *wemeet.ClosePollReq) error {
 	key := pollsKey + r.RoomId
 
 	err := s.rc.Watch(s.ctx, func(tx *redis.Tx) error {
@@ -22,7 +23,7 @@ func (s *RedisService) ClosePoll(r *plugnmeet.ClosePollReq) error {
 			return errors.New("not found")
 		}
 
-		info := new(plugnmeet.PollInfo)
+		info := new(wemeet.PollInfo)
 		err = protojson.Unmarshal([]byte(result), info)
 		if err != nil {
 			return err

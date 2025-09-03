@@ -3,9 +3,10 @@ package dbservice
 import (
 	"database/sql"
 	"fmt"
-	"github.com/mynaparrot/plugnmeet-server/pkg/dbmodels"
 	"testing"
 	"time"
+
+	"github.com/retawsolit/WeMeet-server/pkg/dbmodels"
 )
 
 var recordId = fmt.Sprintf("%d", time.Now().UnixNano())

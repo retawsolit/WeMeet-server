@@ -6,8 +6,8 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	"github.com/mynaparrot/plugnmeet-protocol/plugnmeet"
 	"github.com/nats-io/nats.go/jetstream"
+	"github.com/retawsolit/WeMeet-protocol/wemeet"
 )
 
 // Constants for bucket naming and user metadata keys
@@ -41,7 +41,7 @@ const (
 )
 
 // AddUser adds a new user to a room and stores their metadata
-func (s *NatsService) AddUser(roomId, userId, name string, isAdmin, isPresenter bool, metadata *plugnmeet.UserMetadata) error {
+func (s *NatsService) AddUser(roomId, userId, name string, isAdmin, isPresenter bool, metadata *wemeet.UserMetadata) error {
 	// Create or update the room users bucket
 	bucket := fmt.Sprintf(RoomUsersBucket, roomId)
 	roomKV, err := s.js.CreateOrUpdateKeyValue(s.ctx, jetstream.KeyValueConfig{
@@ -147,7 +147,7 @@ func (s *NatsService) UpdateUserStatus(roomId, userId string, status string) err
 
 // UpdateUserMetadata updates the metadata of a user
 func (s *NatsService) UpdateUserMetadata(roomId, userId string, metadata interface{}) (string, error) {
-	var mt *plugnmeet.UserMetadata
+	var mt *wemeet.UserMetadata
 	var err error
 
 	// Determine the type of metadata and unmarshal accordingly
@@ -157,9 +157,9 @@ func (s *NatsService) UpdateUserMetadata(roomId, userId string, metadata interfa
 		if err != nil {
 			return "", fmt.Errorf("failed to unmarshal metadata: %w", err)
 		}
-	case plugnmeet.UserMetadata:
+	case wemeet.UserMetadata:
 		mt = &v
-	case *plugnmeet.UserMetadata:
+	case *wemeet.UserMetadata:
 		mt = v
 	default:
 		return "", errors.New("invalid metadata data type")

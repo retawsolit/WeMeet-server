@@ -5,8 +5,8 @@ import (
 	"strconv"
 	"sync"
 
-	"github.com/mynaparrot/plugnmeet-server/pkg/config"
-	"github.com/retawsolit/!we!meet-protocol/wemeet backup moi"
+	"github.com/retawsolit/WeMeet-protocol/wemeet"
+	"github.com/retawsolit/WeMeet-server/pkg/config"
 	log "github.com/sirupsen/logrus"
 )
 

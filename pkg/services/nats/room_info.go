@@ -2,11 +2,12 @@ package natsservice
 
 import (
 	"fmt"
-	"github.com/mynaparrot/plugnmeet-protocol/plugnmeet"
+
+	"github.com/retawsolit/WeMeet-protocol/wemeet"
 )
 
 // GetRoomInfo retrieves the room information for the given roomId
-func (s *NatsService) GetRoomInfo(roomId string) (*plugnmeet.NatsKvRoomInfo, error) {
+func (s *NatsService) GetRoomInfo(roomId string) (*wemeet.NatsKvRoomInfo, error) {
 	// try to get cached room info first
 	if info := s.cs.GetCachedRoomInfo(roomId); info != nil {
 		return info, nil
@@ -18,7 +19,7 @@ func (s *NatsService) GetRoomInfo(roomId string) (*plugnmeet.NatsKvRoomInfo, err
 		return nil, err
 	}
 
-	info := new(plugnmeet.NatsKvRoomInfo)
+	info := new(wemeet.NatsKvRoomInfo)
 	info.DbTableId, _ = s.getUint64Value(kv, RoomDbTableIdKey)
 	info.RoomId, _ = s.getStringValue(kv, RoomIdKey)
 	info.RoomSid, _ = s.getStringValue(kv, RoomSidKey)
@@ -35,7 +36,7 @@ func (s *NatsService) GetRoomInfo(roomId string) (*plugnmeet.NatsKvRoomInfo, err
 }
 
 // GetRoomInfoWithMetadata retrieves the room information along with metadata for the given roomId
-func (s *NatsService) GetRoomInfoWithMetadata(roomId string) (*plugnmeet.NatsKvRoomInfo, *plugnmeet.RoomMetadata, error) {
+func (s *NatsService) GetRoomInfoWithMetadata(roomId string) (*wemeet.NatsKvRoomInfo, *wemeet.RoomMetadata, error) {
 	info, err := s.GetRoomInfo(roomId)
 	if err != nil || info == nil {
 		return nil, nil, err
@@ -50,7 +51,7 @@ func (s *NatsService) GetRoomInfoWithMetadata(roomId string) (*plugnmeet.NatsKvR
 }
 
 // GetRoomMetadataStruct retrieves the room metadata as a structured object for the given roomId
-func (s *NatsService) GetRoomMetadataStruct(roomId string) (*plugnmeet.RoomMetadata, error) {
+func (s *NatsService) GetRoomMetadataStruct(roomId string) (*wemeet.RoomMetadata, error) {
 	info, err := s.GetRoomInfo(roomId)
 	if err != nil {
 		return nil, err

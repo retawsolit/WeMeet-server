@@ -3,14 +3,15 @@ package natsservice
 import (
 	"errors"
 	"fmt"
+	"time"
+
 	"github.com/google/uuid"
-	"github.com/mynaparrot/plugnmeet-protocol/plugnmeet"
+	"github.com/retawsolit/WeMeet-protocol/wemeet"
 	log "github.com/sirupsen/logrus"
 	"google.golang.org/protobuf/proto"
-	"time"
 )
 
-func (s *NatsService) BroadcastSystemEventToRoom(event plugnmeet.NatsMsgServerToClientEvents, roomId string, data interface{}, toUserId *string) error {
+func (s *NatsService) BroadcastSystemEventToRoom(event wemeet.NatsMsgServerToClientEvents, roomId string, data interface{}, toUserId *string) error {
 	var msg string
 	var err error
 
@@ -31,7 +32,7 @@ func (s *NatsService) BroadcastSystemEventToRoom(event plugnmeet.NatsMsgServerTo
 		return errors.New("invalid data type")
 	}
 
-	payload := plugnmeet.NatsMsgServerToClient{
+	payload := wemeet.NatsMsgServerToClient{
 		Id:    uuid.NewString(),
 		Event: event,
 		Msg:   msg,
@@ -54,7 +55,7 @@ func (s *NatsService) BroadcastSystemEventToRoom(event plugnmeet.NatsMsgServerTo
 	return nil
 }
 
-func (s *NatsService) BroadcastSystemEventToEveryoneExceptUserId(event plugnmeet.NatsMsgServerToClientEvents, roomId string, data interface{}, exceptUserId string) error {
+func (s *NatsService) BroadcastSystemEventToEveryoneExceptUserId(event wemeet.NatsMsgServerToClientEvents, roomId string, data interface{}, exceptUserId string) error {
 	ids, err := s.GetOnlineUsersId(roomId)
 	if err != nil {
 		return err
@@ -77,8 +78,8 @@ func (s *NatsService) BroadcastSystemEventToEveryoneExceptUserId(event plugnmeet
 	return nil
 }
 
-func (s *NatsService) BroadcastSystemNotificationToRoom(roomId, msg string, msgType plugnmeet.NatsSystemNotificationTypes, withSound bool, userId *string) error {
-	data := &plugnmeet.NatsSystemNotification{
+func (s *NatsService) BroadcastSystemNotificationToRoom(roomId, msg string, msgType wemeet.NatsSystemNotificationTypes, withSound bool, userId *string) error {
+	data := &wemeet.NatsSystemNotification{
 		Id:        uuid.NewString(),
 		Type:      msgType,
 		Msg:       msg,
@@ -91,17 +92,17 @@ func (s *NatsService) BroadcastSystemNotificationToRoom(roomId, msg string, msgT
 		return err
 	}
 
-	return s.BroadcastSystemEventToRoom(plugnmeet.NatsMsgServerToClientEvents_SYSTEM_NOTIFICATION, roomId, marshal, userId)
+	return s.BroadcastSystemEventToRoom(wemeet.NatsMsgServerToClientEvents_SYSTEM_NOTIFICATION, roomId, marshal, userId)
 }
 
 func (s *NatsService) NotifyInfoMsg(roomId, msg string, withSound bool, userId *string) error {
-	return s.BroadcastSystemNotificationToRoom(roomId, msg, plugnmeet.NatsSystemNotificationTypes_NATS_SYSTEM_NOTIFICATION_INFO, withSound, userId)
+	return s.BroadcastSystemNotificationToRoom(roomId, msg, wemeet.NatsSystemNotificationTypes_NATS_SYSTEM_NOTIFICATION_INFO, withSound, userId)
 }
 
 func (s *NatsService) NotifyWarningMsg(roomId, msg string, withSound bool, userId *string) error {
-	return s.BroadcastSystemNotificationToRoom(roomId, msg, plugnmeet.NatsSystemNotificationTypes_NATS_SYSTEM_NOTIFICATION_WARNING, withSound, userId)
+	return s.BroadcastSystemNotificationToRoom(roomId, msg, wemeet.NatsSystemNotificationTypes_NATS_SYSTEM_NOTIFICATION_WARNING, withSound, userId)
 }
 
 func (s *NatsService) NotifyErrorMsg(roomId, msg string, userId *string) error {
-	return s.BroadcastSystemNotificationToRoom(roomId, msg, plugnmeet.NatsSystemNotificationTypes_NATS_SYSTEM_NOTIFICATION_ERROR, true, userId)
+	return s.BroadcastSystemNotificationToRoom(roomId, msg, wemeet.NatsSystemNotificationTypes_NATS_SYSTEM_NOTIFICATION_ERROR, true, userId)
 }

@@ -2,7 +2,8 @@ package natsservice
 
 import (
 	"errors"
-	"github.com/mynaparrot/plugnmeet-protocol/plugnmeet"
+
+	"github.com/retawsolit/WeMeet-protocol/wemeet"
 	log "github.com/sirupsen/logrus"
 )
 
@@ -19,12 +20,12 @@ func (s *NatsService) BroadcastUserMetadata(roomId string, userId string, metada
 		metadata = &result.Metadata
 	}
 
-	data := &plugnmeet.NatsUserMetadataUpdate{
+	data := &wemeet.NatsUserMetadataUpdate{
 		Metadata: *metadata,
 		UserId:   userId,
 	}
 
-	return s.BroadcastSystemEventToRoom(plugnmeet.NatsMsgServerToClientEvents_USER_METADATA_UPDATE, roomId, data, toUser)
+	return s.BroadcastSystemEventToRoom(wemeet.NatsMsgServerToClientEvents_USER_METADATA_UPDATE, roomId, data, toUser)
 }
 
 // UpdateAndBroadcastUserMetadata will update metadata & broadcast to everyone
@@ -40,7 +41,7 @@ func (s *NatsService) UpdateAndBroadcastUserMetadata(roomId, userId string, meta
 	return s.BroadcastUserMetadata(roomId, userId, &mt, toUserId)
 }
 
-func (s *NatsService) BroadcastUserInfoToRoom(event plugnmeet.NatsMsgServerToClientEvents, roomId, userId string, userInfo *plugnmeet.NatsKvUserInfo) {
+func (s *NatsService) BroadcastUserInfoToRoom(event wemeet.NatsMsgServerToClientEvents, roomId, userId string, userInfo *wemeet.NatsKvUserInfo) {
 	if userInfo == nil {
 		info, err := s.GetUserInfo(roomId, userId)
 		if err != nil {

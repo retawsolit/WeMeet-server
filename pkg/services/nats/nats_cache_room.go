@@ -4,7 +4,7 @@ import (
 	"fmt"
 
 	"github.com/nats-io/nats.go/jetstream"
-	"github.com/retawsolit/!we!meet-protocol/wemeet backup moi"
+	"github.com/retawsolit/WeMeet-protocol/wemeet"
 	log "github.com/sirupsen/logrus"
 	"google.golang.org/protobuf/proto"
 )

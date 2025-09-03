@@ -3,10 +3,11 @@ package redisservice
 import (
 	"errors"
 	"fmt"
-	"github.com/mynaparrot/plugnmeet-protocol/plugnmeet"
-	"github.com/redis/go-redis/v9"
 	"strconv"
 	"time"
+
+	"github.com/redis/go-redis/v9"
+	"github.com/retawsolit/WeMeet-protocol/wemeet"
 )
 
 const SpeechServiceRedisKey = "pnm:speechService"
@@ -24,15 +25,15 @@ func (s *RedisService) SpeechToTextGetConnectionsByKeyId(keyId string) (string, 
 	return conns, nil
 }
 
-func (s *RedisService) SpeechToTextUpdateUserStatus(keyId string, task plugnmeet.SpeechServiceUserStatusTasks) error {
+func (s *RedisService) SpeechToTextUpdateUserStatus(keyId string, task wemeet.SpeechServiceUserStatusTasks) error {
 	keyStatus := fmt.Sprintf("%s:%s:connections", SpeechServiceRedisKey, keyId)
 	switch task {
-	case plugnmeet.SpeechServiceUserStatusTasks_SPEECH_TO_TEXT_SESSION_STARTED:
+	case wemeet.SpeechServiceUserStatusTasks_SPEECH_TO_TEXT_SESSION_STARTED:
 		_, err := s.rc.Incr(s.ctx, keyStatus).Result()
 		if err != nil {
 			return err
 		}
-	case plugnmeet.SpeechServiceUserStatusTasks_SPEECH_TO_TEXT_SESSION_ENDED:
+	case wemeet.SpeechServiceUserStatusTasks_SPEECH_TO_TEXT_SESSION_ENDED:
 		_, err := s.rc.Decr(s.ctx, keyStatus).Result()
 		if err != nil {
 			return err
@@ -56,16 +57,16 @@ func (s *RedisService) SpeechToTextCheckUserUsage(roomId, userId string) (string
 	return ss, nil
 }
 
-func (s *RedisService) SpeechToTextUsersUsage(roomId, userId string, task plugnmeet.SpeechServiceUserStatusTasks) (int64, error) {
+func (s *RedisService) SpeechToTextUsersUsage(roomId, userId string, task wemeet.SpeechServiceUserStatusTasks) (int64, error) {
 	key := fmt.Sprintf("%s:%s:usage", SpeechServiceRedisKey, roomId)
 
 	switch task {
-	case plugnmeet.SpeechServiceUserStatusTasks_SPEECH_TO_TEXT_SESSION_STARTED:
+	case wemeet.SpeechServiceUserStatusTasks_SPEECH_TO_TEXT_SESSION_STARTED:
 		_, err := s.rc.HSet(s.ctx, key, userId, time.Now().Unix()).Result()
 		if err != nil {
 			return 0, err
 		}
-	case plugnmeet.SpeechServiceUserStatusTasks_SPEECH_TO_TEXT_SESSION_ENDED:
+	case wemeet.SpeechServiceUserStatusTasks_SPEECH_TO_TEXT_SESSION_ENDED:
 		var usage int64
 		err := s.rc.Watch(s.ctx, func(tx *redis.Tx) error {
 			_, err := tx.TxPipelined(s.ctx, func(pipe redis.Pipeliner) error {

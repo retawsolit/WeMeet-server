@@ -2,7 +2,8 @@ package natsservice
 
 import (
 	"errors"
-	"github.com/mynaparrot/plugnmeet-protocol/plugnmeet"
+
+	"github.com/retawsolit/WeMeet-protocol/wemeet"
 )
 
 func (s *NatsService) BroadcastRoomMetadata(roomId string, metadata, userId *string) error {
@@ -18,7 +19,7 @@ func (s *NatsService) BroadcastRoomMetadata(roomId string, metadata, userId *str
 		metadata = &rInfo.Metadata
 	}
 
-	return s.BroadcastSystemEventToRoom(plugnmeet.NatsMsgServerToClientEvents_ROOM_METADATA_UPDATE, roomId, *metadata, userId)
+	return s.BroadcastSystemEventToRoom(wemeet.NatsMsgServerToClientEvents_ROOM_METADATA_UPDATE, roomId, *metadata, userId)
 }
 
 // UpdateAndBroadcastRoomMetadata will update and broadcast to everyone

@@ -1,8 +1,9 @@
 package dbservice
 
 import (
-	"github.com/mynaparrot/plugnmeet-server/pkg/dbmodels"
 	"testing"
+
+	"github.com/retawsolit/WeMeet-server/pkg/dbmodels"
 )
 
 func TestDatabaseService_GetRoomInfoByRoomId(t *testing.T) {

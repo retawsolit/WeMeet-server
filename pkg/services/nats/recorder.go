@@ -5,7 +5,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/retawsolit/!we!meet-protocol/wemeet backup moi"
+	"github.com/retawsolit/WeMeet-protocol/wemeet"
 )
 
 type RecorderInfo struct {

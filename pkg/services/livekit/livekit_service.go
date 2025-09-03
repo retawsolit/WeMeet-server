@@ -2,8 +2,9 @@ package livekitservice
 
 import (
 	"context"
+
 	lksdk "github.com/livekit/server-sdk-go/v2"
-	"github.com/mynaparrot/plugnmeet-server/pkg/config"
+	"github.com/retawsolit/WeMeet-server/pkg/config"
 )
 
 type LivekitService struct {

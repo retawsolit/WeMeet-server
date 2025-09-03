@@ -3,9 +3,10 @@ package natsservice
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/mynaparrot/plugnmeet-protocol/plugnmeet"
-	"github.com/nats-io/nats.go/jetstream"
 	"strconv"
+
+	"github.com/nats-io/nats.go/jetstream"
+	"github.com/retawsolit/WeMeet-protocol/wemeet"
 )
 
 // GetRoomUserStatus retrieves the status of a user in a specific room.
@@ -30,7 +31,7 @@ func (s *NatsService) GetRoomUserStatus(roomId, userId string) (string, error) {
 
 // GetUserInfo retrieves detailed information about a user in a specific room.
 // Returns nil if the user or room is not found.
-func (s *NatsService) GetUserInfo(roomId, userId string) (*plugnmeet.NatsKvUserInfo, error) {
+func (s *NatsService) GetUserInfo(roomId, userId string) (*wemeet.NatsKvUserInfo, error) {
 	if info := s.cs.GetUserInfo(roomId, userId); info != nil {
 		return info, nil
 	}
@@ -41,7 +42,7 @@ func (s *NatsService) GetUserInfo(roomId, userId string) (*plugnmeet.NatsKvUserI
 		return nil, err
 	}
 
-	info := &plugnmeet.NatsKvUserInfo{}
+	info := &wemeet.NatsKvUserInfo{}
 	info.UserId, _ = s.getStringValue(kv, UserIdKey)
 	info.UserSid, _ = s.getStringValue(kv, UserSidKey)
 	info.Name, _ = s.getStringValue(kv, UserNameKey)
@@ -123,13 +124,13 @@ func (s *NatsService) GetUsersIdFromRoomStatusBucket(roomId string) []string {
 
 // GetOnlineUsersList retrieves detailed information about all online users in a specific room.
 // Returns nil if the room is not found or no users are online.
-func (s *NatsService) GetOnlineUsersList(roomId string) ([]*plugnmeet.NatsKvUserInfo, error) {
+func (s *NatsService) GetOnlineUsersList(roomId string) ([]*wemeet.NatsKvUserInfo, error) {
 	userIds, err := s.GetOnlineUsersId(roomId)
 	if err != nil || len(userIds) == 0 {
 		return nil, err
 	}
 
-	var users []*plugnmeet.NatsKvUserInfo
+	var users []*wemeet.NatsKvUserInfo
 	for _, id := range userIds {
 		info, err := s.GetUserInfo(roomId, id)
 		if err != nil {
@@ -173,7 +174,7 @@ func (s *NatsService) GetUserKeyValue(roomId, userId, key string) (jetstream.Key
 
 // GetUserMetadataStruct retrieves the metadata for a user in a specific room as a structured object.
 // Returns nil if the user or room is not found.
-func (s *NatsService) GetUserMetadataStruct(roomId, userId string) (*plugnmeet.UserMetadata, error) {
+func (s *NatsService) GetUserMetadataStruct(roomId, userId string) (*wemeet.UserMetadata, error) {
 	info, err := s.GetUserInfo(roomId, userId)
 	if err != nil {
 		return nil, err
@@ -187,7 +188,7 @@ func (s *NatsService) GetUserMetadataStruct(roomId, userId string) (*plugnmeet.U
 
 // GetUserWithMetadata retrieves detailed information and metadata about a user in a specific room.
 // Returns nil if the user or room is not found.
-func (s *NatsService) GetUserWithMetadata(roomId, userId string) (*plugnmeet.NatsKvUserInfo, *plugnmeet.UserMetadata, error) {
+func (s *NatsService) GetUserWithMetadata(roomId, userId string) (*wemeet.NatsKvUserInfo, *wemeet.UserMetadata, error) {
 	info, err := s.GetUserInfo(roomId, userId)
 	if err != nil || info == nil {
 		return nil, nil, err

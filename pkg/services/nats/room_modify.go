@@ -3,10 +3,11 @@ package natsservice
 import (
 	"errors"
 	"fmt"
-	"github.com/mynaparrot/plugnmeet-protocol/plugnmeet"
-	"github.com/nats-io/nats.go/jetstream"
-	log "github.com/sirupsen/logrus"
 	"time"
+
+	"github.com/nats-io/nats.go/jetstream"
+	"github.com/retawsolit/WeMeet-protocol/wemeet"
+	log "github.com/sirupsen/logrus"
 )
 
 // Constants for room info bucket and keys
@@ -29,7 +30,7 @@ const (
 )
 
 // AddRoom creates a new room entry in the NATS JetStream Key-Value store
-func (s *NatsService) AddRoom(tableId uint64, roomId, roomSid string, emptyTimeout, maxParticipants *uint32, metadata *plugnmeet.RoomMetadata) error {
+func (s *NatsService) AddRoom(tableId uint64, roomId, roomSid string, emptyTimeout, maxParticipants *uint32, metadata *wemeet.RoomMetadata) error {
 	// Create or update the key-value bucket for the room
 	bucket := fmt.Sprintf(RoomInfoBucket, roomId)
 	kv, err := s.js.CreateOrUpdateKeyValue(s.ctx, jetstream.KeyValueConfig{
@@ -81,15 +82,15 @@ func (s *NatsService) AddRoom(tableId uint64, roomId, roomSid string, emptyTimeo
 
 // updateRoomMetadata updates the metadata of an existing room
 func (s *NatsService) updateRoomMetadata(roomId string, metadata interface{}) (string, error) {
-	var mt *plugnmeet.RoomMetadata
+	var mt *wemeet.RoomMetadata
 	var err error
 	// Handle different metadata input types
 	switch v := metadata.(type) {
 	case string:
 		mt, err = s.UnmarshalRoomMetadata(v)
-	case plugnmeet.RoomMetadata:
+	case wemeet.RoomMetadata:
 		mt = &v
-	case *plugnmeet.RoomMetadata:
+	case *wemeet.RoomMetadata:
 		mt = v
 	default:
 		return "", errors.New("invalid metadata data type")
