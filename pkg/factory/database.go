@@ -2,12 +2,13 @@ package factory
 
 import (
 	"fmt"
-	"github.com/mynaparrot/plugnmeet-server/pkg/config"
+	"strings"
+	"time"
+
+	"github.com/retawsolit/WeMeet-server/pkg/config"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
-	"strings"
-	"time"
 )
 
 func NewDatabaseConnection(appCnf *config.AppConfig) error {

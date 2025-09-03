@@ -1,11 +1,12 @@
 package factory
 
 import (
-	"github.com/mynaparrot/plugnmeet-protocol/utils"
-	"github.com/mynaparrot/plugnmeet-server/pkg/config"
+	"strings"
+
 	"github.com/nats-io/nats.go"
 	"github.com/nats-io/nats.go/jetstream"
-	"strings"
+	"github.com/retawsolit/WeMeet-protocol/utils"
+	"github.com/retawsolit/WeMeet-server/pkg/config"
 )
 
 func NewNatsConnection(appCnf *config.AppConfig) error {

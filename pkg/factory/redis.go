@@ -3,8 +3,9 @@ package factory
 import (
 	"context"
 	"crypto/tls"
-	"github.com/mynaparrot/plugnmeet-server/pkg/config"
+
 	"github.com/redis/go-redis/v9"
+	"github.com/retawsolit/WeMeet-server/pkg/config"
 )
 
 func NewRedisConnection(appCnf *config.AppConfig) error {

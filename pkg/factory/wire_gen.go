@@ -8,14 +8,15 @@ package factory
 
 import (
 	"context"
+
 	"github.com/google/wire"
-	"github.com/mynaparrot/plugnmeet-server/pkg/config"
-	"github.com/mynaparrot/plugnmeet-server/pkg/controllers"
-	"github.com/mynaparrot/plugnmeet-server/pkg/models"
-	"github.com/mynaparrot/plugnmeet-server/pkg/services/db"
-	"github.com/mynaparrot/plugnmeet-server/pkg/services/livekit"
-	"github.com/mynaparrot/plugnmeet-server/pkg/services/nats"
-	"github.com/mynaparrot/plugnmeet-server/pkg/services/redis"
+	"github.com/retawsolit/WeMeet-server/pkg/config"
+	"github.com/retawsolit/WeMeet-server/pkg/controllers"
+	"github.com/retawsolit/WeMeet-server/pkg/models"
+	dbservice "github.com/retawsolit/WeMeet-server/pkg/services/db"
+	livekitservice "github.com/retawsolit/WeMeet-server/pkg/services/livekit"
+	natsservice "github.com/retawsolit/WeMeet-server/pkg/services/nats"
+	redisservice "github.com/retawsolit/WeMeet-server/pkg/services/redis"
 )
 
 // Injectors from wire.go:
