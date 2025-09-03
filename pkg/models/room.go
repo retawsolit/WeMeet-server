@@ -1,29 +1,39 @@
 package models
 
 import (
-	"time"
+	"github.com/mynaparrot/plugnmeet-server/pkg/config"
+	"github.com/mynaparrot/plugnmeet-server/pkg/services/db"
+	"github.com/mynaparrot/plugnmeet-server/pkg/services/livekit"
+	natsservice "github.com/mynaparrot/plugnmeet-server/pkg/services/nats"
+	"github.com/mynaparrot/plugnmeet-server/pkg/services/redis"
 )
 
-type RoomInfo struct {
-	ID                 uint      `gorm:"primaryKey" json:"id"`
-	RoomTitle          string    `gorm:"size:255;not null" json:"room_title"`
-	RoomId             string    `gorm:"size:64;not null;uniqueIndex" json:"room_id"`
-	Sid                string    `gorm:"size:64;not null;unique" json:"sid"`
-	JoinedParticipants int       `gorm:"default:0" json:"joined_participants"`
-	IsRunning          bool      `gorm:"default:false" json:"is_running"`
-	IsRecording        bool      `gorm:"default:false" json:"is_recording"`
-	RecorderID         string    `gorm:"size:36;default:''" json:"recorder_id"`
-	IsActiveRtmp       bool      `gorm:"default:false" json:"is_active_rtmp"`
-	RtmpNodeID         string    `gorm:"size:36;default:''" json:"rtmp_node_id"`
-	WebhookUrl         string    `gorm:"size:255;default:''" json:"webhook_url"`
-	IsBreakoutRoom     bool      `gorm:"default:false" json:"is_breakout_room"`
-	ParentRoomID       string    `gorm:"size:64;default:''" json:"parent_room_id"`
-	CreationTime       int64     `gorm:"default:0" json:"creation_time"`
-	Created            time.Time `gorm:"autoCreateTime" json:"created"`
-	Ended              time.Time `json:"ended"`
-	Modified           time.Time `gorm:"autoUpdateTime" json:"modified"`
+type RoomModel struct {
+	app         *config.AppConfig
+	ds          *dbservice.DatabaseService
+	rs          *redisservice.RedisService
+	lk          *livekitservice.LivekitService
+	userModel   *UserModel
+	natsService *natsservice.NatsService
 }
 
-func (RoomInfo) TableName() string {
-	return "pnm_room_info"
+func NewRoomModel(app *config.AppConfig, ds *dbservice.DatabaseService, rs *redisservice.RedisService) *RoomModel {
+	if app == nil {
+		app = config.GetConfig()
+	}
+	if ds == nil {
+		ds = dbservice.New(app.DB)
+	}
+	if rs == nil {
+		rs = redisservice.New(app.RDS)
+	}
+
+	return &RoomModel{
+		app:         app,
+		ds:          ds,
+		rs:          rs,
+		lk:          livekitservice.New(app),
+		userModel:   NewUserModel(app, ds, rs),
+		natsService: natsservice.New(app),
+	}
 }
