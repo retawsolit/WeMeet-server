@@ -2,10 +2,9 @@ package controllers
 
 import (
 	"github.com/gofiber/fiber/v2"
-	"github.com/mynaparrot/plugnmeet-protocol/plugnmeet"
-	"github.com/mynaparrot/plugnmeet-protocol/utils"
-	"github.com/mynaparrot/plugnmeet-server/pkg/models"
-	"github.com/retawsolit/!we!meet-protocol/wemeet backup moi"
+	"github.com/retawsolit/WeMeet-protocol/utils"
+	"github.com/retawsolit/WeMeet-protocol/wemeet"
+	"github.com/retawsolit/WeMeet-server/pkg/models"
 	"google.golang.org/protobuf/proto"
 )
 
@@ -23,7 +22,7 @@ func NewRoomController(m *models.RoomModel) *RoomController {
 
 // HandleRoomCreate handles creating a new room.
 func (rc *RoomController) HandleRoomCreate(c *fiber.Ctx) error {
-	req := new(plugnmeet.CreateRoomReq)
+	req := new(wemeet.CreateRoomReq)
 	if err := parseAndValidateRequest(c.Body(), req); err != nil {
 		return utils.SendCommonProtoJsonResponse(c, false, err.Error())
 	}
@@ -44,7 +43,7 @@ func (rc *RoomController) HandleRoomCreate(c *fiber.Ctx) error {
 
 // HandleIsRoomActive checks if a room is active.
 func (rc *RoomController) HandleIsRoomActive(c *fiber.Ctx) error {
-	req := new(plugnmeet.IsRoomActiveReq)
+	req := new(wemeet.IsRoomActiveReq)
 	if err := parseAndValidateRequest(c.Body(), req); err != nil {
 		return utils.SendCommonProtoJsonResponse(c, false, err.Error())
 	}
@@ -55,7 +54,7 @@ func (rc *RoomController) HandleIsRoomActive(c *fiber.Ctx) error {
 
 // HandleGetActiveRoomInfo gets information about an active room.
 func (rc *RoomController) HandleGetActiveRoomInfo(c *fiber.Ctx) error {
-	req := new(plugnmeet.GetActiveRoomInfoReq)
+	req := new(wemeet.GetActiveRoomInfoReq)
 	if err := parseAndValidateRequest(c.Body(), req); err != nil {
 		return utils.SendCommonProtoJsonResponse(c, false, err.Error())
 	}
@@ -86,7 +85,7 @@ func (rc *RoomController) HandleGetActiveRoomsInfo(c *fiber.Ctx) error {
 
 // HandleEndRoom handles ending a room.
 func (rc *RoomController) HandleEndRoom(c *fiber.Ctx) error {
-	req := new(plugnmeet.RoomEndReq)
+	req := new(wemeet.RoomEndReq)
 	if err := parseAndValidateRequest(c.Body(), req); err != nil {
 		return utils.SendCommonProtoJsonResponse(c, false, err.Error())
 	}
@@ -98,7 +97,7 @@ func (rc *RoomController) HandleEndRoom(c *fiber.Ctx) error {
 
 // HandleFetchPastRooms handles fetching past rooms.
 func (rc *RoomController) HandleFetchPastRooms(c *fiber.Ctx) error {
-	req := new(plugnmeet.FetchPastRoomsReq)
+	req := new(wemeet.FetchPastRoomsReq)
 	if err := parseAndValidateRequest(c.Body(), req); err != nil {
 		return utils.SendCommonProtoJsonResponse(c, false, err.Error())
 	}
@@ -129,7 +128,7 @@ func (rc *RoomController) HandleEndRoomForAPI(c *fiber.Ctx) error {
 		return utils.SendCommonProtobufResponse(c, false, "only admin can perform this task")
 	}
 
-	req := new(plugnmeet.RoomEndReq)
+	req := new(wemeet.RoomEndReq)
 	err := proto.Unmarshal(c.Body(), req)
 	if err != nil {
 		return utils.SendCommonProtobufResponse(c, false, err.Error())
@@ -152,7 +151,7 @@ func (rc *RoomController) HandleChangeVisibilityForAPI(c *fiber.Ctx) error {
 		return utils.SendCommonProtobufResponse(c, false, "only admin can perform this task")
 	}
 
-	req := new(plugnmeet.ChangeVisibilityRes)
+	req := new(wemeet.ChangeVisibilityRes)
 	err := proto.Unmarshal(c.Body(), req)
 	if err != nil {
 		return utils.SendCommonProtobufResponse(c, false, err.Error())

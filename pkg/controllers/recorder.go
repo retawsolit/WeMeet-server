@@ -2,11 +2,11 @@ package controllers
 
 import (
 	"github.com/gofiber/fiber/v2"
-	"github.com/mynaparrot/plugnmeet-protocol/plugnmeet"
-	"github.com/mynaparrot/plugnmeet-protocol/utils"
-	"github.com/mynaparrot/plugnmeet-server/pkg/config"
-	"github.com/mynaparrot/plugnmeet-server/pkg/models"
-	"github.com/mynaparrot/plugnmeet-server/pkg/services/db"
+	"github.com/retawsolit/WeMeet-protocol/utils"
+	"github.com/retawsolit/WeMeet-protocol/wemeet"
+	"github.com/retawsolit/WeMeet-server/pkg/config"
+	"github.com/retawsolit/WeMeet-server/pkg/models"
+	dbservice "github.com/retawsolit/WeMeet-server/pkg/services/db"
 	log "github.com/sirupsen/logrus"
 	"google.golang.org/protobuf/proto"
 )
@@ -44,7 +44,7 @@ func (rc *RecorderController) HandleRecording(c *fiber.Ctx) error {
 		return utils.SendCommonProtobufResponse(c, false, "no roomId in token")
 	}
 
-	req := new(plugnmeet.RecordingReq)
+	req := new(wemeet.RecordingReq)
 	err := proto.Unmarshal(c.Body(), req)
 	if err != nil {
 		return utils.SendCommonProtobufResponse(c, false, err.Error())
@@ -70,15 +70,15 @@ func (rc *RecorderController) HandleRecording(c *fiber.Ctx) error {
 		return utils.SendCommonProtobufResponse(c, false, "roomId in token mismatched")
 	}
 
-	if room.IsRecording == 1 && req.Task == plugnmeet.RecordingTasks_START_RECORDING {
+	if room.IsRecording == 1 && req.Task == wemeet.RecordingTasks_START_RECORDING {
 		return utils.SendCommonProtobufResponse(c, false, "notifications.recording-already-running")
-	} else if room.IsRecording == 0 && req.Task == plugnmeet.RecordingTasks_STOP_RECORDING {
+	} else if room.IsRecording == 0 && req.Task == wemeet.RecordingTasks_STOP_RECORDING {
 		return utils.SendCommonProtobufResponse(c, false, "notifications.recording-not-running")
 	}
 
-	if room.IsActiveRtmp == 1 && req.Task == plugnmeet.RecordingTasks_START_RTMP {
+	if room.IsActiveRtmp == 1 && req.Task == wemeet.RecordingTasks_START_RTMP {
 		return utils.SendCommonProtobufResponse(c, false, "notifications.rtmp-already-running")
-	} else if room.IsActiveRtmp == 0 && req.Task == plugnmeet.RecordingTasks_STOP_RTMP {
+	} else if room.IsActiveRtmp == 0 && req.Task == wemeet.RecordingTasks_STOP_RTMP {
 		return utils.SendCommonProtobufResponse(c, false, "notifications.rtmp-not-running")
 	}
 
@@ -107,7 +107,7 @@ func (rc *RecorderController) HandleRTMP(c *fiber.Ctx) error {
 	}
 
 	// we can use same as RecordingReq
-	req := new(plugnmeet.RecordingReq)
+	req := new(wemeet.RecordingReq)
 	err := proto.Unmarshal(c.Body(), req)
 	if err != nil {
 		return utils.SendCommonProtobufResponse(c, false, err.Error())
@@ -118,7 +118,7 @@ func (rc *RecorderController) HandleRTMP(c *fiber.Ctx) error {
 		return utils.SendCommonProtobufResponse(c, false, err.Error())
 	}
 
-	if req.Task == plugnmeet.RecordingTasks_START_RTMP {
+	if req.Task == wemeet.RecordingTasks_START_RTMP {
 		if req.RtmpUrl == nil {
 			return utils.SendCommonProtobufResponse(c, false, "rtmpUrl required")
 		}
@@ -139,9 +139,9 @@ func (rc *RecorderController) HandleRTMP(c *fiber.Ctx) error {
 		return utils.SendCommonProtobufResponse(c, false, "roomId in token mismatched")
 	}
 
-	if room.IsActiveRtmp == 1 && req.Task == plugnmeet.RecordingTasks_START_RTMP {
+	if room.IsActiveRtmp == 1 && req.Task == wemeet.RecordingTasks_START_RTMP {
 		return utils.SendCommonProtobufResponse(c, false, "RTMP broadcasting already running")
-	} else if room.IsActiveRtmp == 0 && req.Task == plugnmeet.RecordingTasks_STOP_RTMP {
+	} else if room.IsActiveRtmp == 0 && req.Task == wemeet.RecordingTasks_STOP_RTMP {
 		return utils.SendCommonProtobufResponse(c, false, "RTMP broadcasting not running")
 	}
 
@@ -158,7 +158,7 @@ func (rc *RecorderController) HandleRTMP(c *fiber.Ctx) error {
 
 // HandleRecorderEvents handles events coming from the recorder.
 func (rc *RecorderController) HandleRecorderEvents(c *fiber.Ctx) error {
-	req := new(plugnmeet.RecorderToPlugNmeet)
+	req := new(wemeet.RecorderToWeMeet)
 	err := proto.Unmarshal(c.Body(), req)
 	if err != nil {
 		log.Errorln(err)

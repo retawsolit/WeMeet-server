@@ -2,17 +2,18 @@ package controllers
 
 import (
 	"fmt"
-	"github.com/gabriel-vasile/mimetype"
-	"github.com/gofiber/fiber/v2"
-	"github.com/mynaparrot/plugnmeet-protocol/plugnmeet"
-	"github.com/mynaparrot/plugnmeet-protocol/utils"
-	"github.com/mynaparrot/plugnmeet-server/pkg/config"
-	"github.com/mynaparrot/plugnmeet-server/pkg/models"
-	log "github.com/sirupsen/logrus"
-	"google.golang.org/protobuf/proto"
 	"net/url"
 	"strconv"
 	"strings"
+
+	"github.com/gabriel-vasile/mimetype"
+	"github.com/gofiber/fiber/v2"
+	"github.com/retawsolit/WeMeet-protocol/utils"
+	"github.com/retawsolit/WeMeet-protocol/wemeet"
+	"github.com/retawsolit/WeMeet-server/pkg/config"
+	"github.com/retawsolit/WeMeet-server/pkg/models"
+	log "github.com/sirupsen/logrus"
+	"google.golang.org/protobuf/proto"
 )
 
 // FileController holds dependencies for file-related handlers.
@@ -89,7 +90,7 @@ func (fc *FileController) HandleUploadedFileMerge(c *fiber.Ctx) error {
 func (fc *FileController) HandleUploadBase64EncodedData(c *fiber.Ctx) error {
 	roomId := c.Locals("roomId")
 
-	req := new(plugnmeet.UploadBase64EncodedDataReq)
+	req := new(wemeet.UploadBase64EncodedDataReq)
 	err := proto.Unmarshal(c.Body(), req)
 	if err != nil {
 		return utils.SendCommonProtobufResponse(c, false, err.Error())

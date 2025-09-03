@@ -3,17 +3,18 @@ package models
 import (
 	"database/sql"
 	"fmt"
+	"os"
+
 	"github.com/mynaparrot/plugnmeet-protocol/plugnmeet"
 	"github.com/mynaparrot/plugnmeet-server/pkg/config"
 	"github.com/mynaparrot/plugnmeet-server/pkg/dbmodels"
 	"github.com/mynaparrot/plugnmeet-server/pkg/helpers"
 	log "github.com/sirupsen/logrus"
 	"google.golang.org/protobuf/encoding/protojson"
-	"os"
 )
 
 // recordingStarted update when recorder will start recording
-func (m *RecordingModel) recordingStarted(r *plugnmeet.RecorderToPlugNmeet) {
+func (m *RecordingModel) recordingStarted(r *plugnmeet.RecorderToWeMeet) {
 	_, err := m.ds.UpdateRoomRecordingStatus(uint64(r.RoomTableId), 1, &r.RecorderId)
 	if err != nil {
 		log.Infoln(err)
@@ -39,7 +40,7 @@ func (m *RecordingModel) recordingStarted(r *plugnmeet.RecorderToPlugNmeet) {
 	}
 }
 
-func (m *RecordingModel) addRecordingInfoToDB(r *plugnmeet.RecorderToPlugNmeet, roomCreationTime int64) (int64, error) {
+func (m *RecordingModel) addRecordingInfoToDB(r *plugnmeet.RecorderToWeMeet, roomCreationTime int64) (int64, error) {
 	v := sql.NullString{
 		String: r.RoomSid,
 		Valid:  true,
@@ -68,7 +69,7 @@ func (m *RecordingModel) addRecordingInfoToDB(r *plugnmeet.RecorderToPlugNmeet, 
 // using this recording info file we can import those recordings
 // or will get an idea about the recording
 // format: path/recording_file_name.{mp4|webm}.json
-func (m *RecordingModel) addRecordingInfoFile(r *plugnmeet.RecorderToPlugNmeet, creation int64, roomInfo *dbmodels.RoomInfo) {
+func (m *RecordingModel) addRecordingInfoFile(r *plugnmeet.RecorderToWeMeet, creation int64, roomInfo *dbmodels.RoomInfo) {
 	toRecord := &plugnmeet.RecordingInfoFile{
 		RoomTableId:      r.RoomTableId,
 		RoomId:           r.RoomId,

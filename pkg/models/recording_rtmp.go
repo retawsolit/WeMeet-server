@@ -5,7 +5,7 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-func (m *RecordingModel) rtmpStarted(r *plugnmeet.RecorderToPlugNmeet) {
+func (m *RecordingModel) rtmpStarted(r *plugnmeet.RecorderToWeMeet) {
 	_, err := m.ds.UpdateRoomRTMPStatus(uint64(r.RoomTableId), 1, &r.RecorderId)
 	if err != nil {
 		log.Infoln(err)
@@ -31,7 +31,7 @@ func (m *RecordingModel) rtmpStarted(r *plugnmeet.RecorderToPlugNmeet) {
 }
 
 // rtmpEnded will call when the recorder ends rtmp broadcasting
-func (m *RecordingModel) rtmpEnded(r *plugnmeet.RecorderToPlugNmeet) {
+func (m *RecordingModel) rtmpEnded(r *plugnmeet.RecorderToWeMeet) {
 	_, err := m.ds.UpdateRoomRTMPStatus(uint64(r.RoomTableId), 0, nil)
 	if err != nil {
 		log.Infoln(err)

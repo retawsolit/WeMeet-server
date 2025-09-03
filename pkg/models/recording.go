@@ -5,10 +5,9 @@ import (
 	"github.com/mynaparrot/plugnmeet-server/pkg/config"
 	"github.com/mynaparrot/plugnmeet-server/pkg/dbmodels"
 	"github.com/mynaparrot/plugnmeet-server/pkg/helpers"
-	"github.com/mynaparrot/plugnmeet-server/pkg/services/db"
-	"github.com/mynaparrot/plugnmeet-server/pkg/services/livekit"
 	natsservice "github.com/mynaparrot/plugnmeet-server/pkg/services/nats"
-	"github.com/mynaparrot/plugnmeet-server/pkg/services/redis"
+	dbservice "github.com/retawsolit/WeMeet-server/pkg/services/db"
+	redisservice "github.com/retawsolit/WeMeet-server/pkg/services/redis"
 	log "github.com/sirupsen/logrus"
 )
 
@@ -43,7 +42,7 @@ func NewRecordingModel(app *config.AppConfig, ds *dbservice.DatabaseService, rs 
 	}
 }
 
-func (m *RecordingModel) HandleRecorderResp(r *plugnmeet.RecorderToPlugNmeet, roomInfo *dbmodels.RoomInfo) {
+func (m *RecordingModel) HandleRecorderResp(r *plugnmeet.RecorderToWeMeet, roomInfo *dbmodels.RoomInfo) {
 	switch r.Task {
 	case plugnmeet.RecordingTasks_START_RECORDING:
 		m.recordingStarted(r)
@@ -72,7 +71,7 @@ func (m *RecordingModel) HandleRecorderResp(r *plugnmeet.RecorderToPlugNmeet, ro
 	}
 }
 
-func (m *RecordingModel) sendToWebhookNotifier(r *plugnmeet.RecorderToPlugNmeet) {
+func (m *RecordingModel) sendToWebhookNotifier(r *plugnmeet.RecorderToWeMeet) {
 	tk := r.Task.String()
 	n := m.webhookNotifier
 	if n != nil {

@@ -2,8 +2,8 @@ package controllers
 
 import (
 	"github.com/gofiber/fiber/v2"
-	"github.com/mynaparrot/plugnmeet-protocol/plugnmeet"
-	"github.com/mynaparrot/plugnmeet-server/pkg/models"
+	"github.com/retawsolit/WeMeet-protocol/wemeet"
+	"github.com/retawsolit/WeMeet-server/pkg/models"
 	"google.golang.org/protobuf/proto"
 )
 
@@ -23,7 +23,7 @@ func NewIngressController(im *models.IngressModel) *IngressController {
 func (ic *IngressController) HandleCreateIngress(c *fiber.Ctx) error {
 	roomId := c.Locals("roomId")
 	isAdmin := c.Locals("isAdmin")
-	res := new(plugnmeet.CreateIngressRes)
+	res := new(wemeet.CreateIngressRes)
 	res.Status = false
 
 	if !isAdmin.(bool) {
@@ -31,7 +31,7 @@ func (ic *IngressController) HandleCreateIngress(c *fiber.Ctx) error {
 		return sendCreateIngressResponse(c, res)
 	}
 
-	req := new(plugnmeet.CreateIngressReq)
+	req := new(wemeet.CreateIngressReq)
 	err := proto.Unmarshal(c.Body(), req)
 	if err != nil {
 		res.Msg = err.Error()
@@ -53,7 +53,7 @@ func (ic *IngressController) HandleCreateIngress(c *fiber.Ctx) error {
 	return sendCreateIngressResponse(c, res)
 }
 
-func sendCreateIngressResponse(c *fiber.Ctx, res *plugnmeet.CreateIngressRes) error {
+func sendCreateIngressResponse(c *fiber.Ctx, res *wemeet.CreateIngressRes) error {
 	marshal, err := proto.Marshal(res)
 	if err != nil {
 		return err

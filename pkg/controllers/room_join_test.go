@@ -9,11 +9,10 @@ import (
 	"testing"
 	"time"
 
-	"github.com/mynaparrot/plugnmeet-protocol/plugnmeet"
-	"github.com/mynaparrot/plugnmeet-server/pkg/config"
 	"github.com/nats-io/nats.go"
 	"github.com/nats-io/nats.go/jetstream"
-	"github.com/retawsolit/!we!meet-protocol/wemeet backup moi"
+	"github.com/retawsolit/WeMeet-protocol/wemeet"
+	"github.com/retawsolit/WeMeet-server/pkg/config"
 	"github.com/stretchr/testify/assert"
 	"google.golang.org/protobuf/encoding/protojson"
 	"google.golang.org/protobuf/proto"
@@ -40,7 +39,7 @@ func testValidateJoinToken(t *testing.T, token string) {
 		assert.NoError(t, err)
 
 		// Read and unmarshal response
-		respBody := new(plugnmeet.VerifyTokenRes)
+		respBody := new(wemeet.VerifyTokenRes)
 		err = proto.Unmarshal(buf.Bytes(), respBody)
 		assert.NoError(t, err)
 
@@ -59,7 +58,7 @@ func testValidateJoinToken(t *testing.T, token string) {
 	})
 }
 
-func testNatsJoin(t *testing.T, token string, natsSubjects *plugnmeet.NatsSubjects) {
+func testNatsJoin(t *testing.T, token string, natsSubjects *wemeet.NatsSubjects) {
 	t.Run("Test_Nats_Join", func(t *testing.T) {
 		nc, err := nats.Connect(strings.Join(config.GetConfig().NatsInfo.NatsUrls, ","), nats.Token(token))
 		if !assert.NoError(t, err) {
@@ -92,14 +91,14 @@ func testNatsJoin(t *testing.T, token string, natsSubjects *plugnmeet.NatsSubjec
 					msg.Ack()
 					close(done)
 				}()
-				res := new(plugnmeet.NatsMsgServerToClient)
+				res := new(wemeet.NatsMsgServerToClient)
 				err := proto.Unmarshal(msg.Data(), res)
 				if !assert.NoError(t, err) {
 					return
 				}
 				switch res.Event {
-				case plugnmeet.NatsMsgServerToClientEvents_RES_INITIAL_DATA:
-					data := new(plugnmeet.NatsInitialData)
+				case wemeet.NatsMsgServerToClientEvents_RES_INITIAL_DATA:
+					data := new(wemeet.NatsInitialData)
 					err := protojson.Unmarshal([]byte(res.Msg), data)
 					if !assert.NoError(t, err) {
 						return
@@ -115,7 +114,7 @@ func testNatsJoin(t *testing.T, token string, natsSubjects *plugnmeet.NatsSubjec
 		// send a test
 		subj := fmt.Sprintf("%s.%s.%s", natsSubjects.SystemJsWorker, roomId, userId)
 		payload, err := proto.Marshal(&wemeet.NatsMsgClientToServer{
-			Event: plugnmeet.NatsMsgClientToServerEvents_REQ_INITIAL_DATA,
+			Event: wemeet.NatsMsgClientToServerEvents_REQ_INITIAL_DATA,
 		})
 		if !assert.NoError(t, err) {
 			// not possible to continue

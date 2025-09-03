@@ -5,7 +5,7 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-func (m *RecordingModel) recordingEnded(r *plugnmeet.RecorderToPlugNmeet) {
+func (m *RecordingModel) recordingEnded(r *plugnmeet.RecorderToWeMeet) {
 	_, err := m.ds.UpdateRoomRecordingStatus(uint64(r.RoomTableId), 0, nil)
 	if err != nil {
 		log.Infoln(err)

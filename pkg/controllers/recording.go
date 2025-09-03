@@ -2,10 +2,9 @@ package controllers
 
 import (
 	"github.com/gofiber/fiber/v2"
-	"github.com/mynaparrot/plugnmeet-protocol/plugnmeet"
-	"github.com/mynaparrot/plugnmeet-protocol/utils"
-	"github.com/mynaparrot/plugnmeet-server/pkg/models"
-	"github.com/retawsolit/!we!meet-protocol/wemeet backup moi"
+	"github.com/retawsolit/WeMeet-protocol/utils"
+	"github.com/retawsolit/WeMeet-protocol/wemeet"
+	"github.com/retawsolit/WeMeet-server/pkg/models"
 )
 
 // RecordingController holds dependencies for recording-related handlers.
@@ -22,7 +21,7 @@ func NewRecordingController(m *models.RecordingModel) *RecordingController {
 
 // HandleFetchRecordings handles fetching recordings.
 func (rc *RecordingController) HandleFetchRecordings(c *fiber.Ctx) error {
-	req := new(plugnmeet.FetchRecordingsReq)
+	req := new(wemeet.FetchRecordingsReq)
 	if err := parseAndValidateRequest(c.Body(), req); err != nil {
 		return utils.SendCommonProtoJsonResponse(c, false, err.Error())
 	}
@@ -45,7 +44,7 @@ func (rc *RecordingController) HandleFetchRecordings(c *fiber.Ctx) error {
 
 // HandleRecordingInfo handles fetching information for a single recording.
 func (rc *RecordingController) HandleRecordingInfo(c *fiber.Ctx) error {
-	req := new(plugnmeet.RecordingInfoReq)
+	req := new(wemeet.RecordingInfoReq)
 	if err := parseAndValidateRequest(c.Body(), req); err != nil {
 		return utils.SendCommonProtoJsonResponse(c, false, err.Error())
 	}
@@ -60,7 +59,7 @@ func (rc *RecordingController) HandleRecordingInfo(c *fiber.Ctx) error {
 
 // HandleDeleteRecording handles deleting a recording.
 func (rc *RecordingController) HandleDeleteRecording(c *fiber.Ctx) error {
-	req := new(plugnmeet.DeleteRecordingReq)
+	req := new(wemeet.DeleteRecordingReq)
 	if err := parseAndValidateRequest(c.Body(), req); err != nil {
 		return utils.SendCommonProtoJsonResponse(c, false, err.Error())
 	}
@@ -75,7 +74,7 @@ func (rc *RecordingController) HandleDeleteRecording(c *fiber.Ctx) error {
 
 // HandleGetDownloadToken handles generating a download token for a recording.
 func (rc *RecordingController) HandleGetDownloadToken(c *fiber.Ctx) error {
-	req := new(plugnmeet.GetDownloadTokenReq)
+	req := new(wemeet.GetDownloadTokenReq)
 	if err := parseAndValidateRequest(c.Body(), req); err != nil {
 		return utils.SendCommonProtoJsonResponse(c, false, err.Error())
 	}

@@ -5,12 +5,12 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/mynaparrot/plugnmeet-protocol/plugnmeet"
-	"github.com/mynaparrot/plugnmeet-server/pkg/config"
-	"github.com/mynaparrot/plugnmeet-server/pkg/models"
 	"github.com/nats-io/jwt/v2"
 	"github.com/nats-io/nats.go/micro"
 	"github.com/nats-io/nkeys"
+	"github.com/retawsolit/WeMeet-protocol/wemeet"
+	"github.com/retawsolit/WeMeet-server/pkg/config"
+	"github.com/retawsolit/WeMeet-server/pkg/models"
 	natsservice "github.com/retawsolit/WeMeet-server/pkg/services/nats"
 	log "github.com/sirupsen/logrus"
 )
@@ -105,7 +105,7 @@ func (s *NatsAuthController) handleClaims(req *jwt.AuthorizationRequestClaims) (
 	return claims, nil
 }
 
-func (s *NatsAuthController) setPermissionForRecorder(data *plugnmeet.PlugNmeetTokenClaims, claims *jwt.UserClaims) {
+func (s *NatsAuthController) setPermissionForRecorder(data *wemeet.WeMeetTokenClaims, claims *jwt.UserClaims) {
 	pubAllow := jwt.StringList{
 		"$JS.API.INFO",
 		"_INBOX.>", // otherwise won't be able to send respond msg
@@ -129,7 +129,7 @@ func (s *NatsAuthController) setPermissionForRecorder(data *plugnmeet.PlugNmeetT
 	}
 }
 
-func (s *NatsAuthController) setPermissionForClient(data *plugnmeet.PlugNmeetTokenClaims, claims *jwt.UserClaims) error {
+func (s *NatsAuthController) setPermissionForClient(data *wemeet.WeMeetTokenClaims, claims *jwt.UserClaims) error {
 	roomId := data.GetRoomId()
 	userId := data.GetUserId()
 

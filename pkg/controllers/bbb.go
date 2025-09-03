@@ -10,11 +10,11 @@ import (
 
 	"github.com/goccy/go-json"
 	"github.com/gofiber/fiber/v2"
-	"github.com/mynaparrot/plugnmeet-protocol/bbbapiwrapper"
-	"github.com/mynaparrot/plugnmeet-server/pkg/config"
-	"github.com/mynaparrot/plugnmeet-server/pkg/models"
-	natsservice "github.com/mynaparrot/plugnmeet-server/pkg/services/nats"
-	"github.com/retawsolit/!we!meet-protocol/wemeet backup moi"
+	"github.com/retawsolit/WeMeet-protocol/bbbapiwrapper"
+	"github.com/retawsolit/WeMeet-protocol/wemeet"
+	"github.com/retawsolit/WeMeet-server/pkg/config"
+	"github.com/retawsolit/WeMeet-server/pkg/models"
+	natsservice "github.com/retawsolit/WeMeet-server/pkg/services/nats"
 	"google.golang.org/protobuf/encoding/protojson"
 )
 

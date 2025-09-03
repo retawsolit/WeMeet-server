@@ -2,9 +2,9 @@ package controllers
 
 import (
 	"github.com/gofiber/fiber/v2"
-	"github.com/mynaparrot/plugnmeet-protocol/plugnmeet"
-	"github.com/mynaparrot/plugnmeet-protocol/utils"
-	"github.com/mynaparrot/plugnmeet-server/pkg/models"
+	"github.com/retawsolit/WeMeet-protocol/utils"
+	"github.com/retawsolit/WeMeet-protocol/wemeet"
+	"github.com/retawsolit/WeMeet-server/pkg/models"
 	"google.golang.org/protobuf/proto"
 )
 
@@ -28,7 +28,7 @@ func (stc *SpeechToTextController) HandleSpeechToTextTranslationServiceStatus(c 
 		return utils.SendCommonProtobufResponse(c, false, "only admin can perform this task")
 	}
 
-	req := new(plugnmeet.SpeechToTextTranslationReq)
+	req := new(wemeet.SpeechToTextTranslationReq)
 	err := proto.Unmarshal(c.Body(), req)
 	if err != nil {
 		return utils.SendCommonProtobufResponse(c, false, err.Error())
@@ -48,7 +48,7 @@ func (stc *SpeechToTextController) HandleGenerateAzureToken(c *fiber.Ctx) error 
 	roomId := c.Locals("roomId")
 	requestedUserId := c.Locals("requestedUserId")
 
-	req := new(plugnmeet.GenerateAzureTokenReq)
+	req := new(wemeet.GenerateAzureTokenReq)
 	err := proto.Unmarshal(c.Body(), req)
 	if err != nil {
 		return utils.SendCommonProtobufResponse(c, false, err.Error())
@@ -68,7 +68,7 @@ func (stc *SpeechToTextController) HandleSpeechServiceUserStatus(c *fiber.Ctx) e
 	roomId := c.Locals("roomId")
 	requestedUserId := c.Locals("requestedUserId")
 
-	req := new(plugnmeet.SpeechServiceUserStatusReq)
+	req := new(wemeet.SpeechServiceUserStatusReq)
 	err := proto.Unmarshal(c.Body(), req)
 	if err != nil {
 		return utils.SendCommonProtobufResponse(c, false, err.Error())
@@ -93,7 +93,7 @@ func (stc *SpeechToTextController) HandleRenewAzureToken(c *fiber.Ctx) error {
 	roomId := c.Locals("roomId")
 	requestedUserId := c.Locals("requestedUserId")
 
-	req := new(plugnmeet.AzureTokenRenewReq)
+	req := new(wemeet.AzureTokenRenewReq)
 	err := proto.Unmarshal(c.Body(), req)
 	if err != nil {
 		return utils.SendCommonProtobufResponse(c, false, err.Error())

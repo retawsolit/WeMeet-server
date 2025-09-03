@@ -2,13 +2,12 @@ package controllers
 
 import (
 	"github.com/gofiber/fiber/v2"
-	"github.com/mynaparrot/plugnmeet-protocol/plugnmeet"
-	"github.com/mynaparrot/plugnmeet-protocol/utils"
-	"github.com/mynaparrot/plugnmeet-server/pkg/config"
-	"github.com/mynaparrot/plugnmeet-server/pkg/models"
-	dbservice "github.com/mynaparrot/plugnmeet-server/pkg/services/db"
-	natsservice "github.com/mynaparrot/plugnmeet-server/pkg/services/nats"
-	"github.com/retawsolit/!we!meet-protocol/wemeet backup moi"
+	"github.com/retawsolit/WeMeet-protocol/utils"
+	"github.com/retawsolit/WeMeet-protocol/wemeet"
+	"github.com/retawsolit/WeMeet-server/pkg/config"
+	"github.com/retawsolit/WeMeet-server/pkg/models"
+	dbservice "github.com/retawsolit/WeMeet-server/pkg/services/db"
+	natsservice "github.com/retawsolit/WeMeet-server/pkg/services/nats"
 	"google.golang.org/protobuf/proto"
 )
 
@@ -32,7 +31,7 @@ func NewUserController(appConfig *config.AppConfig, userModel *models.UserModel,
 
 // HandleGenerateJoinToken handles generating a join token for a user.
 func (uc *UserController) HandleGenerateJoinToken(c *fiber.Ctx) error {
-	req := new(plugnmeet.GenerateTokenReq)
+	req := new(wemeet.GenerateTokenReq)
 	if err := parseAndValidateRequest(c.Body(), req); err != nil {
 		return utils.SendCommonProtoJsonResponse(c, false, err.Error())
 	}
@@ -76,7 +75,7 @@ func (uc *UserController) HandleUpdateUserLockSetting(c *fiber.Ctx) error {
 		return utils.SendCommonProtobufResponse(c, false, "only admin can perform this task")
 	}
 
-	req := new(plugnmeet.UpdateUserLockSettingsReq)
+	req := new(wemeet.UpdateUserLockSettingsReq)
 	err := proto.Unmarshal(c.Body(), req)
 	if err != nil {
 		return utils.SendCommonProtobufResponse(c, false, err.Error())
@@ -118,7 +117,7 @@ func (uc *UserController) HandleMuteUnMuteTrack(c *fiber.Ctx) error {
 		return utils.SendCommonProtobufResponse(c, false, err.Error())
 	}
 
-	req := new(plugnmeet.MuteUnMuteTrackReq)
+	req := new(wemeet.MuteUnMuteTrackReq)
 	err = proto.Unmarshal(c.Body(), req)
 	if err != nil {
 		return utils.SendCommonProtobufResponse(c, false, err.Error())
@@ -159,7 +158,7 @@ func (uc *UserController) HandleRemoveParticipant(c *fiber.Ctx) error {
 		return utils.SendCommonProtobufResponse(c, false, err.Error())
 	}
 
-	req := new(plugnmeet.RemoveParticipantReq)
+	req := new(wemeet.RemoveParticipantReq)
 	err = proto.Unmarshal(c.Body(), req)
 	if err != nil {
 		return utils.SendCommonProtobufResponse(c, false, err.Error())
@@ -197,7 +196,7 @@ func (uc *UserController) HandleSwitchPresenter(c *fiber.Ctx) error {
 		return utils.SendCommonProtobufResponse(c, false, "only admin can perform this task")
 	}
 
-	req := new(plugnmeet.SwitchPresenterReq)
+	req := new(wemeet.SwitchPresenterReq)
 	err := proto.Unmarshal(c.Body(), req)
 	if err != nil {
 		return utils.SendCommonProtobufResponse(c, false, err.Error())

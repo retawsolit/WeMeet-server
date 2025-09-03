@@ -2,9 +2,9 @@ package controllers
 
 import (
 	"github.com/gofiber/fiber/v2"
-	"github.com/mynaparrot/plugnmeet-protocol/plugnmeet"
-	"github.com/mynaparrot/plugnmeet-protocol/utils"
-	"github.com/mynaparrot/plugnmeet-server/pkg/models"
+	"github.com/retawsolit/WeMeet-protocol/utils"
+	"github.com/retawsolit/WeMeet-protocol/wemeet"
+	"github.com/retawsolit/WeMeet-server/pkg/models"
 	"google.golang.org/protobuf/proto"
 )
 
@@ -29,7 +29,7 @@ func (wrc *WaitingRoomController) HandleApproveUsers(c *fiber.Ctx) error {
 		return utils.SendCommonProtobufResponse(c, false, "only admin can perform this task")
 	}
 
-	req := new(plugnmeet.ApproveWaitingUsersReq)
+	req := new(wemeet.ApproveWaitingUsersReq)
 	err := proto.Unmarshal(c.Body(), req)
 	if err != nil {
 		return utils.SendCommonProtobufResponse(c, false, err.Error())
@@ -53,7 +53,7 @@ func (wrc *WaitingRoomController) HandleUpdateWaitingRoomMessage(c *fiber.Ctx) e
 		return utils.SendCommonProtobufResponse(c, false, "only admin can perform this task")
 	}
 
-	req := new(plugnmeet.UpdateWaitingRoomMessageReq)
+	req := new(wemeet.UpdateWaitingRoomMessageReq)
 	err := proto.Unmarshal(c.Body(), req)
 	if err != nil {
 		return utils.SendCommonProtobufResponse(c, false, err.Error())

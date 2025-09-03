@@ -4,21 +4,22 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"github.com/mynaparrot/plugnmeet-protocol/plugnmeet"
-	"github.com/mynaparrot/plugnmeet-server/pkg/config"
-	"github.com/mynaparrot/plugnmeet-server/pkg/models"
-	"github.com/mynaparrot/plugnmeet-server/version"
-	"github.com/nats-io/nats.go"
-	"github.com/nats-io/nats.go/jetstream"
-	"github.com/nats-io/nats.go/micro"
-	"github.com/nats-io/nkeys"
-	log "github.com/sirupsen/logrus"
-	"google.golang.org/protobuf/proto"
 	"os"
 	"os/signal"
 	"strings"
 	"sync"
 	"syscall"
+
+	"github.com/nats-io/nats.go"
+	"github.com/nats-io/nats.go/jetstream"
+	"github.com/nats-io/nats.go/micro"
+	"github.com/nats-io/nkeys"
+	"github.com/retawsolit/WeMeet-protocol/wemeet"
+	"github.com/retawsolit/WeMeet-server/pkg/config"
+	"github.com/retawsolit/WeMeet-server/pkg/models"
+	"github.com/retawsolit/WeMeet-server/version"
+	log "github.com/sirupsen/logrus"
+	"google.golang.org/protobuf/proto"
 )
 
 type NatsController struct {
@@ -157,7 +158,7 @@ func (c *NatsController) subscribeToSystemWorker(stream jetstream.Stream) {
 	_, err = cons.Consume(func(msg jetstream.Msg) {
 		defer msg.Ack()
 		go func(sub string, data []byte) {
-			req := new(plugnmeet.NatsMsgClientToServer)
+			req := new(wemeet.NatsMsgClientToServer)
 			if err := proto.Unmarshal(data, req); err == nil {
 				p := strings.Split(sub, ".")
 				if len(p) == 3 {

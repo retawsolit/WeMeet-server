@@ -6,8 +6,7 @@ import (
 	"testing"
 
 	"github.com/gofiber/fiber/v2"
-	"github.com/mynaparrot/plugnmeet-protocol/plugnmeet"
-	"github.com/retawsolit/!we!meet-protocol/wemeet backup moi"
+	"github.com/retawsolit/WeMeet-protocol/wemeet"
 	"github.com/stretchr/testify/assert"
 	"google.golang.org/protobuf/encoding/protojson"
 )
@@ -53,7 +52,7 @@ func TestHandleRoomCreate(t *testing.T) {
 	assert.Equal(t, 200, resp.StatusCode)
 
 	// Read and unmarshal response
-	respBody := new(plugnmeet.CreateRoomRes)
+	respBody := new(wemeet.CreateRoomRes)
 	buf := new(bytes.Buffer)
 	_, err = buf.ReadFrom(resp.Body)
 	assert.NoError(t, err)
@@ -92,7 +91,7 @@ func TestHandleGetJoinToken(t *testing.T) {
 	assert.Equal(t, 200, resp.StatusCode)
 
 	// Read and unmarshal response
-	respBody := new(plugnmeet.GenerateTokenRes)
+	respBody := new(wemeet.GenerateTokenRes)
 	buf := new(bytes.Buffer)
 	_, err = buf.ReadFrom(resp.Body)
 	assert.NoError(t, err)
@@ -127,7 +126,7 @@ func TestHandleIsRoomActive(t *testing.T) {
 	assert.Equal(t, 200, resp.StatusCode)
 
 	// Read and unmarshal response
-	respBody := new(plugnmeet.IsRoomActiveRes)
+	respBody := new(wemeet.IsRoomActiveRes)
 	buf := new(bytes.Buffer)
 	_, err = buf.ReadFrom(resp.Body)
 	assert.NoError(t, err)
@@ -157,7 +156,7 @@ func TestHandleGetActiveRoomInfo(t *testing.T) {
 	assert.Equal(t, 200, resp.StatusCode)
 
 	// Read and unmarshal response
-	respBody := new(plugnmeet.GetActiveRoomInfoRes)
+	respBody := new(wemeet.GetActiveRoomInfoRes)
 	buf := new(bytes.Buffer)
 	_, err = buf.ReadFrom(resp.Body)
 	assert.NoError(t, err)
@@ -182,7 +181,7 @@ func TestHandleGetActiveRoomsInfo(t *testing.T) {
 	assert.Equal(t, 200, resp.StatusCode)
 
 	// Read and unmarshal response
-	respBody := new(plugnmeet.GetActiveRoomsInfoRes)
+	respBody := new(wemeet.GetActiveRoomsInfoRes)
 	buf := new(bytes.Buffer)
 	_, err = buf.ReadFrom(resp.Body)
 	assert.NoError(t, err)
@@ -212,7 +211,7 @@ func TestHandleEndRoom(t *testing.T) {
 	assert.Equal(t, 200, resp.StatusCode)
 
 	// Read and unmarshal response
-	respBody := new(plugnmeet.RoomEndRes)
+	respBody := new(wemeet.RoomEndRes)
 	buf := new(bytes.Buffer)
 	_, err = buf.ReadFrom(resp.Body)
 	assert.NoError(t, err)
@@ -241,7 +240,7 @@ func TestHandleFetchPastRooms(t *testing.T) {
 	assert.Equal(t, 200, resp.StatusCode)
 
 	// Read and unmarshal response
-	respBody := new(plugnmeet.FetchPastRoomsRes)
+	respBody := new(wemeet.FetchPastRoomsRes)
 	buf := new(bytes.Buffer)
 	_, err = buf.ReadFrom(resp.Body)
 	assert.NoError(t, err)

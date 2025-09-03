@@ -1,13 +1,14 @@
 package controllers
 
 import (
-	"github.com/gofiber/fiber/v2"
-	"github.com/mynaparrot/plugnmeet-protocol/plugnmeet"
-	"github.com/mynaparrot/plugnmeet-protocol/utils"
-	"github.com/mynaparrot/plugnmeet-server/pkg/models"
-	"github.com/mynaparrot/plugnmeet-server/pkg/services/redis"
-	"google.golang.org/protobuf/proto"
 	"strconv"
+
+	"github.com/gofiber/fiber/v2"
+	"github.com/retawsolit/WeMeet-protocol/utils"
+	"github.com/retawsolit/WeMeet-protocol/wemeet"
+	"github.com/retawsolit/WeMeet-server/pkg/models"
+	redisservice "github.com/retawsolit/WeMeet-server/pkg/services/redis"
+	"google.golang.org/protobuf/proto"
 )
 
 // PollsController holds dependencies for poll-related handlers.
@@ -38,7 +39,7 @@ func (pc *PollsController) HandleActivatePolls(c *fiber.Ctx) error {
 		return utils.SendCommonProtobufResponse(c, false, "roomId required")
 	}
 
-	req := new(plugnmeet.ActivatePollsReq)
+	req := new(wemeet.ActivatePollsReq)
 	err := proto.Unmarshal(c.Body(), req)
 	if err != nil {
 		return utils.SendCommonProtobufResponse(c, false, err.Error())
@@ -56,7 +57,7 @@ func (pc *PollsController) HandleCreatePoll(c *fiber.Ctx) error {
 	roomId := c.Locals("roomId")
 	isAdmin := c.Locals("isAdmin")
 	requestedUserId := c.Locals("requestedUserId")
-	res := new(plugnmeet.PollResponse)
+	res := new(wemeet.PollResponse)
 	res.Status = false
 
 	if !isAdmin.(bool) {
@@ -64,7 +65,7 @@ func (pc *PollsController) HandleCreatePoll(c *fiber.Ctx) error {
 		return sendPollResponse(c, res)
 	}
 
-	req := new(plugnmeet.CreatePollReq)
+	req := new(wemeet.CreatePollReq)
 	err := proto.Unmarshal(c.Body(), req)
 	if err != nil {
 		res.Msg = err.Error()
@@ -88,7 +89,7 @@ func (pc *PollsController) HandleCreatePoll(c *fiber.Ctx) error {
 // HandleListPolls lists all polls for a room.
 func (pc *PollsController) HandleListPolls(c *fiber.Ctx) error {
 	roomId := c.Locals("roomId")
-	res := new(plugnmeet.PollResponse)
+	res := new(wemeet.PollResponse)
 	res.Status = false
 
 	polls, err := pc.PollModel.ListPolls(roomId.(string))
@@ -107,7 +108,7 @@ func (pc *PollsController) HandleListPolls(c *fiber.Ctx) error {
 func (pc *PollsController) HandleCountPollTotalResponses(c *fiber.Ctx) error {
 	roomId := c.Locals("roomId")
 	pollId := c.Params("pollId")
-	res := new(plugnmeet.PollResponse)
+	res := new(wemeet.PollResponse)
 	res.Status = false
 
 	if pollId == "" {
@@ -139,7 +140,7 @@ func (pc *PollsController) HandleUserSelectedOption(c *fiber.Ctx) error {
 	roomId := c.Locals("roomId")
 	pollId := c.Params("pollId")
 	userId := c.Params("userId")
-	res := new(plugnmeet.PollResponse)
+	res := new(wemeet.PollResponse)
 	res.Status = false
 
 	if pollId == "" || userId == "" {
@@ -159,10 +160,10 @@ func (pc *PollsController) HandleUserSelectedOption(c *fiber.Ctx) error {
 // HandleUserSubmitResponse handles a user's poll submission.
 func (pc *PollsController) HandleUserSubmitResponse(c *fiber.Ctx) error {
 	roomId := c.Locals("roomId")
-	res := new(plugnmeet.PollResponse)
+	res := new(wemeet.PollResponse)
 	res.Status = false
 
-	req := new(plugnmeet.SubmitPollResponseReq)
+	req := new(wemeet.SubmitPollResponseReq)
 	err := proto.Unmarshal(c.Body(), req)
 	if err != nil {
 		res.Msg = err.Error()
@@ -187,7 +188,7 @@ func (pc *PollsController) HandleClosePoll(c *fiber.Ctx) error {
 	roomId := c.Locals("roomId")
 	isAdmin := c.Locals("isAdmin")
 	requestedUserId := c.Locals("requestedUserId")
-	res := new(plugnmeet.PollResponse)
+	res := new(wemeet.PollResponse)
 	res.Status = false
 
 	if !isAdmin.(bool) {
@@ -195,7 +196,7 @@ func (pc *PollsController) HandleClosePoll(c *fiber.Ctx) error {
 		return sendPollResponse(c, res)
 	}
 
-	req := new(plugnmeet.ClosePollReq)
+	req := new(wemeet.ClosePollReq)
 
 	err := proto.Unmarshal(c.Body(), req)
 	if err != nil {
@@ -222,7 +223,7 @@ func (pc *PollsController) HandleGetPollResponsesDetails(c *fiber.Ctx) error {
 	roomId := c.Locals("roomId")
 	pollId := c.Params("pollId")
 	isAdmin := c.Locals("isAdmin")
-	res := new(plugnmeet.PollResponse)
+	res := new(wemeet.PollResponse)
 	res.Status = false
 
 	if !isAdmin.(bool) {
@@ -252,7 +253,7 @@ func (pc *PollsController) HandleGetPollResponsesDetails(c *fiber.Ctx) error {
 func (pc *PollsController) HandleGetResponsesResult(c *fiber.Ctx) error {
 	roomId := c.Locals("roomId")
 	pollId := c.Params("pollId")
-	res := new(plugnmeet.PollResponse)
+	res := new(wemeet.PollResponse)
 	res.Status = false
 
 	result, err := pc.PollModel.GetResponsesResult(roomId.(string), pollId)
@@ -271,7 +272,7 @@ func (pc *PollsController) HandleGetResponsesResult(c *fiber.Ctx) error {
 // HandleGetPollsStats gets statistics for all polls in a room.
 func (pc *PollsController) HandleGetPollsStats(c *fiber.Ctx) error {
 	roomId := c.Locals("roomId")
-	res := new(plugnmeet.PollResponse)
+	res := new(wemeet.PollResponse)
 	res.Status = false
 
 	stats, err := pc.PollModel.GetPollsStats(roomId.(string))
@@ -286,7 +287,7 @@ func (pc *PollsController) HandleGetPollsStats(c *fiber.Ctx) error {
 	return sendPollResponse(c, res)
 }
 
-func sendPollResponse(c *fiber.Ctx, res *plugnmeet.PollResponse) error {
+func sendPollResponse(c *fiber.Ctx, res *wemeet.PollResponse) error {
 	marshal, err := proto.Marshal(res)
 	if err != nil {
 		return err

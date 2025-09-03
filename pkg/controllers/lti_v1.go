@@ -6,10 +6,9 @@ import (
 
 	"github.com/goccy/go-json"
 	"github.com/gofiber/fiber/v2"
-	"github.com/mynaparrot/plugnmeet-protocol/plugnmeet"
-	"github.com/mynaparrot/plugnmeet-protocol/utils"
-	"github.com/mynaparrot/plugnmeet-server/pkg/models"
-	"github.com/retawsolit/!we!meet-protocol/wemeet backup moi"
+	"github.com/retawsolit/WeMeet-protocol/utils"
+	"github.com/retawsolit/WeMeet-protocol/wemeet"
+	"github.com/retawsolit/WeMeet-server/pkg/models"
 )
 
 // LtiV1Controller holds dependencies for LTI v1 related handlers.
@@ -118,7 +117,7 @@ func (lc *LtiV1Controller) HandleLTIV1JoinRoom(c *fiber.Ctx) error {
 	}
 
 	if len(customParams) > 0 {
-		p := new(plugnmeet.LtiCustomParameters)
+		p := new(wemeet.LtiCustomParameters)
 		err := json.Unmarshal(customParams, p)
 		if err == nil {
 			claim.LtiCustomParameters = p
@@ -166,7 +165,7 @@ func (lc *LtiV1Controller) HandleLTIV1EndRoom(c *fiber.Ctx) error {
 func (lc *LtiV1Controller) HandleLTIV1FetchRecordings(c *fiber.Ctx) error {
 	roomId := c.Locals("roomId")
 
-	req := new(plugnmeet.FetchRecordingsReq)
+	req := new(wemeet.FetchRecordingsReq)
 	err := c.BodyParser(req)
 	if err != nil {
 		return c.JSON(fiber.Map{
@@ -194,7 +193,7 @@ func (lc *LtiV1Controller) HandleLTIV1FetchRecordings(c *fiber.Ctx) error {
 
 // HandleLTIV1GetRecordingDownloadToken gets a download token for a recording.
 func (lc *LtiV1Controller) HandleLTIV1GetRecordingDownloadToken(c *fiber.Ctx) error {
-	req := new(plugnmeet.GetDownloadTokenReq)
+	req := new(wemeet.GetDownloadTokenReq)
 	err := c.BodyParser(req)
 	if err != nil {
 		return c.JSON(fiber.Map{
@@ -229,7 +228,7 @@ func (lc *LtiV1Controller) HandleLTIV1DeleteRecordings(c *fiber.Ctx) error {
 		})
 	}
 
-	req := new(plugnmeet.DeleteRecordingReq)
+	req := new(wemeet.DeleteRecordingReq)
 	err := c.BodyParser(req)
 	if err != nil {
 		return c.JSON(fiber.Map{

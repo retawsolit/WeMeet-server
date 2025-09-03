@@ -3,7 +3,7 @@ package controllers
 import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/livekit/protocol/livekit"
-	"github.com/mynaparrot/plugnmeet-server/pkg/models"
+	"github.com/retawsolit/WeMeet-server/pkg/models"
 )
 
 // WebhookController holds dependencies for webhook-related handlers.
