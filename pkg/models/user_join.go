@@ -4,14 +4,15 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"regexp"
+	"strings"
+	"time"
+
 	"github.com/google/uuid"
 	"github.com/mynaparrot/plugnmeet-protocol/plugnmeet"
 	"github.com/mynaparrot/plugnmeet-server/pkg/config"
 	natsservice "github.com/mynaparrot/plugnmeet-server/pkg/services/nats"
 	log "github.com/sirupsen/logrus"
-	"regexp"
-	"strings"
-	"time"
 )
 
 var validUserIDRegex = regexp.MustCompile("^[a-zA-Z0-9-_]+$")
@@ -110,7 +111,7 @@ func (m *UserModel) GetPNMJoinToken(ctx context.Context, g *plugnmeet.GenerateTo
 		return "", err
 	}
 
-	c := &plugnmeet.PlugNmeetTokenClaims{
+	c := &plugnmeet.WeMeetTokenClaims{
 		Name:     g.UserInfo.Name,
 		UserId:   g.UserInfo.UserId,
 		RoomId:   g.RoomId,

@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/retawsolit/WeMeet-protocol/wemeet"
 )
 
 var analyticsModel *AnalyticsModel

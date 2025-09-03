@@ -2,10 +2,11 @@ package models
 
 import (
 	"fmt"
-	"github.com/mynaparrot/plugnmeet-protocol/bbbapiwrapper"
-	log "github.com/sirupsen/logrus"
 	"strings"
 	"time"
+
+	"github.com/retawsolit/WeMeet-protocol/bbbapiwrapper"
+	log "github.com/sirupsen/logrus"
 )
 
 func (m *BBBApiWrapperModel) GetRecordings(host string, r *bbbapiwrapper.GetRecordingsReq) ([]*bbbapiwrapper.RecordingInfo, *bbbapiwrapper.Pagination, error) {

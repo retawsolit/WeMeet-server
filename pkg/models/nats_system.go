@@ -2,11 +2,12 @@ package models
 
 import (
 	"fmt"
-	"github.com/mynaparrot/plugnmeet-protocol/auth"
-	"github.com/mynaparrot/plugnmeet-protocol/plugnmeet"
-	natsservice "github.com/mynaparrot/plugnmeet-server/pkg/services/nats"
-	log "github.com/sirupsen/logrus"
 	"time"
+
+	"github.com/retawsolit/WeMeet-protocol/auth"
+	"github.com/retawsolit/WeMeet-protocol/wemeet"
+	natsservice "github.com/retawsolit/WeMeet-server/pkg/services/nats"
+	log "github.com/sirupsen/logrus"
 )
 
 func (m *NatsModel) RenewPNMToken(roomId, userId, token string) {
@@ -20,14 +21,14 @@ func (m *NatsModel) RenewPNMToken(roomId, userId, token string) {
 		return
 	}
 
-	err = m.natsService.BroadcastSystemEventToRoom(plugnmeet.NatsMsgServerToClientEvents_RESP_RENEW_PNM_TOKEN, roomId, token, &userId)
+	err = m.natsService.BroadcastSystemEventToRoom(wemeet.NatsMsgServerToClientEvents_RESP_RENEW_PNM_TOKEN, roomId, token, &userId)
 	if err != nil {
 		log.Errorln(fmt.Errorf("error sending RESP_RENEW_PNM_TOKEN event for %s; roomId: %s; msg: %s", userId, roomId, err.Error()))
 	}
 }
 
-func (m *NatsModel) GenerateLivekitToken(roomId string, userInfo *plugnmeet.NatsKvUserInfo) (string, error) {
-	c := &plugnmeet.PlugNmeetTokenClaims{
+func (m *NatsModel) GenerateLivekitToken(roomId string, userInfo *wemeet.NatsKvUserInfo) (string, error) {
+	c := &wemeet.WeMeetTokenClaims{
 		RoomId:  roomId,
 		Name:    userInfo.Name,
 		UserId:  userInfo.UserId,

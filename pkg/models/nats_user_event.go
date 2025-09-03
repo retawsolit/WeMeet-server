@@ -2,9 +2,10 @@ package models
 
 import (
 	"fmt"
-	"github.com/mynaparrot/plugnmeet-protocol/plugnmeet"
-	log "github.com/sirupsen/logrus"
 	"strings"
+
+	"github.com/retawsolit/WeMeet-protocol/wemeet"
+	log "github.com/sirupsen/logrus"
 )
 
 func (m *NatsModel) HandleInitialData(roomId, userId string) {
@@ -40,17 +41,17 @@ func (m *NatsModel) HandleInitialData(roomId, userId string) {
 	}
 	lkHost := strings.Replace(m.app.LivekitInfo.Host, "host.docker.internal", "localhost", 1) // without this you won't be able to connect
 
-	initial := &plugnmeet.NatsInitialData{
+	initial := &wemeet.NatsInitialData{
 		Room:      rInfo,
 		LocalUser: userInfo,
-		MediaServerInfo: &plugnmeet.MediaServerConnInfo{
+		MediaServerInfo: &wemeet.MediaServerConnInfo{
 			Url:   lkHost,
 			Token: token,
 		},
 	}
 
 	// send important info first
-	err = m.natsService.BroadcastSystemEventToRoom(plugnmeet.NatsMsgServerToClientEvents_RES_INITIAL_DATA, roomId, initial, &userId)
+	err = m.natsService.BroadcastSystemEventToRoom(wemeet.NatsMsgServerToClientEvents_RES_INITIAL_DATA, roomId, initial, &userId)
 	if err != nil {
 		log.Warnln(fmt.Sprintf("error sending RES_INITIAL_DATA event userId: %s, roomId: %s, msg: %s", userId, roomId, err.Error()))
 	}
@@ -58,7 +59,7 @@ func (m *NatsModel) HandleInitialData(roomId, userId string) {
 
 func (m *NatsModel) HandleSendUsersList(roomId, userId string) {
 	if users, err := m.natsService.GetOnlineUsersListAsJson(roomId); err == nil && users != nil {
-		err := m.natsService.BroadcastSystemEventToRoom(plugnmeet.NatsMsgServerToClientEvents_RES_JOINED_USERS_LIST, roomId, users, &userId)
+		err := m.natsService.BroadcastSystemEventToRoom(wemeet.NatsMsgServerToClientEvents_RES_JOINED_USERS_LIST, roomId, users, &userId)
 		if err != nil {
 			log.Warnln(fmt.Sprintf("error sending RES_JOINED_USERS_LIST event userId: %s, roomId: %s, msg: %s", userId, roomId, err.Error()))
 		}

@@ -2,6 +2,7 @@ package models
 
 import (
 	"github.com/mynaparrot/plugnmeet-protocol/plugnmeet"
+	"github.com/retawsolit/WeMeet-protocol/wemeet"
 	log "github.com/sirupsen/logrus"
 )
 
@@ -17,7 +18,7 @@ func (m *PollModel) ClosePoll(r *plugnmeet.ClosePollReq) error {
 	}
 
 	// send analytics
-	m.analyticsModel.HandleEvent(&plugnmeet.AnalyticsDataMsg{
+	m.analyticsModel.HandleEvent(&wemeet.AnalyticsDataMsg{
 		EventType: plugnmeet.AnalyticsEventType_ANALYTICS_EVENT_TYPE_ROOM,
 		EventName: plugnmeet.AnalyticsEvents_ANALYTICS_EVENT_ROOM_POLL_ENDED,
 		RoomId:    r.RoomId,

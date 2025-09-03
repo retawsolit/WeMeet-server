@@ -2,10 +2,11 @@ package models
 
 import (
 	"fmt"
-	"github.com/mynaparrot/plugnmeet-protocol/plugnmeet"
-	natsservice "github.com/mynaparrot/plugnmeet-server/pkg/services/nats"
-	log "github.com/sirupsen/logrus"
 	"time"
+
+	"github.com/retawsolit/WeMeet-protocol/wemeet"
+	natsservice "github.com/retawsolit/WeMeet-server/pkg/services/nats"
+	log "github.com/sirupsen/logrus"
 )
 
 func (m *NatsModel) OnAfterUserJoined(roomId, userId string) {
@@ -26,14 +27,14 @@ func (m *NatsModel) OnAfterUserJoined(roomId, userId string) {
 
 	if userInfo, err := m.natsService.GetUserInfo(roomId, userId); err == nil && userInfo != nil {
 		// broadcast this user to everyone
-		err := m.natsService.BroadcastSystemEventToEveryoneExceptUserId(plugnmeet.NatsMsgServerToClientEvents_USER_JOINED, roomId, userInfo, userId)
+		err := m.natsService.BroadcastSystemEventToEveryoneExceptUserId(wemeet.NatsMsgServerToClientEvents_USER_JOINED, roomId, userInfo, userId)
 		if err != nil {
 			log.Warnln(err)
 		}
 		now := fmt.Sprintf("%d", time.Now().UnixMilli())
-		m.analyticsModel.HandleEvent(&plugnmeet.AnalyticsDataMsg{
-			EventType: plugnmeet.AnalyticsEventType_ANALYTICS_EVENT_TYPE_ROOM,
-			EventName: plugnmeet.AnalyticsEvents_ANALYTICS_EVENT_USER_JOINED,
+		m.analyticsModel.HandleEvent(&wemeet.AnalyticsDataMsg{
+			EventType: wemeet.AnalyticsEventType_ANALYTICS_EVENT_TYPE_ROOM,
+			EventName: wemeet.AnalyticsEvents_ANALYTICS_EVENT_USER_JOINED,
 			RoomId:    roomId,
 			UserId:    &userId,
 			UserName:  &userInfo.Name,
@@ -57,7 +58,7 @@ func (m *NatsModel) OnAfterUserDisconnected(roomId, userId string) {
 		return
 	}
 
-	_ = m.natsService.BroadcastSystemEventToEveryoneExceptUserId(plugnmeet.NatsMsgServerToClientEvents_USER_DISCONNECTED, roomId, userInfo, userId)
+	_ = m.natsService.BroadcastSystemEventToEveryoneExceptUserId(wemeet.NatsMsgServerToClientEvents_USER_DISCONNECTED, roomId, userInfo, userId)
 
 	// Schedule to check for offline status after 5 seconds without blocking.
 	time.AfterFunc(5*time.Second, func() {
@@ -66,7 +67,7 @@ func (m *NatsModel) OnAfterUserDisconnected(roomId, userId string) {
 }
 
 // handleOfflineStatus will check if the user is still disconnected and mark them as offline.
-func (m *NatsModel) handleOfflineStatus(roomId, userId string, userInfo *plugnmeet.NatsKvUserInfo) {
+func (m *NatsModel) handleOfflineStatus(roomId, userId string, userInfo *wemeet.NatsKvUserInfo) {
 	status, err := m.natsService.GetRoomUserStatus(roomId, userId)
 	if err == nil && status == natsservice.UserStatusOnline {
 		// User reconnected, do nothing.
@@ -82,7 +83,7 @@ func (m *NatsModel) handleOfflineStatus(roomId, userId string, userInfo *plugnme
 	m.updateUserLeftAnalytics(roomId, userId)
 
 	// now broadcast to everyone
-	_ = m.natsService.BroadcastSystemEventToEveryoneExceptUserId(plugnmeet.NatsMsgServerToClientEvents_USER_OFFLINE, roomId, userInfo, userId)
+	_ = m.natsService.BroadcastSystemEventToEveryoneExceptUserId(wemeet.NatsMsgServerToClientEvents_USER_OFFLINE, roomId, userInfo, userId)
 
 	// Schedule consumer deletion after 30 seconds.
 	time.AfterFunc(30*time.Second, func() {
@@ -106,9 +107,9 @@ func (m *NatsModel) cleanupUserConsumer(roomId, userId string) {
 
 func (m *NatsModel) updateUserLeftAnalytics(roomId, userId string) {
 	now := fmt.Sprintf("%d", time.Now().UnixMilli())
-	m.analyticsModel.HandleEvent(&plugnmeet.AnalyticsDataMsg{
-		EventType: plugnmeet.AnalyticsEventType_ANALYTICS_EVENT_TYPE_USER,
-		EventName: plugnmeet.AnalyticsEvents_ANALYTICS_EVENT_USER_LEFT,
+	m.analyticsModel.HandleEvent(&wemeet.AnalyticsDataMsg{
+		EventType: wemeet.AnalyticsEventType_ANALYTICS_EVENT_TYPE_USER,
+		EventName: wemeet.AnalyticsEvents_ANALYTICS_EVENT_USER_LEFT,
 		RoomId:    roomId,
 		UserId:    &userId,
 		HsetValue: &now,

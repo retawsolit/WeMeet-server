@@ -2,7 +2,9 @@ package models
 
 import (
 	"github.com/retawsolit/WeMeet-server/pkg/config"
+	dbservice "github.com/retawsolit/WeMeet-server/pkg/services/db"
 	natsservice "github.com/retawsolit/WeMeet-server/pkg/services/nats"
+	redisservice "github.com/retawsolit/WeMeet-server/pkg/services/redis"
 )
 
 type BreakoutRoomModel struct {

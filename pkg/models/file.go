@@ -1,9 +1,9 @@
 package models
 
 import (
-	"github.com/mynaparrot/plugnmeet-server/pkg/config"
-	"github.com/mynaparrot/plugnmeet-server/pkg/services/db"
-	natsservice "github.com/mynaparrot/plugnmeet-server/pkg/services/nats"
+	"github.com/retawsolit/WeMeet-server/pkg/config"
+	dbservice "github.com/retawsolit/WeMeet-server/pkg/services/db"
+	natsservice "github.com/retawsolit/WeMeet-server/pkg/services/nats"
 )
 
 type FileModel struct {

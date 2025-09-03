@@ -4,14 +4,15 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"time"
+
 	"github.com/mynaparrot/plugnmeet-protocol/plugnmeet"
 	"github.com/mynaparrot/plugnmeet-server/pkg/config"
-	"github.com/mynaparrot/plugnmeet-server/pkg/services/db"
 	natsservice "github.com/mynaparrot/plugnmeet-server/pkg/services/nats"
-	"github.com/mynaparrot/plugnmeet-server/pkg/services/redis"
 	"github.com/nats-io/nats.go"
+	dbservice "github.com/retawsolit/WeMeet-server/pkg/services/db"
+	redisservice "github.com/retawsolit/WeMeet-server/pkg/services/redis"
 	"google.golang.org/protobuf/proto"
-	"time"
 )
 
 type RecorderModel struct {
@@ -67,7 +68,7 @@ func (m *RecorderModel) SendMsgToRecorder(req *plugnmeet.RecordingReq) error {
 		req.RoomId = rmInfo.RoomId
 	}
 
-	toSend := &plugnmeet.PlugNmeetToRecorder{
+	toSend := &wemeet.PlugNmeetToRecorder{
 		From:        "plugnmeet",
 		RoomTableId: req.RoomTableId,
 		RoomId:      req.RoomId,

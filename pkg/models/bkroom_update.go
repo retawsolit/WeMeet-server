@@ -1,7 +1,7 @@
 package models
 
 import (
-	"github.com/retawsolit/!we!meet-protocol/wemeet backup moi"
+	"github.com/retawsolit/WeMeet-protocol/wemeet"
 	"google.golang.org/protobuf/encoding/protojson"
 )
 

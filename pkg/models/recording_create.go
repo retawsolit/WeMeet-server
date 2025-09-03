@@ -9,6 +9,7 @@ import (
 	"github.com/mynaparrot/plugnmeet-server/pkg/config"
 	"github.com/mynaparrot/plugnmeet-server/pkg/dbmodels"
 	"github.com/mynaparrot/plugnmeet-server/pkg/helpers"
+	"github.com/retawsolit/!we!meet-protocol/wemeet backup moi"
 	log "github.com/sirupsen/logrus"
 	"google.golang.org/protobuf/encoding/protojson"
 )
@@ -70,7 +71,7 @@ func (m *RecordingModel) addRecordingInfoToDB(r *plugnmeet.RecorderToWeMeet, roo
 // or will get an idea about the recording
 // format: path/recording_file_name.{mp4|webm}.json
 func (m *RecordingModel) addRecordingInfoFile(r *plugnmeet.RecorderToWeMeet, creation int64, roomInfo *dbmodels.RoomInfo) {
-	toRecord := &plugnmeet.RecordingInfoFile{
+	toRecord := &wemeet.RecordingInfoFile{
 		RoomTableId:      r.RoomTableId,
 		RoomId:           r.RoomId,
 		RoomTitle:        roomInfo.RoomTitle,

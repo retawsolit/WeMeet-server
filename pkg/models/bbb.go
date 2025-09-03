@@ -1,7 +1,9 @@
 package models
 
 import (
-	"github.com/mynaparrot/plugnmeet-server/pkg/config"
+	"github.com/retawsolit/WeMeet-server/pkg/config"
+	dbservice "github.com/retawsolit/WeMeet-server/pkg/services/db"
+	redisservice "github.com/retawsolit/WeMeet-server/pkg/services/redis"
 )
 
 type BBBApiWrapperModel struct {

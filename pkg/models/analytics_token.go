@@ -10,6 +10,7 @@ import (
 	"github.com/go-jose/go-jose/v4"
 	"github.com/go-jose/go-jose/v4/jwt"
 	"github.com/gofiber/fiber/v2"
+	"github.com/retawsolit/WeMeet-protocol/wemeet"
 )
 
 // GetAnalyticsDownloadToken will use the same JWT token generator as wemeet is using

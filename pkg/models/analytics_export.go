@@ -10,6 +10,7 @@ import (
 	"time"
 
 	"github.com/redis/go-redis/v9"
+	"github.com/retawsolit/WeMeet-protocol/wemeet"
 	"github.com/retawsolit/WeMeet-server/pkg/config"
 	"github.com/retawsolit/WeMeet-server/pkg/dbmodels"
 	"github.com/retawsolit/WeMeet-server/pkg/helpers"

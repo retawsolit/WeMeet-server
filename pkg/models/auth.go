@@ -1,8 +1,8 @@
 package models
 
 import (
+	"github.com/retawsolit/WeMeet-server/pkg/config"
 	natsservice "github.com/retawsolit/WeMeet-server/pkg/services/nats"
-	"github.com/retawsolit/plugnmeet-server/pkg/config"
 )
 
 type AuthModel struct {

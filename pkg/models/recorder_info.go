@@ -3,10 +3,12 @@ package models
 import (
 	"context"
 	"errors"
-	"github.com/mynaparrot/plugnmeet-protocol/plugnmeet"
-	log "github.com/sirupsen/logrus"
 	"net/url"
 	"sort"
+
+	"github.com/mynaparrot/plugnmeet-protocol/plugnmeet"
+	"github.com/retawsolit/!we!meet-protocol/wemeet backup moi"
+	log "github.com/sirupsen/logrus"
 )
 
 func (m *RecorderModel) addTokenAndRecorder(ctx context.Context, req *plugnmeet.RecordingReq, rq *plugnmeet.PlugNmeetToRecorder, userId string) error {
@@ -15,9 +17,9 @@ func (m *RecorderModel) addTokenAndRecorder(ctx context.Context, req *plugnmeet.
 		return errors.New("notifications.no-recorder-available")
 	}
 
-	gt := &plugnmeet.GenerateTokenReq{
+	gt := &wemeet.GenerateTokenReq{
 		RoomId: req.RoomId,
-		UserInfo: &plugnmeet.UserInfo{
+		UserInfo: &wemeet.UserInfo{
 			UserId:   userId,
 			IsHidden: true,
 			IsAdmin:  true,

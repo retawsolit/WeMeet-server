@@ -3,9 +3,8 @@ package models
 import (
 	"errors"
 
-	"github.com/mynaparrot/plugnmeet-protocol/plugnmeet"
-	natsservice "github.com/mynaparrot/plugnmeet-server/pkg/services/nats"
-	"github.com/retawsolit/!we!meet-protocol/wemeet backup moi"
+	"github.com/retawsolit/WeMeet-protocol/wemeet"
+	natsservice "github.com/retawsolit/WeMeet-server/pkg/services/nats"
 	"google.golang.org/protobuf/encoding/protojson"
 )
 
@@ -52,7 +51,7 @@ func (m *BreakoutRoomModel) fetchBreakoutRoom(roomId, breakoutRoomId string) (*w
 		return nil, errors.New("not info found")
 	}
 
-	room := new(plugnmeet.BreakoutRoom)
+	room := new(wemeet.BreakoutRoom)
 	err = protojson.Unmarshal(result, room)
 	if err != nil {
 		return nil, err
@@ -72,7 +71,7 @@ func (m *BreakoutRoomModel) fetchBreakoutRooms(roomId string) ([]*wemeet.Breakou
 
 	var breakoutRooms []*wemeet.BreakoutRoom
 	for i, r := range rooms {
-		room := new(plugnmeet.BreakoutRoom)
+		room := new(wemeet.BreakoutRoom)
 		err := protojson.Unmarshal(r, room)
 		if err != nil {
 			continue

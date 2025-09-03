@@ -1,9 +1,10 @@
 package models
 
 import (
-	"github.com/mynaparrot/plugnmeet-server/pkg/services/redis"
-	log "github.com/sirupsen/logrus"
 	"strings"
+
+	redisservice "github.com/retawsolit/WeMeet-server/pkg/services/redis"
+	log "github.com/sirupsen/logrus"
 )
 
 func (m *RoomDurationModel) GetRoomDurationInfo(roomId string) (*RoomDurationInfo, error) {

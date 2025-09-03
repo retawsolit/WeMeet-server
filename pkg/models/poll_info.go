@@ -3,11 +3,13 @@ package models
 import (
 	"errors"
 	"fmt"
-	"github.com/goccy/go-json"
-	"github.com/mynaparrot/plugnmeet-protocol/plugnmeet"
-	"google.golang.org/protobuf/encoding/protojson"
 	"strconv"
 	"strings"
+
+	"github.com/goccy/go-json"
+	"github.com/mynaparrot/plugnmeet-protocol/plugnmeet"
+	"github.com/retawsolit/!we!meet-protocol/wemeet backup moi"
+	"google.golang.org/protobuf/encoding/protojson"
 )
 
 func (m *PollModel) ListPolls(roomId string) ([]*plugnmeet.PollInfo, error) {
@@ -110,7 +112,7 @@ func (m *PollModel) GetResponsesResult(roomId, pollId string) (*plugnmeet.PollRe
 	for _, opt := range info.Options {
 		f := fmt.Sprintf("%d_count", opt.Id)
 		i, _ := strconv.Atoi(result[f])
-		rr := &plugnmeet.PollResponsesResultOptions{
+		rr := &wemeet.PollResponsesResultOptions{
 			Id:        uint64(opt.Id),
 			Text:      opt.Text,
 			VoteCount: uint64(i),
@@ -126,7 +128,7 @@ func (m *PollModel) GetResponsesResult(roomId, pollId string) (*plugnmeet.PollRe
 }
 
 func (m *PollModel) GetPollsStats(roomId string) (*plugnmeet.PollsStats, error) {
-	res := &plugnmeet.PollsStats{
+	res := &wemeet.PollsStats{
 		TotalPolls:   0,
 		TotalRunning: 0,
 	}

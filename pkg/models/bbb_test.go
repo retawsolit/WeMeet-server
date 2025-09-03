@@ -1,13 +1,14 @@
 package models
 
 import (
-	"github.com/mynaparrot/plugnmeet-protocol/bbbapiwrapper"
 	"testing"
+
+	"github.com/retawsolit/WeMeet-protocol/bbbapiwrapper"
 )
 
 func TestBBBApiWrapperModel_GetRecordings(t *testing.T) {
 	bbbm := NewBBBApiWrapperModel(nil, nil, nil)
-	recordings, pag, err := bbbm.GetRecordings("https://demo.plugnmeet.com", &bbbapiwrapper.GetRecordingsReq{
+	recordings, pag, err := bbbm.GetRecordings("https://demo.wemeet.com", &bbbapiwrapper.GetRecordingsReq{
 		MeetingID: roomId,
 	})
 	if err != nil {
@@ -19,7 +20,7 @@ func TestBBBApiWrapperModel_GetRecordings(t *testing.T) {
 
 	t.Logf("%+v, %+v", recordings[0], *pag)
 
-	recordings, pag, err = bbbm.GetRecordings("https://demo.plugnmeet.com", &bbbapiwrapper.GetRecordingsReq{
+	recordings, pag, err = bbbm.GetRecordings("https://demo.wemeet.com", &bbbapiwrapper.GetRecordingsReq{
 		RecordID: recordId,
 	})
 	if err != nil {

@@ -4,12 +4,11 @@ import (
 	"context"
 	"errors"
 
-	"github.com/mynaparrot/plugnmeet-protocol/plugnmeet"
-	"github.com/mynaparrot/plugnmeet-protocol/utils"
-	"github.com/retawsolit/!we!meet-protocol/wemeet backup moi"
+	"github.com/retawsolit/!WeMeet-protocol/wemeet"
+	"github.com/retawsolit/WeMeet-protocol/utils"
 )
 
-func (m *LtiV1Model) LTIV1JoinRoom(ctx context.Context, c *plugnmeet.LtiClaims) (string, error) {
+func (m *LtiV1Model) LTIV1JoinRoom(ctx context.Context, c *wemeet.LtiClaims) (string, error) {
 	res, _, _, _ := m.rm.IsRoomActive(ctx, &wemeet.IsRoomActiveReq{
 		RoomId: c.RoomId,
 	})
@@ -29,12 +28,12 @@ func (m *LtiV1Model) LTIV1JoinRoom(ctx context.Context, c *plugnmeet.LtiClaims) 
 	return token, nil
 }
 
-func (m *LtiV1Model) createRoomSession(ctx context.Context, c *plugnmeet.LtiClaims) (*plugnmeet.ActiveRoomInfo, error) {
+func (m *LtiV1Model) createRoomSession(ctx context.Context, c *wemeet.LtiClaims) (*wemeet.ActiveRoomInfo, error) {
 	req := utils.PrepareLTIV1RoomCreateReq(c)
 	return m.rm.CreateRoom(ctx, req)
 }
 
-func (m *LtiV1Model) joinRoom(ctx context.Context, c *plugnmeet.LtiClaims) (string, error) {
+func (m *LtiV1Model) joinRoom(ctx context.Context, c *wemeet.LtiClaims) (string, error) {
 	um := NewUserModel(m.app, m.ds, m.rs)
 	token, err := um.GetPNMJoinToken(ctx, &wemeet.GenerateTokenReq{
 		RoomId: c.RoomId,

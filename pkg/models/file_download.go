@@ -3,14 +3,15 @@ package models
 import (
 	"errors"
 	"fmt"
-	"github.com/cavaliergopher/grab/v3"
-	"github.com/gabriel-vasile/mimetype"
-	"github.com/mynaparrot/plugnmeet-server/pkg/config"
-	log "github.com/sirupsen/logrus"
 	"net/http"
 	"os"
 	"path/filepath"
 	"time"
+
+	"github.com/cavaliergopher/grab/v3"
+	"github.com/gabriel-vasile/mimetype"
+	"github.com/retawsolit/WeMeet-server/pkg/config"
+	log "github.com/sirupsen/logrus"
 )
 
 // DownloadAndProcessPreUploadWBfile downloads and processes a pre-uploaded whiteboard file.

@@ -41,7 +41,7 @@ func New(appConfig *config.AppConfig, ctrl *factory.ApplicationControllers) *fib
 		app.Use(logger.New())
 	}
 	if appConfig.Client.PrometheusConf.Enable {
-		prometheus := fiberprometheus.New("wemeet")
+		prometheus := fiberprometheus.New("WeMeet")
 		prometheus.RegisterAt(app, appConfig.Client.PrometheusConf.MetricsPath)
 		app.Use(prometheus.Middleware)
 	}

@@ -9,11 +9,10 @@ import (
 	"strings"
 
 	"github.com/gabriel-vasile/mimetype"
-	"github.com/mynaparrot/plugnmeet-protocol/plugnmeet"
-	"github.com/retawsolit/!we!meet-protocol/wemeet backup moi"
+	"github.com/retawsolit/WeMeet-protocol/wemeet"
 )
 
-func (m *FileModel) UploadBase64EncodedData(req *plugnmeet.UploadBase64EncodedDataReq) (*plugnmeet.UploadBase64EncodedDataRes, error) {
+func (m *FileModel) UploadBase64EncodedData(req *wemeet.UploadBase64EncodedDataReq) (*wemeet.UploadBase64EncodedDataRes, error) {
 	roomInfo, err := m.ds.GetRoomInfoByRoomId(req.GetRoomId(), 1)
 	if err != nil {
 		return nil, err

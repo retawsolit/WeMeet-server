@@ -4,15 +4,16 @@ import (
 	"crypto/sha1"
 	"encoding/hex"
 	"errors"
-	"github.com/go-jose/go-jose/v4"
-	"github.com/go-jose/go-jose/v4/jwt"
-	"github.com/jordic/lti"
-	"github.com/mynaparrot/plugnmeet-protocol/plugnmeet"
-	"github.com/mynaparrot/plugnmeet-server/pkg/config"
-	log "github.com/sirupsen/logrus"
 	"net/url"
 	"strings"
 	"time"
+
+	"github.com/go-jose/go-jose/v4"
+	"github.com/go-jose/go-jose/v4/jwt"
+	"github.com/jordic/lti"
+	"github.com/retawsolit/WeMeet-protocol/wemeet"
+	"github.com/retawsolit/WeMeet-server/pkg/config"
+	log "github.com/sirupsen/logrus"
 )
 
 func (m *LtiV1Model) VerifyAuth(requests, signingURL string) (*url.Values, error) {
@@ -58,7 +59,7 @@ func (m *LtiV1Model) genHashId(id string) string {
 	return hash
 }
 
-func (m *LtiV1Model) ToJWT(c *plugnmeet.LtiClaims) (string, error) {
+func (m *LtiV1Model) ToJWT(c *wemeet.LtiClaims) (string, error) {
 	sig, err := jose.NewSigner(jose.SigningKey{Algorithm: jose.HS256, Key: []byte(config.GetConfig().Client.Secret)},
 		(&jose.SignerOptions{}).WithType("JWT"))
 	if err != nil {

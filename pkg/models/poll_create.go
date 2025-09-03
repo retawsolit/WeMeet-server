@@ -2,12 +2,14 @@ package models
 
 import (
 	"fmt"
+	"time"
+
 	"github.com/goccy/go-json"
 	"github.com/google/uuid"
 	"github.com/mynaparrot/plugnmeet-protocol/plugnmeet"
+	"github.com/retawsolit/!we!meet-protocol/wemeet backup moi"
 	log "github.com/sirupsen/logrus"
 	"google.golang.org/protobuf/encoding/protojson"
-	"time"
 )
 
 func (m *PollModel) CreatePoll(r *plugnmeet.CreatePollReq) (string, error) {
@@ -45,7 +47,7 @@ func (m *PollModel) CreatePoll(r *plugnmeet.CreatePollReq) (string, error) {
 		log.Errorln(err)
 	}
 	val := string(marshal)
-	m.analyticsModel.HandleEvent(&plugnmeet.AnalyticsDataMsg{
+	m.analyticsModel.HandleEvent(&wemeet.AnalyticsDataMsg{
 		EventType: plugnmeet.AnalyticsEventType_ANALYTICS_EVENT_TYPE_ROOM,
 		EventName: plugnmeet.AnalyticsEvents_ANALYTICS_EVENT_ROOM_POLL_ADDED,
 		RoomId:    r.RoomId,
@@ -57,7 +59,7 @@ func (m *PollModel) CreatePoll(r *plugnmeet.CreatePollReq) (string, error) {
 
 // createRoomPollHash will insert the poll to room hash
 func (m *PollModel) createRoomPollHash(r *plugnmeet.CreatePollReq) error {
-	p := &plugnmeet.PollInfo{
+	p := &wemeet.PollInfo{
 		Id:        r.PollId,
 		RoomId:    r.RoomId,
 		Question:  r.Question,
@@ -112,7 +114,7 @@ func (m *PollModel) UserSubmitResponse(r *plugnmeet.SubmitPollResponseReq) error
 		log.Errorln(err)
 	}
 	val := string(marshal)
-	m.analyticsModel.HandleEvent(&plugnmeet.AnalyticsDataMsg{
+	m.analyticsModel.HandleEvent(&wemeet.AnalyticsDataMsg{
 		EventType: plugnmeet.AnalyticsEventType_ANALYTICS_EVENT_TYPE_USER,
 		EventName: plugnmeet.AnalyticsEvents_ANALYTICS_EVENT_USER_VOTED_POLL,
 		RoomId:    r.RoomId,

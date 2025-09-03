@@ -6,12 +6,11 @@ import (
 	"time"
 
 	"github.com/livekit/protocol/livekit"
-	"github.com/mynaparrot/plugnmeet-protocol/plugnmeet"
-	"github.com/mynaparrot/plugnmeet-server/pkg/config"
-	"github.com/retawsolit/!we!meet-protocol/wemeet backup moi"
+	"github.com/retawsolit/WeMeet-protocol/wemeet"
+	"github.com/retawsolit/WeMeet-server/pkg/config"
 )
 
-func (m *IngressModel) CreateIngress(r *plugnmeet.CreateIngressReq) (*livekit.IngressInfo, error) {
+func (m *IngressModel) CreateIngress(r *wemeet.CreateIngressReq) (*livekit.IngressInfo, error) {
 	// we'll update room metadata
 	metadata, err := m.natsService.GetRoomMetadataStruct(r.RoomId)
 	if err != nil {
@@ -30,7 +29,7 @@ func (m *IngressModel) CreateIngress(r *plugnmeet.CreateIngressReq) (*livekit.In
 	}
 
 	inputType := livekit.IngressInput_RTMP_INPUT
-	if r.InputType == plugnmeet.IngressInput_WHIP_INPUT {
+	if r.InputType == wemeet.IngressInput_WHIP_INPUT {
 		inputType = livekit.IngressInput_WHIP_INPUT
 	}
 
@@ -53,7 +52,7 @@ func (m *IngressModel) CreateIngress(r *plugnmeet.CreateIngressReq) (*livekit.In
 	// add this user in our bucket
 	tr := true
 	fl := false
-	mt := plugnmeet.UserMetadata{
+	mt := wemeet.UserMetadata{
 		IsAdmin:         true,
 		RecordWebcam:    &tr,
 		WaitForApproval: false,
@@ -79,8 +78,8 @@ func (m *IngressModel) CreateIngress(r *plugnmeet.CreateIngressReq) (*livekit.In
 	// send analytics
 	analyticsModel := NewAnalyticsModel(m.app, m.ds, m.rs)
 	analyticsModel.HandleEvent(&wemeet.AnalyticsDataMsg{
-		EventType: plugnmeet.AnalyticsEventType_ANALYTICS_EVENT_TYPE_ROOM,
-		EventName: plugnmeet.AnalyticsEvents_ANALYTICS_EVENT_ROOM_INGRESS_CREATED,
+		EventType: wemeet.AnalyticsEventType_ANALYTICS_EVENT_TYPE_ROOM,
+		EventName: wemeet.AnalyticsEvents_ANALYTICS_EVENT_ROOM_INGRESS_CREATED,
 		RoomId:    r.RoomId,
 	})
 

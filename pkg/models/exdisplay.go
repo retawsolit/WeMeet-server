@@ -3,10 +3,12 @@ package models
 import (
 	"errors"
 
-	"github.com/mynaparrot/plugnmeet-protocol/plugnmeet"
-	"github.com/mynaparrot/plugnmeet-server/pkg/config"
-	natsservice "github.com/mynaparrot/plugnmeet-server/pkg/services/nats"
-	"github.com/retawsolit/!we!meet-protocol/wemeet backup moi"
+	"github.com/retawsolit/WeMeet-protocol/wemeet"
+	"github.com/retawsolit/WeMeet-server/pkg/config"
+	dbservice "github.com/retawsolit/WeMeet-server/pkg/services/db"
+	livekitservice "github.com/retawsolit/WeMeet-server/pkg/services/livekit"
+	natsservice "github.com/retawsolit/WeMeet-server/pkg/services/nats"
+	redisservice "github.com/retawsolit/WeMeet-server/pkg/services/redis"
 )
 
 type ExDisplayModel struct {
@@ -38,9 +40,9 @@ func NewExDisplayModel(app *config.AppConfig, ds *dbservice.DatabaseService, rs 
 
 func (m *ExDisplayModel) HandleTask(req *wemeet.ExternalDisplayLinkReq) error {
 	switch req.Task {
-	case plugnmeet.ExternalDisplayLinkTask_START_EXTERNAL_LINK:
+	case wemeet.ExternalDisplayLinkTask_START_EXTERNAL_LINK:
 		return m.start(req)
-	case plugnmeet.ExternalDisplayLinkTask_STOP_EXTERNAL_LINK:
+	case wemeet.ExternalDisplayLinkTask_STOP_EXTERNAL_LINK:
 		return m.end(req)
 	}
 

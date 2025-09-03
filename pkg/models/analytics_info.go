@@ -2,6 +2,8 @@ package models
 
 import (
 	"errors"
+
+	"github.com/retawsolit/WeMeet-protocol/wemeet"
 )
 
 func (m *AnalyticsModel) FetchAnalytics(r *wemeet.FetchAnalyticsReq) (*wemeet.FetchAnalyticsResult, error) {
