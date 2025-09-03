@@ -2,9 +2,9 @@ package controllers
 
 import (
 	"github.com/gofiber/fiber/v2"
-	"github.com/mynaparrot/plugnmeet-protocol/plugnmeet"
 	"github.com/mynaparrot/plugnmeet-protocol/utils"
 	"github.com/mynaparrot/plugnmeet-server/pkg/models"
+	"github.com/retawsolit/!we!meet-protocol/wemeet backup moi"
 	"google.golang.org/protobuf/proto"
 )
 
@@ -35,7 +35,7 @@ func (emc *ExMediaController) HandleExternalMediaPlayer(c *fiber.Ctx) error {
 		return utils.SendCommonProtobufResponse(c, false, "roomId required")
 	}
 
-	req := new(plugnmeet.ExternalMediaPlayerReq)
+	req := new(wemeet.ExternalMediaPlayerReq)
 	err := proto.Unmarshal(c.Body(), req)
 	if err != nil {
 		return utils.SendCommonProtobufResponse(c, false, err.Error())

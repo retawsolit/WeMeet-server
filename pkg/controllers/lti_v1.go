@@ -2,12 +2,14 @@ package controllers
 
 import (
 	"fmt"
+	"strings"
+
 	"github.com/goccy/go-json"
 	"github.com/gofiber/fiber/v2"
 	"github.com/mynaparrot/plugnmeet-protocol/plugnmeet"
 	"github.com/mynaparrot/plugnmeet-protocol/utils"
 	"github.com/mynaparrot/plugnmeet-server/pkg/models"
-	"strings"
+	"github.com/retawsolit/!we!meet-protocol/wemeet backup moi"
 )
 
 // LtiV1Controller holds dependencies for LTI v1 related handlers.
@@ -96,7 +98,7 @@ func (lc *LtiV1Controller) HandleLTIV1VerifyHeaderToken(c *fiber.Ctx) error {
 func (lc *LtiV1Controller) HandleLTIV1IsRoomActive(c *fiber.Ctx) error {
 	roomId := c.Locals("roomId")
 
-	res, _, _, _ := lc.RoomModel.IsRoomActive(c.UserContext(), &plugnmeet.IsRoomActiveReq{
+	res, _, _, _ := lc.RoomModel.IsRoomActive(c.UserContext(), &wemeet.IsRoomActiveReq{
 		RoomId: roomId.(string),
 	})
 
@@ -107,7 +109,7 @@ func (lc *LtiV1Controller) HandleLTIV1IsRoomActive(c *fiber.Ctx) error {
 func (lc *LtiV1Controller) HandleLTIV1JoinRoom(c *fiber.Ctx) error {
 	customParams := c.Locals("customParams").([]byte)
 
-	claim := &plugnmeet.LtiClaims{
+	claim := &wemeet.LtiClaims{
 		UserId:    c.Locals("userId").(string),
 		Name:      c.Locals("name").(string),
 		IsAdmin:   c.Locals("isAdmin").(bool),
@@ -150,7 +152,7 @@ func (lc *LtiV1Controller) HandleLTIV1EndRoom(c *fiber.Ctx) error {
 		})
 	}
 
-	status, msg := lc.RoomModel.EndRoom(c.UserContext(), &plugnmeet.RoomEndReq{
+	status, msg := lc.RoomModel.EndRoom(c.UserContext(), &wemeet.RoomEndReq{
 		RoomId: roomId.(string),
 	})
 

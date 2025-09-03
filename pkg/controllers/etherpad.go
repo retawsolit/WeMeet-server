@@ -2,11 +2,11 @@ package controllers
 
 import (
 	"github.com/gofiber/fiber/v2"
-	"github.com/mynaparrot/plugnmeet-protocol/plugnmeet"
 	"github.com/mynaparrot/plugnmeet-protocol/utils"
 	"github.com/mynaparrot/plugnmeet-server/pkg/config"
 	"github.com/mynaparrot/plugnmeet-server/pkg/models"
 	dbservice "github.com/mynaparrot/plugnmeet-server/pkg/services/db"
+	"github.com/retawsolit/!we!meet-protocol/wemeet backup moi"
 	"google.golang.org/protobuf/proto"
 )
 
@@ -68,7 +68,7 @@ func (ec *EtherpadController) HandleCleanPad(c *fiber.Ctx) error {
 		return utils.SendCommonProtobufResponse(c, false, "only admin can perform this task")
 	}
 
-	req := new(plugnmeet.CleanEtherpadReq)
+	req := new(wemeet.CleanEtherpadReq)
 	err := proto.Unmarshal(c.Body(), req)
 	if err != nil {
 		return utils.SendCommonProtobufResponse(c, false, err.Error())
@@ -89,7 +89,7 @@ func (ec *EtherpadController) HandleChangeEtherpadStatus(c *fiber.Ctx) error {
 		return utils.SendCommonProtobufResponse(c, false, "only admin can perform this task")
 	}
 
-	req := new(plugnmeet.ChangeEtherpadStatusReq)
+	req := new(wemeet.ChangeEtherpadStatusReq)
 	err := proto.Unmarshal(c.Body(), req)
 	if err != nil {
 		return utils.SendCommonProtobufResponse(c, false, err.Error())

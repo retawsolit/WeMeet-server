@@ -4,11 +4,12 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"strings"
+
 	"github.com/gofiber/fiber/v2"
-	"github.com/mynaparrot/plugnmeet-protocol/plugnmeet"
 	"github.com/mynaparrot/plugnmeet-protocol/utils"
 	"github.com/mynaparrot/plugnmeet-server/pkg/config"
-	"strings"
+	"github.com/retawsolit/!we!meet-protocol/wemeet backup moi"
 )
 
 func (m *LtiV1Model) LTIV1Landing(c *fiber.Ctx, requests, signingURL string) error {
@@ -33,7 +34,7 @@ func (m *LtiV1Model) LTIV1Landing(c *fiber.Ctx, requests, signingURL string) err
 		name = fmt.Sprintf("%s_%s", "User", userId)
 	}
 
-	claims := &plugnmeet.LtiClaims{
+	claims := &wemeet.LtiClaims{
 		UserId:    userId,
 		Name:      name,
 		IsAdmin:   false,

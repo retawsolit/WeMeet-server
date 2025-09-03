@@ -4,13 +4,14 @@ import (
 	"context"
 	"errors"
 	"fmt"
+
 	"github.com/mynaparrot/plugnmeet-protocol/plugnmeet"
 	"github.com/mynaparrot/plugnmeet-server/pkg/config"
 	"github.com/mynaparrot/plugnmeet-server/pkg/models"
-	"github.com/mynaparrot/plugnmeet-server/pkg/services/nats"
 	"github.com/nats-io/jwt/v2"
 	"github.com/nats-io/nats.go/micro"
 	"github.com/nats-io/nkeys"
+	natsservice "github.com/retawsolit/WeMeet-server/pkg/services/nats"
 	log "github.com/sirupsen/logrus"
 )
 
@@ -86,7 +87,7 @@ func (s *NatsAuthController) handleClaims(req *jwt.AuthorizationRequestClaims) (
 	claims.Name = req.ConnectOptions.Token
 
 	// check the info first
-	data, err := s.authModel.VerifyPlugNmeetAccessToken(req.ConnectOptions.Token, true)
+	data, err := s.authModel.VerifyWeMeetAccessToken(req.ConnectOptions.Token, true)
 	if err != nil {
 		return nil, err
 	}

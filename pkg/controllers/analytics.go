@@ -3,9 +3,9 @@ package controllers
 import (
 	"buf.build/go/protovalidate"
 	"github.com/gofiber/fiber/v2"
-	"github.com/mynaparrot/plugnmeet-protocol/plugnmeet"
-	"github.com/mynaparrot/plugnmeet-protocol/utils"
-	"github.com/mynaparrot/plugnmeet-server/pkg/models"
+	"github.com/retawsolit/WeMeet-protocol/utils"
+	"github.com/retawsolit/WeMeet-protocol/wemeet"
+	"github.com/retawsolit/WeMeet-server/pkg/models"
 	"google.golang.org/protobuf/encoding/protojson"
 	"google.golang.org/protobuf/proto"
 )
@@ -48,7 +48,7 @@ func validateRequest(msg proto.Message) error {
 
 // HandleFetchAnalytics fetches analytics data.
 func (ac *AnalyticsController) HandleFetchAnalytics(c *fiber.Ctx) error {
-	req := new(plugnmeet.FetchAnalyticsReq)
+	req := new(wemeet.FetchAnalyticsReq)
 	if err := parseAndValidateRequest(c.Body(), req); err != nil {
 		return utils.SendCommonProtoJsonResponse(c, false, err.Error())
 	}
@@ -61,7 +61,7 @@ func (ac *AnalyticsController) HandleFetchAnalytics(c *fiber.Ctx) error {
 		return utils.SendCommonProtoJsonResponse(c, false, "no analytics found")
 	}
 
-	r := &plugnmeet.FetchAnalyticsRes{
+	r := &wemeet.FetchAnalyticsRes{
 		Status: true,
 		Msg:    "success",
 		Result: result,
@@ -71,7 +71,7 @@ func (ac *AnalyticsController) HandleFetchAnalytics(c *fiber.Ctx) error {
 
 // HandleDeleteAnalytics deletes analytics data.
 func (ac *AnalyticsController) HandleDeleteAnalytics(c *fiber.Ctx) error {
-	req := new(plugnmeet.DeleteAnalyticsReq)
+	req := new(wemeet.DeleteAnalyticsReq)
 	if err := parseAndValidateRequest(c.Body(), req); err != nil {
 		return utils.SendCommonProtoJsonResponse(c, false, err.Error())
 	}
@@ -86,7 +86,7 @@ func (ac *AnalyticsController) HandleDeleteAnalytics(c *fiber.Ctx) error {
 
 // HandleGetAnalyticsDownloadToken generates a download token for analytics.
 func (ac *AnalyticsController) HandleGetAnalyticsDownloadToken(c *fiber.Ctx) error {
-	req := new(plugnmeet.GetAnalyticsDownloadTokenReq)
+	req := new(wemeet.GetAnalyticsDownloadTokenReq)
 	if err := parseAndValidateRequest(c.Body(), req); err != nil {
 		return utils.SendCommonProtoJsonResponse(c, false, err.Error())
 	}
@@ -96,7 +96,7 @@ func (ac *AnalyticsController) HandleGetAnalyticsDownloadToken(c *fiber.Ctx) err
 		return utils.SendCommonProtoJsonResponse(c, false, err.Error())
 	}
 
-	r := &plugnmeet.GetAnalyticsDownloadTokenRes{
+	r := &wemeet.GetAnalyticsDownloadTokenRes{
 		Status: true,
 		Msg:    "success",
 		Token:  &token,

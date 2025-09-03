@@ -5,6 +5,7 @@ import (
 	"github.com/mynaparrot/plugnmeet-protocol/plugnmeet"
 	"github.com/mynaparrot/plugnmeet-protocol/utils"
 	"github.com/mynaparrot/plugnmeet-server/pkg/models"
+	"github.com/retawsolit/!we!meet-protocol/wemeet backup moi"
 )
 
 // RecordingController holds dependencies for recording-related handlers.
@@ -34,7 +35,7 @@ func (rc *RecordingController) HandleFetchRecordings(c *fiber.Ctx) error {
 		return utils.SendCommonProtoJsonResponse(c, false, "no recordings found")
 	}
 
-	r := &plugnmeet.FetchRecordingsRes{
+	r := &wemeet.FetchRecordingsRes{
 		Status: true,
 		Msg:    "success",
 		Result: result,
@@ -84,7 +85,7 @@ func (rc *RecordingController) HandleGetDownloadToken(c *fiber.Ctx) error {
 		return utils.SendCommonProtoJsonResponse(c, false, err.Error())
 	}
 
-	r := &plugnmeet.GetDownloadTokenRes{
+	r := &wemeet.GetDownloadTokenRes{
 		Status: true,
 		Msg:    "success",
 		Token:  &token,

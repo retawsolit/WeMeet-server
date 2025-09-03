@@ -4,23 +4,25 @@ import (
 	"bytes"
 	"context"
 	"fmt"
-	"github.com/mynaparrot/plugnmeet-protocol/plugnmeet"
-	"github.com/mynaparrot/plugnmeet-server/pkg/config"
-	"github.com/nats-io/nats.go"
-	"github.com/nats-io/nats.go/jetstream"
-	"github.com/stretchr/testify/assert"
-	"google.golang.org/protobuf/encoding/protojson"
-	"google.golang.org/protobuf/proto"
 	"net/http/httptest"
 	"strings"
 	"testing"
 	"time"
+
+	"github.com/mynaparrot/plugnmeet-protocol/plugnmeet"
+	"github.com/mynaparrot/plugnmeet-server/pkg/config"
+	"github.com/nats-io/nats.go"
+	"github.com/nats-io/nats.go/jetstream"
+	"github.com/retawsolit/!we!meet-protocol/wemeet backup moi"
+	"github.com/stretchr/testify/assert"
+	"google.golang.org/protobuf/encoding/protojson"
+	"google.golang.org/protobuf/proto"
 )
 
 func testValidateJoinToken(t *testing.T, token string) {
 	t.Run("Test_Validate_Join_Token", func(t *testing.T) {
 		app := setupApp()
-		reqBody := &plugnmeet.VerifyTokenReq{}
+		reqBody := &wemeet.VerifyTokenReq{}
 
 		bodyBytes, err := proto.Marshal(reqBody)
 		assert.NoError(t, err)
@@ -112,7 +114,7 @@ func testNatsJoin(t *testing.T, token string, natsSubjects *plugnmeet.NatsSubjec
 
 		// send a test
 		subj := fmt.Sprintf("%s.%s.%s", natsSubjects.SystemJsWorker, roomId, userId)
-		payload, err := proto.Marshal(&plugnmeet.NatsMsgClientToServer{
+		payload, err := proto.Marshal(&wemeet.NatsMsgClientToServer{
 			Event: plugnmeet.NatsMsgClientToServerEvents_REQ_INITIAL_DATA,
 		})
 		if !assert.NoError(t, err) {

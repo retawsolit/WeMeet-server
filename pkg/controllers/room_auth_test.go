@@ -2,12 +2,14 @@ package controllers
 
 import (
 	"bytes"
-	"github.com/gofiber/fiber/v2"
-	"github.com/mynaparrot/plugnmeet-protocol/plugnmeet"
-	"github.com/stretchr/testify/assert"
-	"google.golang.org/protobuf/encoding/protojson"
 	"net/http/httptest"
 	"testing"
+
+	"github.com/gofiber/fiber/v2"
+	"github.com/mynaparrot/plugnmeet-protocol/plugnmeet"
+	"github.com/retawsolit/!we!meet-protocol/wemeet backup moi"
+	"github.com/stretchr/testify/assert"
+	"google.golang.org/protobuf/encoding/protojson"
 )
 
 func setupApp() *fiber.App {
@@ -32,11 +34,11 @@ func setupApp() *fiber.App {
 
 func TestHandleRoomCreate(t *testing.T) {
 	app := setupApp()
-	reqBody := &plugnmeet.CreateRoomReq{
+	reqBody := &wemeet.CreateRoomReq{
 		RoomId: roomId,
-		Metadata: &plugnmeet.RoomMetadata{
+		Metadata: &wemeet.RoomMetadata{
 			RoomTitle:    "Test Room",
-			RoomFeatures: &plugnmeet.RoomCreateFeatures{},
+			RoomFeatures: &wemeet.RoomCreateFeatures{},
 		},
 	}
 
@@ -68,12 +70,12 @@ func TestHandleRoomCreate(t *testing.T) {
 
 func TestHandleGetJoinToken(t *testing.T) {
 	app := setupApp()
-	reqBody := &plugnmeet.GenerateTokenReq{
+	reqBody := &wemeet.GenerateTokenReq{
 		RoomId: roomId,
-		UserInfo: &plugnmeet.UserInfo{
+		UserInfo: &wemeet.UserInfo{
 			UserId: userId,
 			Name:   "Test User",
-			UserMetadata: &plugnmeet.UserMetadata{
+			UserMetadata: &wemeet.UserMetadata{
 				IsAdmin: true,
 			},
 		},
@@ -110,7 +112,7 @@ func TestHandleGetJoinToken(t *testing.T) {
 
 func TestHandleIsRoomActive(t *testing.T) {
 	app := setupApp()
-	reqBody := &plugnmeet.IsRoomActiveReq{
+	reqBody := &wemeet.IsRoomActiveReq{
 		RoomId: roomId,
 	}
 
@@ -140,7 +142,7 @@ func TestHandleIsRoomActive(t *testing.T) {
 
 func TestHandleGetActiveRoomInfo(t *testing.T) {
 	app := setupApp()
-	reqBody := &plugnmeet.GetActiveRoomInfoReq{
+	reqBody := &wemeet.GetActiveRoomInfoReq{
 		RoomId: roomId,
 	}
 
@@ -195,7 +197,7 @@ func TestHandleGetActiveRoomsInfo(t *testing.T) {
 
 func TestHandleEndRoom(t *testing.T) {
 	app := setupApp()
-	reqBody := &plugnmeet.RoomEndReq{
+	reqBody := &wemeet.RoomEndReq{
 		RoomId: roomId,
 	}
 
@@ -224,7 +226,7 @@ func TestHandleEndRoom(t *testing.T) {
 
 func TestHandleFetchPastRooms(t *testing.T) {
 	app := setupApp()
-	reqBody := &plugnmeet.FetchPastRoomsReq{
+	reqBody := &wemeet.FetchPastRoomsReq{
 		RoomIds: []string{roomId},
 	}
 

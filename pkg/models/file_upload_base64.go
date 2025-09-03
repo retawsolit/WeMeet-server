@@ -4,11 +4,13 @@ import (
 	"encoding/base64"
 	"errors"
 	"fmt"
-	"github.com/gabriel-vasile/mimetype"
-	"github.com/mynaparrot/plugnmeet-protocol/plugnmeet"
 	"os"
 	"path/filepath"
 	"strings"
+
+	"github.com/gabriel-vasile/mimetype"
+	"github.com/mynaparrot/plugnmeet-protocol/plugnmeet"
+	"github.com/retawsolit/!we!meet-protocol/wemeet backup moi"
 )
 
 func (m *FileModel) UploadBase64EncodedData(req *plugnmeet.UploadBase64EncodedDataReq) (*plugnmeet.UploadBase64EncodedDataRes, error) {
@@ -47,7 +49,7 @@ func (m *FileModel) UploadBase64EncodedData(req *plugnmeet.UploadBase64EncodedDa
 		return nil, fmt.Errorf("failed to write file: %w", err)
 	}
 
-	return &plugnmeet.UploadBase64EncodedDataRes{
+	return &wemeet.UploadBase64EncodedDataRes{
 		Status:        true,
 		Msg:           "file uploaded successfully",
 		FileMimeType:  mimeType.String(),

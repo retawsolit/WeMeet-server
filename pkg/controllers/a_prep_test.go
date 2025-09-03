@@ -1,11 +1,12 @@
 package controllers
 
 import (
-	"github.com/google/uuid"
-	"github.com/mynaparrot/plugnmeet-server/helpers"
-	"github.com/mynaparrot/plugnmeet-server/pkg/config"
 	"path/filepath"
 	"runtime"
+
+	"github.com/google/uuid"
+	"github.com/retawsolit/WeMeet-server/helpers"
+	"github.com/retawsolit/WeMeet-server/pkg/config"
 )
 
 var (

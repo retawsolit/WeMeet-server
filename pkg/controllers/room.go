@@ -5,6 +5,7 @@ import (
 	"github.com/mynaparrot/plugnmeet-protocol/plugnmeet"
 	"github.com/mynaparrot/plugnmeet-protocol/utils"
 	"github.com/mynaparrot/plugnmeet-server/pkg/models"
+	"github.com/retawsolit/!we!meet-protocol/wemeet backup moi"
 	"google.golang.org/protobuf/proto"
 )
 
@@ -32,7 +33,7 @@ func (rc *RoomController) HandleRoomCreate(c *fiber.Ctx) error {
 		return utils.SendCommonProtoJsonResponse(c, false, err.Error())
 	}
 
-	r := &plugnmeet.CreateRoomRes{
+	r := &wemeet.CreateRoomRes{
 		Status:   true,
 		Msg:      "success",
 		RoomInfo: room,
@@ -61,7 +62,7 @@ func (rc *RoomController) HandleGetActiveRoomInfo(c *fiber.Ctx) error {
 
 	status, msg, res := rc.RoomModel.GetActiveRoomInfo(c.UserContext(), req)
 
-	r := &plugnmeet.GetActiveRoomInfoRes{
+	r := &wemeet.GetActiveRoomInfoRes{
 		Status: status,
 		Msg:    msg,
 		Room:   res,
@@ -74,7 +75,7 @@ func (rc *RoomController) HandleGetActiveRoomInfo(c *fiber.Ctx) error {
 func (rc *RoomController) HandleGetActiveRoomsInfo(c *fiber.Ctx) error {
 	status, msg, res := rc.RoomModel.GetActiveRoomsInfo()
 
-	r := &plugnmeet.GetActiveRoomsInfoRes{
+	r := &wemeet.GetActiveRoomsInfoRes{
 		Status: status,
 		Msg:    msg,
 		Rooms:  res,
@@ -111,7 +112,7 @@ func (rc *RoomController) HandleFetchPastRooms(c *fiber.Ctx) error {
 		return utils.SendCommonProtoJsonResponse(c, false, "no info found")
 	}
 
-	r := &plugnmeet.FetchPastRoomsRes{
+	r := &wemeet.FetchPastRoomsRes{
 		Status: true,
 		Msg:    "success",
 		Result: result,

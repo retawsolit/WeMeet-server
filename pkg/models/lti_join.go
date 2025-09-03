@@ -3,12 +3,14 @@ package models
 import (
 	"context"
 	"errors"
+
 	"github.com/mynaparrot/plugnmeet-protocol/plugnmeet"
 	"github.com/mynaparrot/plugnmeet-protocol/utils"
+	"github.com/retawsolit/!we!meet-protocol/wemeet backup moi"
 )
 
 func (m *LtiV1Model) LTIV1JoinRoom(ctx context.Context, c *plugnmeet.LtiClaims) (string, error) {
-	res, _, _, _ := m.rm.IsRoomActive(ctx, &plugnmeet.IsRoomActiveReq{
+	res, _, _, _ := m.rm.IsRoomActive(ctx, &wemeet.IsRoomActiveReq{
 		RoomId: c.RoomId,
 	})
 
@@ -34,13 +36,13 @@ func (m *LtiV1Model) createRoomSession(ctx context.Context, c *plugnmeet.LtiClai
 
 func (m *LtiV1Model) joinRoom(ctx context.Context, c *plugnmeet.LtiClaims) (string, error) {
 	um := NewUserModel(m.app, m.ds, m.rs)
-	token, err := um.GetPNMJoinToken(ctx, &plugnmeet.GenerateTokenReq{
+	token, err := um.GetPNMJoinToken(ctx, &wemeet.GenerateTokenReq{
 		RoomId: c.RoomId,
-		UserInfo: &plugnmeet.UserInfo{
+		UserInfo: &wemeet.UserInfo{
 			UserId:  c.UserId,
 			Name:    c.Name,
 			IsAdmin: c.IsAdmin,
-			UserMetadata: &plugnmeet.UserMetadata{
+			UserMetadata: &wemeet.UserMetadata{
 				IsAdmin: c.IsAdmin,
 			},
 		},

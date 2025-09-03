@@ -2,8 +2,8 @@ package controllers
 
 import (
 	"github.com/gofiber/fiber/v2"
-	"github.com/mynaparrot/plugnmeet-protocol/plugnmeet"
 	"github.com/mynaparrot/plugnmeet-server/pkg/models"
+	"github.com/retawsolit/!we!meet-protocol/wemeet backup moi"
 	"google.golang.org/protobuf/proto"
 )
 
@@ -24,7 +24,7 @@ func (brc *BreakoutRoomController) HandleCreateBreakoutRooms(c *fiber.Ctx) error
 	isAdmin := c.Locals("isAdmin")
 	roomId := c.Locals("roomId")
 	requestedUserId := c.Locals("requestedUserId")
-	res := new(plugnmeet.BreakoutRoomRes)
+	res := new(wemeet.BreakoutRoomRes)
 	res.Status = false
 
 	if isAdmin != true {
@@ -32,7 +32,7 @@ func (brc *BreakoutRoomController) HandleCreateBreakoutRooms(c *fiber.Ctx) error
 		return sendBreakoutRoomResponse(c, res)
 	}
 
-	req := new(plugnmeet.CreateBreakoutRoomsReq)
+	req := new(wemeet.CreateBreakoutRoomsReq)
 	err := proto.Unmarshal(c.Body(), req)
 	if err != nil {
 		res.Msg = err.Error()
@@ -58,10 +58,10 @@ func (brc *BreakoutRoomController) HandleJoinBreakoutRoom(c *fiber.Ctx) error {
 	roomId := c.Locals("roomId")
 	isAdmin := c.Locals("isAdmin")
 
-	res := new(plugnmeet.BreakoutRoomRes)
+	res := new(wemeet.BreakoutRoomRes)
 	res.Status = false
 
-	req := new(plugnmeet.JoinBreakoutRoomReq)
+	req := new(wemeet.JoinBreakoutRoomReq)
 	err := proto.Unmarshal(c.Body(), req)
 	if err != nil {
 		res.Msg = err.Error()
@@ -85,7 +85,7 @@ func (brc *BreakoutRoomController) HandleJoinBreakoutRoom(c *fiber.Ctx) error {
 // HandleGetBreakoutRooms lists all breakout rooms for a parent room.
 func (brc *BreakoutRoomController) HandleGetBreakoutRooms(c *fiber.Ctx) error {
 	roomId := c.Locals("roomId")
-	res := new(plugnmeet.BreakoutRoomRes)
+	res := new(wemeet.BreakoutRoomRes)
 	res.Status = false
 
 	rooms, err := brc.BreakoutRoomModel.GetBreakoutRooms(roomId.(string))
@@ -104,7 +104,7 @@ func (brc *BreakoutRoomController) HandleGetBreakoutRooms(c *fiber.Ctx) error {
 func (brc *BreakoutRoomController) HandleGetMyBreakoutRooms(c *fiber.Ctx) error {
 	roomId := c.Locals("roomId")
 	requestedUserId := c.Locals("requestedUserId")
-	res := new(plugnmeet.BreakoutRoomRes)
+	res := new(wemeet.BreakoutRoomRes)
 	res.Status = false
 
 	room, err := brc.BreakoutRoomModel.GetMyBreakoutRooms(roomId.(string), requestedUserId.(string))
@@ -122,10 +122,10 @@ func (brc *BreakoutRoomController) HandleGetMyBreakoutRooms(c *fiber.Ctx) error 
 // HandleIncreaseBreakoutRoomDuration increases the duration of a breakout room.
 func (brc *BreakoutRoomController) HandleIncreaseBreakoutRoomDuration(c *fiber.Ctx) error {
 	roomId := c.Locals("roomId")
-	res := new(plugnmeet.BreakoutRoomRes)
+	res := new(wemeet.BreakoutRoomRes)
 	res.Status = false
 
-	req := new(plugnmeet.IncreaseBreakoutRoomDurationReq)
+	req := new(wemeet.IncreaseBreakoutRoomDurationReq)
 	err := proto.Unmarshal(c.Body(), req)
 	if err != nil {
 		res.Msg = err.Error()
@@ -147,10 +147,10 @@ func (brc *BreakoutRoomController) HandleIncreaseBreakoutRoomDuration(c *fiber.C
 // HandleSendBreakoutRoomMsg broadcasts a message to all breakout rooms.
 func (brc *BreakoutRoomController) HandleSendBreakoutRoomMsg(c *fiber.Ctx) error {
 	roomId := c.Locals("roomId")
-	res := new(plugnmeet.BreakoutRoomRes)
+	res := new(wemeet.BreakoutRoomRes)
 	res.Status = false
 
-	req := new(plugnmeet.BroadcastBreakoutRoomMsgReq)
+	req := new(wemeet.BroadcastBreakoutRoomMsgReq)
 	err := proto.Unmarshal(c.Body(), req)
 	if err != nil {
 		res.Msg = err.Error()
@@ -172,10 +172,10 @@ func (brc *BreakoutRoomController) HandleSendBreakoutRoomMsg(c *fiber.Ctx) error
 // HandleEndBreakoutRoom ends a specific breakout room.
 func (brc *BreakoutRoomController) HandleEndBreakoutRoom(c *fiber.Ctx) error {
 	roomId := c.Locals("roomId")
-	res := new(plugnmeet.BreakoutRoomRes)
+	res := new(wemeet.BreakoutRoomRes)
 	res.Status = false
 
-	req := new(plugnmeet.EndBreakoutRoomReq)
+	req := new(wemeet.EndBreakoutRoomReq)
 	err := proto.Unmarshal(c.Body(), req)
 	if err != nil {
 		res.Msg = err.Error()
@@ -198,7 +198,7 @@ func (brc *BreakoutRoomController) HandleEndBreakoutRoom(c *fiber.Ctx) error {
 func (brc *BreakoutRoomController) HandleEndBreakoutRooms(c *fiber.Ctx) error {
 	roomId := c.Locals("roomId")
 	isAdmin := c.Locals("isAdmin")
-	res := new(plugnmeet.BreakoutRoomRes)
+	res := new(wemeet.BreakoutRoomRes)
 	res.Status = false
 
 	if isAdmin != true {
@@ -217,7 +217,7 @@ func (brc *BreakoutRoomController) HandleEndBreakoutRooms(c *fiber.Ctx) error {
 	return sendBreakoutRoomResponse(c, res)
 }
 
-func sendBreakoutRoomResponse(c *fiber.Ctx, res *plugnmeet.BreakoutRoomRes) error {
+func sendBreakoutRoomResponse(c *fiber.Ctx, res *wemeet.BreakoutRoomRes) error {
 	marshal, err := proto.Marshal(res)
 	if err != nil {
 		return err

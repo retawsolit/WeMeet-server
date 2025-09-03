@@ -3,10 +3,12 @@ package models
 import (
 	"errors"
 	"fmt"
+	"time"
+
 	"github.com/livekit/protocol/livekit"
 	"github.com/mynaparrot/plugnmeet-protocol/plugnmeet"
 	"github.com/mynaparrot/plugnmeet-server/pkg/config"
-	"time"
+	"github.com/retawsolit/!we!meet-protocol/wemeet backup moi"
 )
 
 func (m *IngressModel) CreateIngress(r *plugnmeet.CreateIngressReq) (*livekit.IngressInfo, error) {
@@ -55,7 +57,7 @@ func (m *IngressModel) CreateIngress(r *plugnmeet.CreateIngressReq) (*livekit.In
 		IsAdmin:         true,
 		RecordWebcam:    &tr,
 		WaitForApproval: false,
-		LockSettings: &plugnmeet.LockSettings{
+		LockSettings: &wemeet.LockSettings{
 			LockWebcam:     &fl,
 			LockMicrophone: &fl,
 		},
@@ -76,7 +78,7 @@ func (m *IngressModel) CreateIngress(r *plugnmeet.CreateIngressReq) (*livekit.In
 
 	// send analytics
 	analyticsModel := NewAnalyticsModel(m.app, m.ds, m.rs)
-	analyticsModel.HandleEvent(&plugnmeet.AnalyticsDataMsg{
+	analyticsModel.HandleEvent(&wemeet.AnalyticsDataMsg{
 		EventType: plugnmeet.AnalyticsEventType_ANALYTICS_EVENT_TYPE_ROOM,
 		EventName: plugnmeet.AnalyticsEvents_ANALYTICS_EVENT_ROOM_INGRESS_CREATED,
 		RoomId:    r.RoomId,

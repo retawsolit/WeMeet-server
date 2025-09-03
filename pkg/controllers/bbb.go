@@ -4,17 +4,18 @@ import (
 	"crypto/subtle"
 	"encoding/xml"
 	"fmt"
-	"github.com/goccy/go-json"
-	"github.com/gofiber/fiber/v2"
-	"github.com/mynaparrot/plugnmeet-protocol/bbbapiwrapper"
-	"github.com/mynaparrot/plugnmeet-protocol/plugnmeet"
-	"github.com/mynaparrot/plugnmeet-server/pkg/config"
-	"github.com/mynaparrot/plugnmeet-server/pkg/models"
-	natsservice "github.com/mynaparrot/plugnmeet-server/pkg/services/nats"
-	"google.golang.org/protobuf/encoding/protojson"
 	"net/url"
 	"strings"
 	"time"
+
+	"github.com/goccy/go-json"
+	"github.com/gofiber/fiber/v2"
+	"github.com/mynaparrot/plugnmeet-protocol/bbbapiwrapper"
+	"github.com/mynaparrot/plugnmeet-server/pkg/config"
+	"github.com/mynaparrot/plugnmeet-server/pkg/models"
+	natsservice "github.com/mynaparrot/plugnmeet-server/pkg/services/nats"
+	"github.com/retawsolit/!we!meet-protocol/wemeet backup moi"
+	"google.golang.org/protobuf/encoding/protojson"
 )
 
 // BBBController holds dependencies for BBB API compatibility handlers.
@@ -200,7 +201,7 @@ func (bc *BBBController) HandleBBBJoin(c *fiber.Ctx) error {
 	}
 
 	ex := new(bbbapiwrapper.CreateMeetingDefaultExtraData)
-	customDesign := new(plugnmeet.CustomDesignParams)
+	customDesign := new(wemeet.CustomDesignParams)
 	if metadata.ExtraData != nil {
 		err = json.Unmarshal([]byte(*metadata.ExtraData), ex)
 		if err != nil {
@@ -291,7 +292,7 @@ func (bc *BBBController) HandleBBBIsMeetingRunning(c *fiber.Ctx) error {
 		return c.XML(bbbapiwrapper.CommonResponseMsg("FAILED", "parsingError", "We can not parse request"))
 	}
 
-	res, _, _, _ := bc.RoomModel.IsRoomActive(c.UserContext(), &plugnmeet.IsRoomActiveReq{
+	res, _, _, _ := bc.RoomModel.IsRoomActive(c.UserContext(), &wemeet.IsRoomActiveReq{
 		RoomId: q.MeetingID,
 	})
 
@@ -314,7 +315,7 @@ func (bc *BBBController) HandleBBBGetMeetingInfo(c *fiber.Ctx) error {
 		return c.XML(bbbapiwrapper.CommonResponseMsg("FAILED", "parsingError", "We can not parse request"))
 	}
 
-	status, msg, res := bc.RoomModel.GetActiveRoomInfo(c.UserContext(), &plugnmeet.GetActiveRoomInfoReq{
+	status, msg, res := bc.RoomModel.GetActiveRoomInfo(c.UserContext(), &wemeet.GetActiveRoomInfoReq{
 		RoomId: bbbapiwrapper.CheckMeetingIdToMatchFormat(q.MeetingID),
 	})
 
@@ -369,7 +370,7 @@ func (bc *BBBController) HandleBBBEndMeetings(c *fiber.Ctx) error {
 		return c.XML(bbbapiwrapper.CommonResponseMsg("FAILED", "parsingError", "We can not parse request"))
 	}
 
-	status, msg := bc.RoomModel.EndRoom(c.UserContext(), &plugnmeet.RoomEndReq{
+	status, msg := bc.RoomModel.EndRoom(c.UserContext(), &wemeet.RoomEndReq{
 		RoomId: bbbapiwrapper.CheckMeetingIdToMatchFormat(q.MeetingID),
 	})
 
@@ -422,7 +423,7 @@ func (bc *BBBController) HandleBBBDeleteRecordings(c *fiber.Ctx) error {
 		return c.XML(bbbapiwrapper.CommonResponseMsg("FAILED", "parsingError", "We can not parse request"))
 	}
 
-	err = bc.RecordingModel.DeleteRecording(&plugnmeet.DeleteRecordingReq{
+	err = bc.RecordingModel.DeleteRecording(&wemeet.DeleteRecordingReq{
 		RecordId: q.RecordID,
 	})
 
