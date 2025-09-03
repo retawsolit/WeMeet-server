@@ -1,7 +1,1 @@
-log/
-recording_files/
-mysql-data/
-client/dist/
-.git/
-.vscode/
-.idea/
+**/node_modules
