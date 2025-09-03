@@ -3,12 +3,13 @@ package models
 import (
 	"errors"
 	"fmt"
-	"github.com/mynaparrot/plugnmeet-protocol/plugnmeet"
-	natsservice "github.com/mynaparrot/plugnmeet-server/pkg/services/nats"
+
+	"github.com/retawsolit/WeMeet-protocol/wemeet"
+	natsservice "github.com/retawsolit/WeMeet-server/pkg/services/nats"
 	log "github.com/sirupsen/logrus"
 )
 
-func (m *UserModel) CreateNewPresenter(r *plugnmeet.GenerateTokenReq) error {
+func (m *UserModel) CreateNewPresenter(r *wemeet.GenerateTokenReq) error {
 	// first, check if we've any presenter already assigned
 	ids, err := m.natsService.GetOnlineUsersId(r.RoomId)
 	if err != nil {
@@ -37,7 +38,7 @@ func (m *UserModel) CreateNewPresenter(r *plugnmeet.GenerateTokenReq) error {
 	return nil
 }
 
-func (m *UserModel) SwitchPresenter(r *plugnmeet.SwitchPresenterReq) error {
+func (m *UserModel) SwitchPresenter(r *wemeet.SwitchPresenterReq) error {
 	ids := m.natsService.GetUsersIdFromRoomStatusBucket(r.RoomId)
 	if ids == nil || len(ids) == 0 {
 		return errors.New("no users found")
@@ -55,7 +56,7 @@ func (m *UserModel) SwitchPresenter(r *plugnmeet.SwitchPresenterReq) error {
 		}
 		update := false
 
-		if r.Task == plugnmeet.SwitchPresenterTask_PROMOTE {
+		if r.Task == wemeet.SwitchPresenterTask_PROMOTE {
 			if userId == r.UserId {
 				uInfo.IsPresenter = true
 				metadata.IsPresenter = true
@@ -66,7 +67,7 @@ func (m *UserModel) SwitchPresenter(r *plugnmeet.SwitchPresenterReq) error {
 				metadata.IsPresenter = false
 				update = true
 			}
-		} else if r.Task == plugnmeet.SwitchPresenterTask_DEMOTE {
+		} else if r.Task == wemeet.SwitchPresenterTask_DEMOTE {
 			// make requested user as presenter first
 			// otherwise there won't be any presenter in the room
 			if userId == r.RequestedUserId {

@@ -2,11 +2,12 @@ package natsservice
 
 import (
 	"context"
-	"github.com/mynaparrot/plugnmeet-protocol/plugnmeet"
-	"github.com/mynaparrot/plugnmeet-server/pkg/config"
-	log "github.com/sirupsen/logrus"
 	"strconv"
 	"sync"
+
+	"github.com/mynaparrot/plugnmeet-server/pkg/config"
+	"github.com/retawsolit/!we!meet-protocol/wemeet backup moi"
+	log "github.com/sirupsen/logrus"
 )
 
 var (
@@ -15,7 +16,7 @@ var (
 )
 
 type CachedRoomEntry struct {
-	RoomInfo *plugnmeet.NatsKvRoomInfo
+	RoomInfo *wemeet.NatsKvRoomInfo
 }
 
 type CachedRoomUserStatusEntry struct {
@@ -24,7 +25,7 @@ type CachedRoomUserStatusEntry struct {
 }
 
 type CachedUserInfoEntry struct {
-	UserInfo   *plugnmeet.NatsKvUserInfo
+	UserInfo   *wemeet.NatsKvUserInfo
 	LastPingAt uint64
 }
 

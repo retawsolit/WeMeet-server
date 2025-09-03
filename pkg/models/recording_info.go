@@ -2,10 +2,11 @@ package models
 
 import (
 	"errors"
-	"github.com/mynaparrot/plugnmeet-protocol/plugnmeet"
+
+	"github.com/retawsolit/WeMeet-protocol/wemeet"
 )
 
-func (m *RecordingModel) FetchRecordings(r *plugnmeet.FetchRecordingsReq) (*plugnmeet.FetchRecordingsResult, error) {
+func (m *RecordingModel) FetchRecordings(r *wemeet.FetchRecordingsReq) (*wemeet.FetchRecordingsResult, error) {
 	if r.Limit <= 0 {
 		r.Limit = 20
 	}
@@ -17,9 +18,9 @@ func (m *RecordingModel) FetchRecordings(r *plugnmeet.FetchRecordingsReq) (*plug
 	if err != nil {
 		return nil, err
 	}
-	var recordings []*plugnmeet.RecordingInfo
+	var recordings []*wemeet.RecordingInfo
 	for _, v := range data {
-		recording := &plugnmeet.RecordingInfo{
+		recording := &wemeet.RecordingInfo{
 			RecordId:         v.RecordID,
 			RoomId:           v.RoomID,
 			RoomSid:          v.RoomSid.String,
@@ -31,7 +32,7 @@ func (m *RecordingModel) FetchRecordings(r *plugnmeet.FetchRecordingsReq) (*plug
 		recordings = append(recordings, recording)
 	}
 
-	result := &plugnmeet.FetchRecordingsResult{
+	result := &wemeet.FetchRecordingsResult{
 		TotalRecordings: total,
 		From:            r.From,
 		Limit:           r.Limit,
@@ -43,7 +44,7 @@ func (m *RecordingModel) FetchRecordings(r *plugnmeet.FetchRecordingsReq) (*plug
 }
 
 // FetchRecording to get single recording information from DB
-func (m *RecordingModel) FetchRecording(recordId string) (*plugnmeet.RecordingInfo, error) {
+func (m *RecordingModel) FetchRecording(recordId string) (*wemeet.RecordingInfo, error) {
 	v, err := m.ds.GetRecording(recordId)
 	if err != nil {
 		return nil, err
@@ -51,7 +52,7 @@ func (m *RecordingModel) FetchRecording(recordId string) (*plugnmeet.RecordingIn
 	if v == nil {
 		return nil, errors.New("no info found")
 	}
-	recording := &plugnmeet.RecordingInfo{
+	recording := &wemeet.RecordingInfo{
 		RecordId:         v.RecordID,
 		RoomId:           v.RoomID,
 		RoomSid:          v.RoomSid.String,
@@ -64,17 +65,17 @@ func (m *RecordingModel) FetchRecording(recordId string) (*plugnmeet.RecordingIn
 	return recording, nil
 }
 
-func (m *RecordingModel) RecordingInfo(req *plugnmeet.RecordingInfoReq) (*plugnmeet.RecordingInfoRes, error) {
+func (m *RecordingModel) RecordingInfo(req *wemeet.RecordingInfoReq) (*wemeet.RecordingInfoRes, error) {
 	recording, err := m.FetchRecording(req.RecordId)
 	if err != nil {
 		return nil, err
 	}
 
-	pastRoomInfo := new(plugnmeet.PastRoomInfo)
+	pastRoomInfo := new(wemeet.PastRoomInfo)
 	// SID can't be null, so we'll check before
 	if recording.GetRoomSid() != "" {
 		if roomInfo, err := m.ds.GetRoomInfoBySid(recording.GetRoomSid(), nil); err == nil && roomInfo != nil {
-			pastRoomInfo = &plugnmeet.PastRoomInfo{
+			pastRoomInfo = &wemeet.PastRoomInfo{
 				RoomTitle:          roomInfo.RoomTitle,
 				RoomId:             roomInfo.RoomId,
 				RoomSid:            roomInfo.Sid,
@@ -89,7 +90,7 @@ func (m *RecordingModel) RecordingInfo(req *plugnmeet.RecordingInfoReq) (*plugnm
 		}
 	}
 
-	return &plugnmeet.RecordingInfoRes{
+	return &wemeet.RecordingInfoRes{
 		Status:        true,
 		Msg:           "success",
 		RecordingInfo: recording,

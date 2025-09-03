@@ -5,17 +5,16 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/mynaparrot/plugnmeet-protocol/plugnmeet"
-	"github.com/mynaparrot/plugnmeet-server/pkg/config"
-	"github.com/mynaparrot/plugnmeet-server/pkg/dbmodels"
-	"github.com/mynaparrot/plugnmeet-server/pkg/helpers"
-	"github.com/retawsolit/!we!meet-protocol/wemeet backup moi"
+	"github.com/retawsolit/WeMeet-protocol/wemeet"
+	"github.com/retawsolit/WeMeet-server/pkg/config"
+	"github.com/retawsolit/WeMeet-server/pkg/dbmodels"
+	"github.com/retawsolit/WeMeet-server/pkg/helpers"
 	log "github.com/sirupsen/logrus"
 	"google.golang.org/protobuf/encoding/protojson"
 )
 
 // recordingStarted update when recorder will start recording
-func (m *RecordingModel) recordingStarted(r *plugnmeet.RecorderToWeMeet) {
+func (m *RecordingModel) recordingStarted(r *wemeet.RecorderToWeMeet) {
 	_, err := m.ds.UpdateRoomRecordingStatus(uint64(r.RoomTableId), 1, &r.RecorderId)
 	if err != nil {
 		log.Infoln(err)
@@ -41,7 +40,7 @@ func (m *RecordingModel) recordingStarted(r *plugnmeet.RecorderToWeMeet) {
 	}
 }
 
-func (m *RecordingModel) addRecordingInfoToDB(r *plugnmeet.RecorderToWeMeet, roomCreationTime int64) (int64, error) {
+func (m *RecordingModel) addRecordingInfoToDB(r *wemeet.RecorderToWeMeet, roomCreationTime int64) (int64, error) {
 	v := sql.NullString{
 		String: r.RoomSid,
 		Valid:  true,
@@ -70,7 +69,7 @@ func (m *RecordingModel) addRecordingInfoToDB(r *plugnmeet.RecorderToWeMeet, roo
 // using this recording info file we can import those recordings
 // or will get an idea about the recording
 // format: path/recording_file_name.{mp4|webm}.json
-func (m *RecordingModel) addRecordingInfoFile(r *plugnmeet.RecorderToWeMeet, creation int64, roomInfo *dbmodels.RoomInfo) {
+func (m *RecordingModel) addRecordingInfoFile(r *wemeet.RecorderToWeMeet, creation int64, roomInfo *dbmodels.RoomInfo) {
 	toRecord := &wemeet.RecordingInfoFile{
 		RoomTableId:      r.RoomTableId,
 		RoomId:           r.RoomId,

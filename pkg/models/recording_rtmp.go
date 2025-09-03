@@ -1,11 +1,11 @@
 package models
 
 import (
-	"github.com/mynaparrot/plugnmeet-protocol/plugnmeet"
+	"github.com/retawsolit/WeMeet-protocol/wemeet"
 	log "github.com/sirupsen/logrus"
 )
 
-func (m *RecordingModel) rtmpStarted(r *plugnmeet.RecorderToWeMeet) {
+func (m *RecordingModel) rtmpStarted(r *wemeet.RecorderToWeMeet) {
 	_, err := m.ds.UpdateRoomRTMPStatus(uint64(r.RoomTableId), 1, &r.RecorderId)
 	if err != nil {
 		log.Infoln(err)
@@ -31,7 +31,7 @@ func (m *RecordingModel) rtmpStarted(r *plugnmeet.RecorderToWeMeet) {
 }
 
 // rtmpEnded will call when the recorder ends rtmp broadcasting
-func (m *RecordingModel) rtmpEnded(r *plugnmeet.RecorderToWeMeet) {
+func (m *RecordingModel) rtmpEnded(r *wemeet.RecorderToWeMeet) {
 	_, err := m.ds.UpdateRoomRTMPStatus(uint64(r.RoomTableId), 0, nil)
 	if err != nil {
 		log.Infoln(err)

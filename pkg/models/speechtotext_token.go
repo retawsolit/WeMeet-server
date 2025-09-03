@@ -4,15 +4,16 @@ import (
 	"bytes"
 	"errors"
 	"fmt"
-	"github.com/mynaparrot/plugnmeet-protocol/plugnmeet"
-	"github.com/mynaparrot/plugnmeet-server/pkg/config"
 	"io"
 	"net/http"
 	"sort"
 	"strconv"
+
+	"github.com/retawsolit/WeMeet-protocol/wemeet"
+	"github.com/retawsolit/WeMeet-server/pkg/config"
 )
 
-func (m *SpeechToTextModel) GenerateAzureToken(r *plugnmeet.GenerateAzureTokenReq, requestedUserId string) error {
+func (m *SpeechToTextModel) GenerateAzureToken(r *wemeet.GenerateAzureTokenReq, requestedUserId string) error {
 	e, err := m.rs.SpeechToTextAzureKeyRequestedTask(r.RoomId, requestedUserId, "check")
 	if err != nil {
 		return err
@@ -58,10 +59,10 @@ func (m *SpeechToTextModel) GenerateAzureToken(r *plugnmeet.GenerateAzureTokenRe
 		return err
 	}
 
-	return m.natsService.BroadcastSystemEventToRoom(plugnmeet.NatsMsgServerToClientEvents_AZURE_COGNITIVE_SERVICE_SPEECH_TOKEN, r.RoomId, res, &requestedUserId)
+	return m.natsService.BroadcastSystemEventToRoom(wemeet.NatsMsgServerToClientEvents_AZURE_COGNITIVE_SERVICE_SPEECH_TOKEN, r.RoomId, res, &requestedUserId)
 }
 
-func (m *SpeechToTextModel) RenewAzureToken(r *plugnmeet.AzureTokenRenewReq, requestedUserId string) error {
+func (m *SpeechToTextModel) RenewAzureToken(r *wemeet.AzureTokenRenewReq, requestedUserId string) error {
 	ss, err := m.rs.SpeechToTextCheckUserUsage(r.RoomId, requestedUserId)
 	if err != nil {
 		return err
@@ -90,10 +91,10 @@ func (m *SpeechToTextModel) RenewAzureToken(r *plugnmeet.AzureTokenRenewReq, req
 
 	// send token by data channel
 	res.Renew = true
-	return m.natsService.BroadcastSystemEventToRoom(plugnmeet.NatsMsgServerToClientEvents_AZURE_COGNITIVE_SERVICE_SPEECH_TOKEN, r.RoomId, res, &requestedUserId)
+	return m.natsService.BroadcastSystemEventToRoom(wemeet.NatsMsgServerToClientEvents_AZURE_COGNITIVE_SERVICE_SPEECH_TOKEN, r.RoomId, res, &requestedUserId)
 }
 
-func (m *SpeechToTextModel) sendRequestToAzureForToken(subscriptionKey, serviceRegion, keyId string) (*plugnmeet.GenerateAzureTokenRes, error) {
+func (m *SpeechToTextModel) sendRequestToAzureForToken(subscriptionKey, serviceRegion, keyId string) (*wemeet.GenerateAzureTokenRes, error) {
 	url := fmt.Sprintf("https://%s.api.cognitive.microsoft.com/sts/v1.0/issueToken", serviceRegion)
 	r, err := http.NewRequest("POST", url, bytes.NewReader([]byte("{}")))
 	if err != nil {
@@ -112,7 +113,7 @@ func (m *SpeechToTextModel) sendRequestToAzureForToken(subscriptionKey, serviceR
 	}
 
 	token := string(body)
-	return &plugnmeet.GenerateAzureTokenRes{
+	return &wemeet.GenerateAzureTokenRes{
 		Status:        true,
 		Msg:           "success",
 		Token:         &token,

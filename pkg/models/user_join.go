@@ -9,15 +9,15 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	"github.com/mynaparrot/plugnmeet-protocol/plugnmeet"
-	"github.com/mynaparrot/plugnmeet-server/pkg/config"
-	natsservice "github.com/mynaparrot/plugnmeet-server/pkg/services/nats"
+	"github.com/retawsolit/WeMeet-protocol/wemeet"
+	"github.com/retawsolit/WeMeet-server/pkg/config"
+	natsservice "github.com/retawsolit/WeMeet-server/pkg/services/nats"
 	log "github.com/sirupsen/logrus"
 )
 
 var validUserIDRegex = regexp.MustCompile("^[a-zA-Z0-9-_]+$")
 
-func (m *UserModel) GetPNMJoinToken(ctx context.Context, g *plugnmeet.GenerateTokenReq) (string, error) {
+func (m *UserModel) GetPNMJoinToken(ctx context.Context, g *wemeet.GenerateTokenReq) (string, error) {
 	// check first
 	_ = waitUntilRoomCreationCompletes(ctx, m.rs, g.GetRoomId())
 
@@ -39,7 +39,7 @@ func (m *UserModel) GetPNMJoinToken(ctx context.Context, g *plugnmeet.GenerateTo
 	}
 
 	if g.UserInfo.UserMetadata == nil {
-		g.UserInfo.UserMetadata = new(plugnmeet.UserMetadata)
+		g.UserInfo.UserMetadata = new(wemeet.UserMetadata)
 	}
 
 	if g.UserInfo.UserMetadata.ExUserId == nil || *g.UserInfo.UserMetadata.ExUserId == "" {
@@ -66,7 +66,7 @@ func (m *UserModel) GetPNMJoinToken(ctx context.Context, g *plugnmeet.GenerateTo
 		if status == natsservice.UserStatusOnline {
 			log.Warnln(fmt.Sprintf("same user found in online status, removing that user before re-generating token for userId: %s; roomId: %s", g.UserInfo.GetUserId(), g.GetRoomId()))
 
-			_ = m.RemoveParticipant(&plugnmeet.RemoveParticipantReq{
+			_ = m.RemoveParticipant(&wemeet.RemoveParticipantReq{
 				RoomId: g.GetRoomId(),
 				UserId: g.GetUserInfo().GetUserId(),
 				Msg:    "notifications.room-disconnected-duplicate-entry",
@@ -86,7 +86,7 @@ func (m *UserModel) GetPNMJoinToken(ctx context.Context, g *plugnmeet.GenerateTo
 		g.UserInfo.UserMetadata.IsAdmin = true
 		g.UserInfo.UserMetadata.WaitForApproval = false
 		// no lock for admin
-		g.UserInfo.UserMetadata.LockSettings = new(plugnmeet.LockSettings)
+		g.UserInfo.UserMetadata.LockSettings = new(wemeet.LockSettings)
 
 		if err := m.CreateNewPresenter(g); err != nil {
 			return "", err
@@ -111,7 +111,7 @@ func (m *UserModel) GetPNMJoinToken(ctx context.Context, g *plugnmeet.GenerateTo
 		return "", err
 	}
 
-	c := &plugnmeet.WeMeetTokenClaims{
+	c := &wemeet.WeMeetTokenClaims{
 		Name:     g.UserInfo.Name,
 		UserId:   g.UserInfo.UserId,
 		RoomId:   g.RoomId,

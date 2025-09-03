@@ -6,11 +6,11 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/mynaparrot/plugnmeet-protocol/plugnmeet"
-	"github.com/mynaparrot/plugnmeet-server/pkg/config"
-	natsservice "github.com/mynaparrot/plugnmeet-server/pkg/services/nats"
 	"github.com/nats-io/nats.go"
+	"github.com/retawsolit/WeMeet-protocol/wemeet"
+	"github.com/retawsolit/WeMeet-server/pkg/config"
 	dbservice "github.com/retawsolit/WeMeet-server/pkg/services/db"
+	natsservice "github.com/retawsolit/WeMeet-server/pkg/services/nats"
 	redisservice "github.com/retawsolit/WeMeet-server/pkg/services/redis"
 	"google.golang.org/protobuf/proto"
 )
@@ -52,7 +52,7 @@ type RecorderReq struct {
 	RtmpUrl     string `json:"rtmp_url"`
 }
 
-func (m *RecorderModel) SendMsgToRecorder(req *plugnmeet.RecordingReq) error {
+func (m *RecorderModel) SendMsgToRecorder(req *wemeet.RecordingReq) error {
 	recordId := time.Now().UnixMilli()
 
 	if req.RoomTableId == 0 {
@@ -68,8 +68,8 @@ func (m *RecorderModel) SendMsgToRecorder(req *plugnmeet.RecordingReq) error {
 		req.RoomId = rmInfo.RoomId
 	}
 
-	toSend := &wemeet.PlugNmeetToRecorder{
-		From:        "plugnmeet",
+	toSend := &wemeet.WeMeetToRecorder{
+		From:        "wemeet",
 		RoomTableId: req.RoomTableId,
 		RoomId:      req.RoomId,
 		RoomSid:     req.Sid,
@@ -78,12 +78,12 @@ func (m *RecorderModel) SendMsgToRecorder(req *plugnmeet.RecordingReq) error {
 	}
 
 	switch req.Task {
-	case plugnmeet.RecordingTasks_START_RECORDING:
+	case wemeet.RecordingTasks_START_RECORDING:
 		err := m.addTokenAndRecorder(context.Background(), req, toSend, config.RecorderBot)
 		if err != nil {
 			return err
 		}
-	case plugnmeet.RecordingTasks_START_RTMP:
+	case wemeet.RecordingTasks_START_RTMP:
 		toSend.RtmpUrl = req.RtmpUrl
 		err := m.addTokenAndRecorder(context.Background(), req, toSend, config.RtmpBot)
 		if err != nil {
@@ -105,7 +105,7 @@ func (m *RecorderModel) SendMsgToRecorder(req *plugnmeet.RecordingReq) error {
 		return err
 	}
 
-	res := new(plugnmeet.CommonResponse)
+	res := new(wemeet.CommonResponse)
 	if err = proto.Unmarshal(msg.Data, res); err == nil && !res.Status {
 		return errors.New(res.GetMsg())
 	}

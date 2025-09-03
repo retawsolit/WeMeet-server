@@ -2,17 +2,18 @@ package models
 
 import (
 	"errors"
-	"github.com/mynaparrot/plugnmeet-protocol/plugnmeet"
+
+	"github.com/retawsolit/WeMeet-protocol/wemeet"
 	log "github.com/sirupsen/logrus"
 )
 
 // AssignLockSettingsToUser will assign lock to no-admin user
 // it will consider default room lock settings too
-func (m *UserModel) AssignLockSettingsToUser(meta *plugnmeet.RoomMetadata, g *plugnmeet.GenerateTokenReq) {
+func (m *UserModel) AssignLockSettingsToUser(meta *wemeet.RoomMetadata, g *wemeet.GenerateTokenReq) {
 	if g.UserInfo.UserMetadata.LockSettings == nil {
-		g.UserInfo.UserMetadata.LockSettings = new(plugnmeet.LockSettings)
+		g.UserInfo.UserMetadata.LockSettings = new(wemeet.LockSettings)
 	}
-	l := new(plugnmeet.LockSettings)
+	l := new(wemeet.LockSettings)
 
 	// if no lock settings were sent,
 	// then we'll use default room lock settings
@@ -78,7 +79,7 @@ func (m *UserModel) AssignLockSettingsToUser(meta *plugnmeet.RoomMetadata, g *pl
 
 // UpdateUserLockSettings will handle request to update user lock settings
 // if user id was sent "all" then it will update all the users
-func (m *UserModel) UpdateUserLockSettings(r *plugnmeet.UpdateUserLockSettingsReq) error {
+func (m *UserModel) UpdateUserLockSettings(r *wemeet.UpdateUserLockSettingsReq) error {
 	if r.UserId == "all" {
 		return m.updateRoomUsersLockSettings(r)
 	}
@@ -96,7 +97,7 @@ func (m *UserModel) UpdateUserLockSettings(r *plugnmeet.UpdateUserLockSettingsRe
 
 // updateRoomUsersLockSettings will update lock settings for all existing users
 // and room default lock settings for future users
-func (m *UserModel) updateRoomUsersLockSettings(r *plugnmeet.UpdateUserLockSettingsReq) error {
+func (m *UserModel) updateRoomUsersLockSettings(r *wemeet.UpdateUserLockSettingsReq) error {
 	participants, err := m.natsService.GetOnlineUsersList(r.RoomId)
 	if err != nil {
 		return err
@@ -135,7 +136,7 @@ func (m *UserModel) updateUserLockMetadata(roomId, userId, service, direction, m
 	return m.natsService.UpdateAndBroadcastUserMetadata(roomId, userId, mt, nil)
 }
 
-func (m *UserModel) assignNewLockSetting(service string, direction string, l *plugnmeet.LockSettings) *plugnmeet.LockSettings {
+func (m *UserModel) assignNewLockSetting(service string, direction string, l *wemeet.LockSettings) *wemeet.LockSettings {
 	lock := new(bool)
 	if direction == "lock" {
 		*lock = true

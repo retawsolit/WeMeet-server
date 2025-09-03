@@ -2,11 +2,12 @@ package models
 
 import (
 	"errors"
-	"github.com/mynaparrot/plugnmeet-protocol/plugnmeet"
+
+	"github.com/retawsolit/WeMeet-protocol/wemeet"
 	log "github.com/sirupsen/logrus"
 )
 
-func (m *WaitingRoomModel) ApproveWaitingUsers(r *plugnmeet.ApproveWaitingUsersReq) error {
+func (m *WaitingRoomModel) ApproveWaitingUsers(r *wemeet.ApproveWaitingUsersReq) error {
 	if r.UserId == "all" {
 		participants, err := m.natsService.GetOnlineUsersList(r.RoomId)
 		if err != nil {
@@ -47,7 +48,7 @@ func (m *WaitingRoomModel) approveUser(roomId, userId, metadata string) error {
 	return nil
 }
 
-func (m *WaitingRoomModel) UpdateWaitingRoomMessage(r *plugnmeet.UpdateWaitingRoomMessageReq) error {
+func (m *WaitingRoomModel) UpdateWaitingRoomMessage(r *wemeet.UpdateWaitingRoomMessageReq) error {
 	roomMeta, err := m.natsService.GetRoomMetadataStruct(r.RoomId)
 	if err != nil {
 		return err

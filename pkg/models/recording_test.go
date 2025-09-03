@@ -2,10 +2,11 @@ package models
 
 import (
 	"fmt"
-	"github.com/gofiber/fiber/v2"
-	"github.com/mynaparrot/plugnmeet-protocol/plugnmeet"
 	"testing"
 	"time"
+
+	"github.com/gofiber/fiber/v2"
+	"github.com/retawsolit/WeMeet-protocol/wemeet"
 )
 
 var recordingModel *RecordingModel
@@ -13,7 +14,7 @@ var recordingModel *RecordingModel
 func TestAuthRecording_FetchRecordings(t *testing.T) {
 	recordingModel = NewRecordingModel(nil, nil, nil)
 
-	result, err := recordingModel.FetchRecordings(&plugnmeet.FetchRecordingsReq{
+	result, err := recordingModel.FetchRecordings(&wemeet.FetchRecordingsReq{
 		RoomIds: []string{roomId},
 	})
 	if err != nil {
@@ -46,7 +47,7 @@ func TestAnalyticsAuthModel_FetchRecording(t *testing.T) {
 }
 
 func TestAnalyticsAuthModel_RecordingInfo(t *testing.T) {
-	result, err := recordingModel.RecordingInfo(&plugnmeet.RecordingInfoReq{
+	result, err := recordingModel.RecordingInfo(&wemeet.RecordingInfoReq{
 		RecordId: recordId,
 	})
 	if err != nil {
@@ -65,7 +66,7 @@ func TestAnalyticsAuthModel_RecordingInfo(t *testing.T) {
 }
 
 func TestAnalyticsAuthModel_DeleteRecording(t *testing.T) {
-	err := recordingModel.DeleteRecording(&plugnmeet.DeleteRecordingReq{
+	err := recordingModel.DeleteRecording(&wemeet.DeleteRecordingReq{
 		RecordId: recordId,
 	})
 	if err != nil {

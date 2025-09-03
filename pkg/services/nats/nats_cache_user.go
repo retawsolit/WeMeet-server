@@ -2,11 +2,12 @@ package natsservice
 
 import (
 	"fmt"
-	"github.com/mynaparrot/plugnmeet-protocol/plugnmeet"
+	"strconv"
+
 	"github.com/nats-io/nats.go/jetstream"
+	"github.com/retawsolit/!we!meet-protocol/wemeet backup moi"
 	log "github.com/sirupsen/logrus"
 	"google.golang.org/protobuf/proto"
-	"strconv"
 )
 
 // AddRoomUserStatusWatcher will start watching user status in a specific room.
@@ -117,7 +118,7 @@ func (ncs *NatsCacheService) AddUserInfoWatcher(kv jetstream.KeyValue, bucket, r
 		return
 	}
 	ncs.roomUsersInfoStore[roomId][userId] = CachedUserInfoEntry{
-		UserInfo: new(plugnmeet.NatsKvUserInfo),
+		UserInfo: new(wemeet.NatsKvUserInfo),
 	}
 	ncs.userLock.Unlock()
 
@@ -189,13 +190,13 @@ func (ncs *NatsCacheService) updateUserInfoCache(entry jetstream.KeyValueEntry, 
 	ncs.roomUsersInfoStore[roomId][userId] = user
 }
 
-func (ncs *NatsCacheService) GetUserInfo(roomId, userId string) *plugnmeet.NatsKvUserInfo {
+func (ncs *NatsCacheService) GetUserInfo(roomId, userId string) *wemeet.NatsKvUserInfo {
 	ncs.userLock.RLock()
 	defer ncs.userLock.RUnlock()
 	if rm, found := ncs.roomUsersInfoStore[roomId]; found {
 		if entry, ok := rm[userId]; ok && entry.UserInfo != nil {
 			// Return a copy to prevent modification of cached object if it's a pointer
-			infoCopy := proto.Clone(entry.UserInfo).(*plugnmeet.NatsKvUserInfo)
+			infoCopy := proto.Clone(entry.UserInfo).(*wemeet.NatsKvUserInfo)
 			return infoCopy
 		}
 	}

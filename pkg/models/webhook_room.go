@@ -2,13 +2,14 @@ package models
 
 import (
 	"fmt"
-	"github.com/livekit/protocol/livekit"
-	"github.com/mynaparrot/plugnmeet-protocol/plugnmeet"
-	"github.com/mynaparrot/plugnmeet-server/pkg/config"
-	livekitservice "github.com/mynaparrot/plugnmeet-server/pkg/services/livekit"
-	natsservice "github.com/mynaparrot/plugnmeet-server/pkg/services/nats"
-	log "github.com/sirupsen/logrus"
 	"time"
+
+	"github.com/livekit/protocol/livekit"
+	"github.com/retawsolit/WeMeet-protocol/wemeet"
+	"github.com/retawsolit/WeMeet-server/pkg/config"
+	livekitservice "github.com/retawsolit/WeMeet-server/pkg/services/livekit"
+	natsservice "github.com/retawsolit/WeMeet-server/pkg/services/nats"
+	log "github.com/sirupsen/logrus"
 )
 
 func (m *WebhookModel) roomStarted(event *livekit.WebhookEvent) {
@@ -109,7 +110,7 @@ func (m *WebhookModel) roomFinished(event *livekit.WebhookEvent) {
 			log.Errorln(err)
 		}
 		// end the room in proper way
-		m.rm.EndRoom(m.ctx, &plugnmeet.RoomEndReq{RoomId: rInfo.RoomId})
+		m.rm.EndRoom(m.ctx, &wemeet.RoomEndReq{RoomId: rInfo.RoomId})
 	}
 
 	// now we'll perform a few service related tasks

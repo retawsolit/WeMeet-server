@@ -2,8 +2,9 @@ package models
 
 import (
 	"context"
-	"github.com/mynaparrot/plugnmeet-protocol/plugnmeet"
 	"time"
+
+	"github.com/retawsolit/WeMeet-protocol/wemeet"
 )
 
 func (m *SchedulerModel) checkRoomWithDuration() {
@@ -23,7 +24,7 @@ func (m *SchedulerModel) checkRoomWithDuration() {
 		now := uint64(time.Now().Unix())
 		valid := r.StartedAt + (r.Duration * 60)
 		if now > valid {
-			_, _ = m.rm.EndRoom(context.Background(), &plugnmeet.RoomEndReq{
+			_, _ = m.rm.EndRoom(context.Background(), &wemeet.RoomEndReq{
 				RoomId: i,
 			})
 		}

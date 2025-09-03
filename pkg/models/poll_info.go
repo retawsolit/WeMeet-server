@@ -7,13 +7,12 @@ import (
 	"strings"
 
 	"github.com/goccy/go-json"
-	"github.com/mynaparrot/plugnmeet-protocol/plugnmeet"
-	"github.com/retawsolit/!we!meet-protocol/wemeet backup moi"
+	"github.com/retawsolit/WeMeet-protocol/wemeet"
 	"google.golang.org/protobuf/encoding/protojson"
 )
 
-func (m *PollModel) ListPolls(roomId string) ([]*plugnmeet.PollInfo, error) {
-	var polls []*plugnmeet.PollInfo
+func (m *PollModel) ListPolls(roomId string) ([]*wemeet.PollInfo, error) {
+	var polls []*wemeet.PollInfo
 
 	result, err := m.rs.GetPollsListByRoomId(roomId)
 	if err != nil {
@@ -26,7 +25,7 @@ func (m *PollModel) ListPolls(roomId string) ([]*plugnmeet.PollInfo, error) {
 	}
 
 	for _, pi := range result {
-		info := new(plugnmeet.PollInfo)
+		info := new(wemeet.PollInfo)
 		err = protojson.Unmarshal([]byte(pi), info)
 		if err != nil {
 			continue
@@ -82,13 +81,13 @@ func (m *PollModel) GetPollResponsesDetails(roomId, pollId string) (map[string]s
 	return result, nil
 }
 
-func (m *PollModel) GetResponsesResult(roomId, pollId string) (*plugnmeet.PollResponsesResult, error) {
+func (m *PollModel) GetResponsesResult(roomId, pollId string) (*wemeet.PollResponsesResult, error) {
 	pi, err := m.rs.GetPollInfoByPollId(roomId, pollId)
 	if err != nil {
 		return nil, err
 	}
 
-	info := new(plugnmeet.PollInfo)
+	info := new(wemeet.PollInfo)
 	err = protojson.Unmarshal([]byte(pi), info)
 	if err != nil {
 		return nil, err
@@ -97,7 +96,7 @@ func (m *PollModel) GetResponsesResult(roomId, pollId string) (*plugnmeet.PollRe
 		return nil, errors.New("need to wait until poll close")
 	}
 
-	res := new(plugnmeet.PollResponsesResult)
+	res := new(wemeet.PollResponsesResult)
 	res.Question = info.Question
 
 	result, err := m.rs.GetPollResponsesByPollId(roomId, pollId)
@@ -108,7 +107,7 @@ func (m *PollModel) GetResponsesResult(roomId, pollId string) (*plugnmeet.PollRe
 		return nil, nil
 	}
 
-	var options []*plugnmeet.PollResponsesResultOptions
+	var options []*wemeet.PollResponsesResultOptions
 	for _, opt := range info.Options {
 		f := fmt.Sprintf("%d_count", opt.Id)
 		i, _ := strconv.Atoi(result[f])
@@ -127,7 +126,7 @@ func (m *PollModel) GetResponsesResult(roomId, pollId string) (*plugnmeet.PollRe
 	return res, nil
 }
 
-func (m *PollModel) GetPollsStats(roomId string) (*plugnmeet.PollsStats, error) {
+func (m *PollModel) GetPollsStats(roomId string) (*wemeet.PollsStats, error) {
 	res := &wemeet.PollsStats{
 		TotalPolls:   0,
 		TotalRunning: 0,
@@ -145,7 +144,7 @@ func (m *PollModel) GetPollsStats(roomId string) (*plugnmeet.PollsStats, error) 
 	res.TotalPolls = uint64(len(result))
 
 	for _, pi := range result {
-		info := new(plugnmeet.PollInfo)
+		info := new(wemeet.PollInfo)
 		err = protojson.Unmarshal([]byte(pi), info)
 		if err != nil {
 			continue

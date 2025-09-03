@@ -2,17 +2,18 @@ package models
 
 import (
 	"context"
-	"github.com/mynaparrot/plugnmeet-protocol/plugnmeet"
-	"github.com/mynaparrot/plugnmeet-server/pkg/dbmodels"
-	natsservice "github.com/mynaparrot/plugnmeet-server/pkg/services/nats"
 	"time"
+
+	"github.com/retawsolit/WeMeet-protocol/wemeet"
+	"github.com/retawsolit/WeMeet-server/pkg/dbmodels"
+	natsservice "github.com/retawsolit/WeMeet-server/pkg/services/nats"
 )
 
-func (m *RoomModel) IsRoomActive(ctx context.Context, r *plugnmeet.IsRoomActiveReq) (*plugnmeet.IsRoomActiveRes, *dbmodels.RoomInfo, *plugnmeet.NatsKvRoomInfo, *plugnmeet.RoomMetadata) {
+func (m *RoomModel) IsRoomActive(ctx context.Context, r *wemeet.IsRoomActiveReq) (*wemeet.IsRoomActiveRes, *dbmodels.RoomInfo, *wemeet.NatsKvRoomInfo, *wemeet.RoomMetadata) {
 	// check first
 	_ = waitUntilRoomCreationCompletes(ctx, m.rs, r.GetRoomId())
 
-	res := &plugnmeet.IsRoomActiveRes{
+	res := &wemeet.IsRoomActiveRes{
 		Status: true,
 		Msg:    "room is not active",
 	}
@@ -52,7 +53,7 @@ func (m *RoomModel) IsRoomActive(ctx context.Context, r *plugnmeet.IsRoomActiveR
 	return res, roomDbInfo, rInfo, meta
 }
 
-func (m *RoomModel) GetActiveRoomInfo(ctx context.Context, r *plugnmeet.GetActiveRoomInfoReq) (bool, string, *plugnmeet.ActiveRoomWithParticipant) {
+func (m *RoomModel) GetActiveRoomInfo(ctx context.Context, r *wemeet.GetActiveRoomInfoReq) (bool, string, *wemeet.ActiveRoomWithParticipant) {
 	// check first
 	_ = waitUntilRoomCreationCompletes(ctx, m.rs, r.GetRoomId())
 
@@ -76,8 +77,8 @@ func (m *RoomModel) GetActiveRoomInfo(ctx context.Context, r *plugnmeet.GetActiv
 		return false, "no room found", nil
 	}
 
-	res := new(plugnmeet.ActiveRoomWithParticipant)
-	res.RoomInfo = &plugnmeet.ActiveRoomInfo{
+	res := new(wemeet.ActiveRoomWithParticipant)
+	res.RoomInfo = &wemeet.ActiveRoomInfo{
 		RoomTitle:          roomDbInfo.RoomTitle,
 		RoomId:             roomDbInfo.RoomId,
 		Sid:                roomDbInfo.Sid,
@@ -106,7 +107,7 @@ func (m *RoomModel) GetActiveRoomInfo(ctx context.Context, r *plugnmeet.GetActiv
 	return true, "success", res
 }
 
-func (m *RoomModel) GetActiveRoomsInfo() (bool, string, []*plugnmeet.ActiveRoomWithParticipant) {
+func (m *RoomModel) GetActiveRoomsInfo() (bool, string, []*wemeet.ActiveRoomWithParticipant) {
 	roomsInfo, err := m.ds.GetActiveRoomsInfo()
 	if err != nil {
 		return false, err.Error(), nil
@@ -115,10 +116,10 @@ func (m *RoomModel) GetActiveRoomsInfo() (bool, string, []*plugnmeet.ActiveRoomW
 		return false, "no active room found", nil
 	}
 
-	var res []*plugnmeet.ActiveRoomWithParticipant
+	var res []*wemeet.ActiveRoomWithParticipant
 	for _, r := range roomsInfo {
-		i := &plugnmeet.ActiveRoomWithParticipant{
-			RoomInfo: &plugnmeet.ActiveRoomInfo{
+		i := &wemeet.ActiveRoomWithParticipant{
+			RoomInfo: &wemeet.ActiveRoomInfo{
 				RoomTitle:          r.RoomTitle,
 				RoomId:             r.RoomId,
 				Sid:                r.Sid,
@@ -156,7 +157,7 @@ func (m *RoomModel) GetActiveRoomsInfo() (bool, string, []*plugnmeet.ActiveRoomW
 	return true, "success", res
 }
 
-func (m *RoomModel) FetchPastRooms(r *plugnmeet.FetchPastRoomsReq) (*plugnmeet.FetchPastRoomsResult, error) {
+func (m *RoomModel) FetchPastRooms(r *wemeet.FetchPastRoomsReq) (*wemeet.FetchPastRoomsResult, error) {
 	if r.Limit <= 0 {
 		r.Limit = 20
 	}
@@ -167,10 +168,10 @@ func (m *RoomModel) FetchPastRooms(r *plugnmeet.FetchPastRoomsReq) (*plugnmeet.F
 	if err != nil {
 		return nil, err
 	}
-	var list []*plugnmeet.PastRoomInfo
+	var list []*wemeet.PastRoomInfo
 
 	for _, rr := range rooms {
-		room := &plugnmeet.PastRoomInfo{
+		room := &wemeet.PastRoomInfo{
 			RoomTitle:          rr.RoomTitle,
 			RoomId:             rr.RoomId,
 			RoomSid:            rr.Sid,
@@ -185,7 +186,7 @@ func (m *RoomModel) FetchPastRooms(r *plugnmeet.FetchPastRoomsReq) (*plugnmeet.F
 		list = append(list, room)
 	}
 
-	result := &plugnmeet.FetchPastRoomsResult{
+	result := &wemeet.FetchPastRoomsResult{
 		TotalRooms: total,
 		From:       r.From,
 		Limit:      r.Limit,

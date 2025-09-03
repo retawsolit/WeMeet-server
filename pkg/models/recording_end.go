@@ -1,11 +1,11 @@
 package models
 
 import (
-	"github.com/mynaparrot/plugnmeet-protocol/plugnmeet"
+	"github.com/retawsolit/WeMeet-protocol/wemeet"
 	log "github.com/sirupsen/logrus"
 )
 
-func (m *RecordingModel) recordingEnded(r *plugnmeet.RecorderToWeMeet) {
+func (m *RecordingModel) recordingEnded(r *wemeet.RecorderToWeMeet) {
 	_, err := m.ds.UpdateRoomRecordingStatus(uint64(r.RoomTableId), 0, nil)
 	if err != nil {
 		log.Infoln(err)

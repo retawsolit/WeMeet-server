@@ -2,11 +2,12 @@ package natsservice
 
 import (
 	"context"
+
 	"github.com/google/uuid"
-	"github.com/mynaparrot/plugnmeet-protocol/plugnmeet"
 	"github.com/mynaparrot/plugnmeet-server/pkg/config"
 	"github.com/nats-io/nats.go"
 	"github.com/nats-io/nats.go/jetstream"
+	"github.com/retawsolit/!we!meet-protocol/wemeet backup moi"
 	"google.golang.org/protobuf/encoding/protojson"
 	"google.golang.org/protobuf/proto"
 )
@@ -53,7 +54,7 @@ func (s *NatsService) MarshalToProtoJson(m proto.Message) (string, error) {
 }
 
 // MarshalRoomMetadata will convert metadata struct to proper json format
-func (s *NatsService) MarshalRoomMetadata(meta *plugnmeet.RoomMetadata) (string, error) {
+func (s *NatsService) MarshalRoomMetadata(meta *wemeet.RoomMetadata) (string, error) {
 	mId := uuid.NewString()
 	meta.MetadataId = &mId
 
@@ -66,8 +67,8 @@ func (s *NatsService) MarshalRoomMetadata(meta *plugnmeet.RoomMetadata) (string,
 }
 
 // UnmarshalRoomMetadata will convert metadata string to proper format
-func (s *NatsService) UnmarshalRoomMetadata(metadata string) (*plugnmeet.RoomMetadata, error) {
-	meta := new(plugnmeet.RoomMetadata)
+func (s *NatsService) UnmarshalRoomMetadata(metadata string) (*wemeet.RoomMetadata, error) {
+	meta := new(wemeet.RoomMetadata)
 	err := protojson.Unmarshal([]byte(metadata), meta)
 	if err != nil {
 		return nil, err
@@ -77,7 +78,7 @@ func (s *NatsService) UnmarshalRoomMetadata(metadata string) (*plugnmeet.RoomMet
 }
 
 // MarshalUserMetadata will create proper json string of user's metadata
-func (s *NatsService) MarshalUserMetadata(meta *plugnmeet.UserMetadata) (string, error) {
+func (s *NatsService) MarshalUserMetadata(meta *wemeet.UserMetadata) (string, error) {
 	mId := uuid.NewString()
 	meta.MetadataId = &mId
 
@@ -90,8 +91,8 @@ func (s *NatsService) MarshalUserMetadata(meta *plugnmeet.UserMetadata) (string,
 }
 
 // UnmarshalUserMetadata will create proper formatted medata from json string
-func (s *NatsService) UnmarshalUserMetadata(metadata string) (*plugnmeet.UserMetadata, error) {
-	m := new(plugnmeet.UserMetadata)
+func (s *NatsService) UnmarshalUserMetadata(metadata string) (*wemeet.UserMetadata, error) {
+	m := new(wemeet.UserMetadata)
 	err := protojson.Unmarshal([]byte(metadata), m)
 	if err != nil {
 		return nil, err

@@ -1,15 +1,16 @@
 package models
 
 import (
-	"github.com/mynaparrot/plugnmeet-protocol/plugnmeet"
-	"github.com/mynaparrot/plugnmeet-server/pkg/config"
-	"github.com/mynaparrot/plugnmeet-server/pkg/helpers"
-	"github.com/mynaparrot/plugnmeet-server/pkg/services/db"
-	natsservice "github.com/mynaparrot/plugnmeet-server/pkg/services/nats"
-	"github.com/mynaparrot/plugnmeet-server/pkg/services/redis"
-	log "github.com/sirupsen/logrus"
 	"strconv"
 	"time"
+
+	"github.com/retawsolit/WeMeet-protocol/wemeet"
+	"github.com/retawsolit/WeMeet-server/pkg/config"
+	"github.com/retawsolit/WeMeet-server/pkg/helpers"
+	dbservice "github.com/retawsolit/WeMeet-server/pkg/services/db"
+	natsservice "github.com/retawsolit/WeMeet-server/pkg/services/nats"
+	redisservice "github.com/retawsolit/WeMeet-server/pkg/services/redis"
+	log "github.com/sirupsen/logrus"
 )
 
 type SpeechToTextModel struct {
@@ -42,19 +43,19 @@ func NewSpeechToTextModel(app *config.AppConfig, ds *dbservice.DatabaseService, 
 	}
 }
 
-func (m *SpeechToTextModel) sendToWebhookNotifier(rId, rSid string, userId *string, task plugnmeet.SpeechServiceUserStatusTasks, usage int64) {
+func (m *SpeechToTextModel) sendToWebhookNotifier(rId, rSid string, userId *string, task wemeet.SpeechServiceUserStatusTasks, usage int64) {
 	tk := task.String()
 	n := m.webhookNotifier
 	if n == nil {
 		return
 	}
-	msg := &plugnmeet.CommonNotifyEvent{
+	msg := &wemeet.CommonNotifyEvent{
 		Event: &tk,
-		Room: &plugnmeet.NotifyEventRoom{
+		Room: &wemeet.NotifyEventRoom{
 			Sid:    &rSid,
 			RoomId: &rId,
 		},
-		SpeechService: &plugnmeet.SpeechServiceEvent{
+		SpeechService: &wemeet.SpeechServiceEvent{
 			UserId:     userId,
 			TotalUsage: usage,
 		},
@@ -78,7 +79,7 @@ func (m *SpeechToTextModel) OnAfterRoomEnded(roomId, sId string) error {
 	}
 	for _, k := range hkeys {
 		if k != "total_usage" {
-			_ = m.SpeechServiceUsersUsage(roomId, sId, k, plugnmeet.SpeechServiceUserStatusTasks_SPEECH_TO_TEXT_SESSION_ENDED)
+			_ = m.SpeechServiceUsersUsage(roomId, sId, k, wemeet.SpeechServiceUserStatusTasks_SPEECH_TO_TEXT_SESSION_ENDED)
 		}
 	}
 
@@ -87,11 +88,11 @@ func (m *SpeechToTextModel) OnAfterRoomEnded(roomId, sId string) error {
 	if usage != "" {
 		c, err := strconv.ParseInt(usage, 10, 64)
 		if err == nil {
-			m.sendToWebhookNotifier(roomId, sId, nil, plugnmeet.SpeechServiceUserStatusTasks_SPEECH_TO_TEXT_TOTAL_USAGE, c)
+			m.sendToWebhookNotifier(roomId, sId, nil, wemeet.SpeechServiceUserStatusTasks_SPEECH_TO_TEXT_TOTAL_USAGE, c)
 			// send analytics
-			m.analyticsModel.HandleEvent(&plugnmeet.AnalyticsDataMsg{
-				EventType:        plugnmeet.AnalyticsEventType_ANALYTICS_EVENT_TYPE_ROOM,
-				EventName:        plugnmeet.AnalyticsEvents_ANALYTICS_EVENT_ROOM_SPEECH_SERVICE_TOTAL_USAGE,
+			m.analyticsModel.HandleEvent(&wemeet.AnalyticsDataMsg{
+				EventType:        wemeet.AnalyticsEventType_ANALYTICS_EVENT_TYPE_ROOM,
+				EventName:        wemeet.AnalyticsEvents_ANALYTICS_EVENT_ROOM_SPEECH_SERVICE_TOTAL_USAGE,
 				RoomId:           roomId,
 				EventValueString: &usage,
 			})

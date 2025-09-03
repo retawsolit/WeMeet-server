@@ -2,9 +2,10 @@ package natsservice
 
 import (
 	"fmt"
-	"github.com/mynaparrot/plugnmeet-protocol/plugnmeet"
 	"strings"
 	"time"
+
+	"github.com/retawsolit/!we!meet-protocol/wemeet backup moi"
 )
 
 type RecorderInfo struct {
@@ -43,9 +44,9 @@ func (s *NatsService) GetRecorderInfo(recorderId string) (*RecorderInfo, error) 
 	info := &RecorderInfo{
 		RecorderId: recorderId,
 	}
-	info.MaxLimit, _ = s.getInt64Value(kv, fmt.Sprintf("%d", plugnmeet.RecorderInfoKeys_RECORDER_INFO_MAX_LIMIT))
-	info.CurrentProgress, _ = s.getInt64Value(kv, fmt.Sprintf("%d", plugnmeet.RecorderInfoKeys_RECORDER_INFO_CURRENT_PROGRESS))
-	info.LastPing, _ = s.getInt64Value(kv, fmt.Sprintf("%d", plugnmeet.RecorderInfoKeys_RECORDER_INFO_LAST_PING))
+	info.MaxLimit, _ = s.getInt64Value(kv, fmt.Sprintf("%d", wemeet.RecorderInfoKeys_RECORDER_INFO_MAX_LIMIT))
+	info.CurrentProgress, _ = s.getInt64Value(kv, fmt.Sprintf("%d", wemeet.RecorderInfoKeys_RECORDER_INFO_CURRENT_PROGRESS))
+	info.LastPing, _ = s.getInt64Value(kv, fmt.Sprintf("%d", wemeet.RecorderInfoKeys_RECORDER_INFO_LAST_PING))
 
 	return info, nil
 }

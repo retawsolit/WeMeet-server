@@ -2,10 +2,11 @@ package models
 
 import (
 	"context"
-	"github.com/mynaparrot/plugnmeet-protocol/plugnmeet"
-	"github.com/mynaparrot/plugnmeet-server/pkg/dbmodels"
-	log "github.com/sirupsen/logrus"
 	"time"
+
+	"github.com/retawsolit/WeMeet-protocol/wemeet"
+	"github.com/retawsolit/WeMeet-server/pkg/dbmodels"
+	log "github.com/sirupsen/logrus"
 )
 
 // activeRoomChecker will check & do reconciliation between DB & livekit
@@ -70,7 +71,7 @@ func (m *SchedulerModel) activeRoomChecker() {
 				log.Infoln("EmptyTimeout for roomId:", room.RoomId, "passed: ", uint64(time.Now().UTC().Unix())-valid)
 
 				// end room by proper channel
-				m.rm.EndRoom(context.Background(), &plugnmeet.RoomEndReq{RoomId: room.RoomId})
+				m.rm.EndRoom(context.Background(), &wemeet.RoomEndReq{RoomId: room.RoomId})
 				continue
 			}
 		}

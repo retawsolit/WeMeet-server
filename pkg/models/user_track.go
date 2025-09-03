@@ -2,9 +2,10 @@ package models
 
 import (
 	"errors"
+
 	"github.com/livekit/protocol/livekit"
-	"github.com/mynaparrot/plugnmeet-protocol/plugnmeet"
-	"github.com/mynaparrot/plugnmeet-server/pkg/config"
+	"github.com/retawsolit/WeMeet-protocol/wemeet"
+	"github.com/retawsolit/WeMeet-server/pkg/config"
 )
 
 type MuteUnMuteTrackReq struct {
@@ -20,7 +21,7 @@ type MuteUnMuteTrackReq struct {
 // if track_sid wasn't send then it will find the microphone track & mute it
 // for unmute you'll require enabling "enable_remote_unmute: true" in livekit
 // under room settings. For privacy reason we aren't using it.
-func (m *UserModel) MuteUnMuteTrack(r *plugnmeet.MuteUnMuteTrackReq) error {
+func (m *UserModel) MuteUnMuteTrack(r *wemeet.MuteUnMuteTrackReq) error {
 	if r.UserId == "all" {
 		err := m.muteUnmuteAllMic(r)
 		return err
@@ -57,7 +58,7 @@ func (m *UserModel) MuteUnMuteTrack(r *plugnmeet.MuteUnMuteTrackReq) error {
 	return nil
 }
 
-func (m *UserModel) muteUnmuteAllMic(r *plugnmeet.MuteUnMuteTrackReq) error {
+func (m *UserModel) muteUnmuteAllMic(r *wemeet.MuteUnMuteTrackReq) error {
 	participants, err := m.lk.LoadParticipants(r.RoomId)
 	if err != nil {
 		return err

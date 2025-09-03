@@ -2,8 +2,9 @@ package natsservice
 
 import (
 	"fmt"
-	"github.com/mynaparrot/plugnmeet-protocol/plugnmeet"
+
 	"github.com/nats-io/nats.go/jetstream"
+	"github.com/retawsolit/!we!meet-protocol/wemeet backup moi"
 	log "github.com/sirupsen/logrus"
 	"google.golang.org/protobuf/proto"
 )
@@ -19,7 +20,7 @@ func (ncs *NatsCacheService) AddRoomWatcher(kv jetstream.KeyValue, bucket, roomI
 		return
 	}
 	ncs.roomsInfoStore[roomId] = CachedRoomEntry{
-		RoomInfo: new(plugnmeet.NatsKvRoomInfo),
+		RoomInfo: new(wemeet.NatsKvRoomInfo),
 	}
 	ncs.roomLock.Unlock()
 
@@ -85,11 +86,11 @@ func (ncs *NatsCacheService) updateRoomCache(entry jetstream.KeyValueEntry, room
 	ncs.roomsInfoStore[roomId] = cacheEntry
 }
 
-func (ncs *NatsCacheService) GetCachedRoomInfo(roomID string) *plugnmeet.NatsKvRoomInfo {
+func (ncs *NatsCacheService) GetCachedRoomInfo(roomID string) *wemeet.NatsKvRoomInfo {
 	ncs.roomLock.RLock()
 	defer ncs.roomLock.RUnlock()
 	if cachedEntry, found := ncs.roomsInfoStore[roomID]; found && cachedEntry.RoomInfo != nil {
-		infoCopy := proto.Clone(cachedEntry.RoomInfo).(*plugnmeet.NatsKvRoomInfo)
+		infoCopy := proto.Clone(cachedEntry.RoomInfo).(*wemeet.NatsKvRoomInfo)
 		return infoCopy
 	}
 	return nil

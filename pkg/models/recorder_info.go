@@ -6,12 +6,11 @@ import (
 	"net/url"
 	"sort"
 
-	"github.com/mynaparrot/plugnmeet-protocol/plugnmeet"
-	"github.com/retawsolit/!we!meet-protocol/wemeet backup moi"
+	"github.com/retawsolit/WeMeet-protocol/wemeet"
 	log "github.com/sirupsen/logrus"
 )
 
-func (m *RecorderModel) addTokenAndRecorder(ctx context.Context, req *plugnmeet.RecordingReq, rq *plugnmeet.PlugNmeetToRecorder, userId string) error {
+func (m *RecorderModel) addTokenAndRecorder(ctx context.Context, req *wemeet.RecordingReq, rq *wemeet.WeMeetToRecorder, userId string) error {
 	recorderId := m.selectRecorder()
 	if recorderId == "" {
 		return errors.New("notifications.no-recorder-available")

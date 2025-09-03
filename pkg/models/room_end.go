@@ -3,16 +3,17 @@ package models
 import (
 	"context"
 	"fmt"
-	"github.com/mynaparrot/plugnmeet-protocol/plugnmeet"
-	"github.com/mynaparrot/plugnmeet-server/pkg/config"
-	"github.com/mynaparrot/plugnmeet-server/pkg/dbmodels"
-	natsservice "github.com/mynaparrot/plugnmeet-server/pkg/services/nats"
-	log "github.com/sirupsen/logrus"
 	"time"
+
+	"github.com/retawsolit/WeMeet-protocol/wemeet"
+	"github.com/retawsolit/WeMeet-server/pkg/config"
+	"github.com/retawsolit/WeMeet-server/pkg/dbmodels"
+	natsservice "github.com/retawsolit/WeMeet-server/pkg/services/nats"
+	log "github.com/sirupsen/logrus"
 )
 
 // EndRoom now accepts context and userIDForLog
-func (m *RoomModel) EndRoom(ctx context.Context, r *plugnmeet.RoomEndReq) (bool, string) {
+func (m *RoomModel) EndRoom(ctx context.Context, r *wemeet.RoomEndReq) (bool, string) {
 	roomID := r.GetRoomId()
 	if errWait := waitUntilRoomCreationCompletes(ctx, m.rs, roomID); errWait != nil {
 		log.WithFields(log.Fields{"roomId": roomID}).Errorf("Cannot end room: %v", errWait)
@@ -41,7 +42,7 @@ func (m *RoomModel) EndRoom(ctx context.Context, r *plugnmeet.RoomEndReq) (bool,
 		return false, "room not active (not found in NATS)"
 	}
 
-	err = m.natsService.BroadcastSystemEventToRoom(plugnmeet.NatsMsgServerToClientEvents_SESSION_ENDED, roomID, "notifications.room-disconnected-room-ended", nil)
+	err = m.natsService.BroadcastSystemEventToRoom(wemeet.NatsMsgServerToClientEvents_SESSION_ENDED, roomID, "notifications.room-disconnected-room-ended", nil)
 	if err != nil {
 		log.Errorln(err)
 	}
@@ -119,7 +120,7 @@ func (m *RoomModel) OnAfterRoomEnded(ctx context.Context, roomID, roomSID, metad
 	m.natsService.DeleteRoomUsersBlockList(roomID)
 
 	recorderModel := NewRecorderModel(m.app, m.ds, m.rs)
-	if err = recorderModel.SendMsgToRecorder(&plugnmeet.RecordingReq{Task: plugnmeet.RecordingTasks_STOP, Sid: roomSID, RoomId: roomID}); err != nil {
+	if err = recorderModel.SendMsgToRecorder(&wemeet.RecordingReq{Task: wemeet.RecordingTasks_STOP, Sid: roomSID, RoomId: roomID}); err != nil {
 		log.WithFields(log.Fields{"roomId": roomID, "roomSid": roomSID}).Errorf("Error sending stop to recorder: %v", err)
 	}
 

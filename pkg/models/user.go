@@ -2,12 +2,13 @@ package models
 
 import (
 	"errors"
+
 	"github.com/gofiber/fiber/v2"
-	"github.com/mynaparrot/plugnmeet-server/pkg/config"
-	"github.com/mynaparrot/plugnmeet-server/pkg/services/db"
-	"github.com/mynaparrot/plugnmeet-server/pkg/services/livekit"
-	natsservice "github.com/mynaparrot/plugnmeet-server/pkg/services/nats"
-	"github.com/mynaparrot/plugnmeet-server/pkg/services/redis"
+	"github.com/retawsolit/WeMeet-server/pkg/config"
+	dbservice "github.com/retawsolit/WeMeet-server/pkg/services/db"
+	livekitservice "github.com/retawsolit/WeMeet-server/pkg/services/livekit"
+	natsservice "github.com/retawsolit/WeMeet-server/pkg/services/nats"
+	redisservice "github.com/retawsolit/WeMeet-server/pkg/services/redis"
 )
 
 type UserModel struct {

@@ -2,11 +2,12 @@ package models
 
 import (
 	"fmt"
-	"github.com/livekit/protocol/livekit"
-	"github.com/mynaparrot/plugnmeet-protocol/plugnmeet"
-	"github.com/mynaparrot/plugnmeet-server/pkg/config"
-	log "github.com/sirupsen/logrus"
 	"strings"
+
+	"github.com/livekit/protocol/livekit"
+	"github.com/retawsolit/WeMeet-protocol/wemeet"
+	"github.com/retawsolit/WeMeet-server/pkg/config"
+	log "github.com/sirupsen/logrus"
 )
 
 func (m *WebhookModel) participantJoined(event *livekit.WebhookEvent) {
@@ -32,7 +33,7 @@ func (m *WebhookModel) participantJoined(event *livekit.WebhookEvent) {
 
 	if strings.HasPrefix(event.Participant.Identity, config.IngressUserIdPrefix) {
 		// if user was ingress user then we'll have to do it manually
-		// because that user will not use plugNmeet client interface
+		// because that user will not use WeMeet client interface
 		nm := NewNatsModel(m.app, m.ds, m.rs)
 		nm.OnAfterUserJoined(event.Room.Name, event.Participant.Identity)
 	}
@@ -64,7 +65,7 @@ func (m *WebhookModel) participantLeft(event *livekit.WebhookEvent) {
 
 	if strings.HasPrefix(event.Participant.Identity, config.IngressUserIdPrefix) {
 		// if user was ingress user then we'll have to do it manually
-		// because that user did not use plugNmeet client interface
+		// because that user did not use WeMeet client interface
 		nm := NewNatsModel(m.app, m.ds, m.rs)
 		nm.OnAfterUserDisconnected(event.Room.Name, event.Participant.Identity)
 	}
@@ -75,5 +76,5 @@ func (m *WebhookModel) participantLeft(event *livekit.WebhookEvent) {
 	// if we missed calculating this user's speech service usage stat
 	// for sudden disconnection
 	sm := NewSpeechToTextModel(m.app, m.ds, m.rs)
-	_ = sm.SpeechServiceUsersUsage(rInfo.RoomId, rInfo.RoomSid, event.Participant.Identity, plugnmeet.SpeechServiceUserStatusTasks_SPEECH_TO_TEXT_SESSION_ENDED)
+	_ = sm.SpeechServiceUsersUsage(rInfo.RoomId, rInfo.RoomSid, event.Participant.Identity, wemeet.SpeechServiceUserStatusTasks_SPEECH_TO_TEXT_SESSION_ENDED)
 }

@@ -1,10 +1,8 @@
 package models
 
-import (
-	"github.com/mynaparrot/plugnmeet-protocol/plugnmeet"
-)
+import "github.com/retawsolit/WeMeet-protocol/wemeet"
 
-func (m *RoomModel) ChangeVisibility(r *plugnmeet.ChangeVisibilityRes) (bool, string) {
+func (m *RoomModel) ChangeVisibility(r *wemeet.ChangeVisibilityRes) (bool, string) {
 	roomMeta, err := m.natsService.GetRoomMetadataStruct(r.RoomId)
 	if err != nil {
 		return false, err.Error()

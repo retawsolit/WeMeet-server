@@ -4,17 +4,18 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"github.com/google/uuid"
-	"github.com/mynaparrot/plugnmeet-protocol/plugnmeet"
-	"github.com/mynaparrot/plugnmeet-protocol/utils"
-	"github.com/mynaparrot/plugnmeet-server/pkg/dbmodels"
-	"github.com/mynaparrot/plugnmeet-server/pkg/helpers"
-	natsservice "github.com/mynaparrot/plugnmeet-server/pkg/services/nats"
-	log "github.com/sirupsen/logrus"
 	"time"
+
+	"github.com/google/uuid"
+	"github.com/retawsolit/WeMeet-protocol/utils"
+	"github.com/retawsolit/WeMeet-protocol/wemeet"
+	"github.com/retawsolit/WeMeet-server/pkg/dbmodels"
+	"github.com/retawsolit/WeMeet-server/pkg/helpers"
+	natsservice "github.com/retawsolit/WeMeet-server/pkg/services/nats"
+	log "github.com/sirupsen/logrus"
 )
 
-func (m *RoomModel) CreateRoom(ctx context.Context, r *plugnmeet.CreateRoomReq) (*plugnmeet.ActiveRoomInfo, error) {
+func (m *RoomModel) CreateRoom(ctx context.Context, r *wemeet.CreateRoomReq) (*wemeet.ActiveRoomInfo, error) {
 	// we'll lock the same room creation until the room is created
 	lockValue, err := acquireRoomCreationLockWithRetry(ctx, m.rs, r.GetRoomId())
 	if err != nil {
@@ -83,7 +84,7 @@ func (m *RoomModel) CreateRoom(ctx context.Context, r *plugnmeet.CreateRoomReq) 
 		go m.prepareWhiteboardPreloadFile(r.Metadata, r.RoomId, sid)
 	}
 
-	ari := &plugnmeet.ActiveRoomInfo{
+	ari := &wemeet.ActiveRoomInfo{
 		RoomId:       rInfo.RoomId,
 		Sid:          rInfo.RoomSid,
 		RoomTitle:    roomDbInfo.RoomTitle,
@@ -100,7 +101,7 @@ func (m *RoomModel) CreateRoom(ctx context.Context, r *plugnmeet.CreateRoomReq) 
 }
 
 // handleExistingRoom to handle logic if room already exists
-func (m *RoomModel) handleExistingRoom(r *plugnmeet.CreateRoomReq, roomDbInfo *dbmodels.RoomInfo) (*plugnmeet.ActiveRoomInfo, error) {
+func (m *RoomModel) handleExistingRoom(r *wemeet.CreateRoomReq, roomDbInfo *dbmodels.RoomInfo) (*wemeet.ActiveRoomInfo, error) {
 	rInfo, err := m.natsService.GetRoomInfo(r.RoomId)
 	if err != nil {
 		return nil, err
@@ -116,7 +117,7 @@ func (m *RoomModel) handleExistingRoom(r *plugnmeet.CreateRoomReq, roomDbInfo *d
 		if err != nil {
 			return nil, err
 		}
-		return &plugnmeet.ActiveRoomInfo{
+		return &wemeet.ActiveRoomInfo{
 			RoomId:       rInfo.RoomId,
 			Sid:          rInfo.RoomSid,
 			RoomTitle:    roomDbInfo.RoomTitle,
@@ -130,7 +131,7 @@ func (m *RoomModel) handleExistingRoom(r *plugnmeet.CreateRoomReq, roomDbInfo *d
 }
 
 // setRoomDefaults to Sets default values and metadata
-func (m *RoomModel) setRoomDefaults(r *plugnmeet.CreateRoomReq) {
+func (m *RoomModel) setRoomDefaults(r *wemeet.CreateRoomReq) {
 	utils.PrepareDefaultRoomFeatures(r)
 	utils.SetCreateRoomDefaultValues(r, m.app.UploadFileSettings.MaxSize, m.app.UploadFileSettings.MaxSizeWhiteboardFile, m.app.UploadFileSettings.AllowedTypes, m.app.SharedNotePad.Enabled)
 	utils.SetRoomDefaultLockSettings(r)
@@ -139,12 +140,12 @@ func (m *RoomModel) setRoomDefaults(r *plugnmeet.CreateRoomReq) {
 	// copyright
 	copyrightConf := m.app.Client.CopyrightConf
 	if copyrightConf == nil {
-		r.Metadata.CopyrightConf = &plugnmeet.CopyrightConf{
+		r.Metadata.CopyrightConf = &wemeet.CopyrightConf{
 			Display: true,
-			Text:    "Powered by <a href=\"https://www.plugnmeet.org\" target=\"_blank\">plugNmeet</a>",
+			Text:    "Powered by <a href=\"https://www.wemeet.org\" target=\"_blank\">WeMeet</a>",
 		}
 	} else {
-		d := &plugnmeet.CopyrightConf{
+		d := &wemeet.CopyrightConf{
 			Display: copyrightConf.Display,
 			Text:    copyrightConf.Text,
 		}
@@ -173,7 +174,7 @@ func (m *RoomModel) setRoomDefaults(r *plugnmeet.CreateRoomReq) {
 }
 
 // prepareRoomDbInfo Prepares DB model for room
-func (m *RoomModel) prepareRoomDbInfo(r *plugnmeet.CreateRoomReq, existing *dbmodels.RoomInfo) (*dbmodels.RoomInfo, string) {
+func (m *RoomModel) prepareRoomDbInfo(r *wemeet.CreateRoomReq, existing *dbmodels.RoomInfo) (*dbmodels.RoomInfo, string) {
 	sId := uuid.New().String()
 	isBreakoutRoom := 0
 	if r.Metadata.IsBreakoutRoom {
@@ -201,7 +202,7 @@ func (m *RoomModel) prepareRoomDbInfo(r *plugnmeet.CreateRoomReq, existing *dbmo
 }
 
 // prepareWhiteboardPreloadFile preload whiteboard file
-func (m *RoomModel) prepareWhiteboardPreloadFile(meta *plugnmeet.RoomMetadata, roomId, roomSid string) {
+func (m *RoomModel) prepareWhiteboardPreloadFile(meta *wemeet.RoomMetadata, roomId, roomSid string) {
 	wbf := meta.RoomFeatures.WhiteboardFeatures
 	if wbf == nil || !wbf.AllowedWhiteboard || wbf.PreloadFile == nil || *wbf.PreloadFile == "" {
 		return
@@ -223,15 +224,15 @@ func (m *RoomModel) prepareWhiteboardPreloadFile(meta *plugnmeet.RoomMetadata, r
 }
 
 // sendRoomCreatedWebhook to send webhook
-func (m *RoomModel) sendRoomCreatedWebhook(info *plugnmeet.ActiveRoomInfo, emptyTimeout, maxParticipants *uint32) {
+func (m *RoomModel) sendRoomCreatedWebhook(info *wemeet.ActiveRoomInfo, emptyTimeout, maxParticipants *uint32) {
 	n := helpers.GetWebhookNotifier(m.app)
 	if n != nil {
 		n.RegisterWebhook(info.RoomId, info.Sid)
 		e := "room_created"
 		cr := uint64(info.CreationTime)
-		msg := &plugnmeet.CommonNotifyEvent{
+		msg := &wemeet.CommonNotifyEvent{
 			Event: &e,
-			Room: &plugnmeet.NotifyEventRoom{
+			Room: &wemeet.NotifyEventRoom{
 				RoomId:          &info.RoomId,
 				Sid:             &info.Sid,
 				CreationTime:    &cr,

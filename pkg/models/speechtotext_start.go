@@ -2,11 +2,12 @@ package models
 
 import (
 	"errors"
-	"github.com/mynaparrot/plugnmeet-protocol/plugnmeet"
-	"github.com/mynaparrot/plugnmeet-server/pkg/config"
+
+	"github.com/retawsolit/WeMeet-protocol/wemeet"
+	"github.com/retawsolit/WeMeet-server/pkg/config"
 )
 
-func (m *SpeechToTextModel) SpeechToTextTranslationServiceStart(r *plugnmeet.SpeechToTextTranslationReq) error {
+func (m *SpeechToTextModel) SpeechToTextTranslationServiceStart(r *wemeet.SpeechToTextTranslationReq) error {
 	if !config.GetConfig().AzureCognitiveServicesSpeech.Enabled {
 		return errors.New("speech service disabled")
 	}
@@ -35,16 +36,16 @@ func (m *SpeechToTextModel) SpeechToTextTranslationServiceStart(r *plugnmeet.Spe
 	}
 
 	// send analytics
-	val := plugnmeet.AnalyticsStatus_ANALYTICS_STATUS_STARTED.String()
-	d := &plugnmeet.AnalyticsDataMsg{
-		EventType: plugnmeet.AnalyticsEventType_ANALYTICS_EVENT_TYPE_ROOM,
-		EventName: plugnmeet.AnalyticsEvents_ANALYTICS_EVENT_ROOM_SPEECH_SERVICE_STATUS,
+	val := wemeet.AnalyticsStatus_ANALYTICS_STATUS_STARTED.String()
+	d := &wemeet.AnalyticsDataMsg{
+		EventType: wemeet.AnalyticsEventType_ANALYTICS_EVENT_TYPE_ROOM,
+		EventName: wemeet.AnalyticsEvents_ANALYTICS_EVENT_ROOM_SPEECH_SERVICE_STATUS,
 		RoomId:    r.RoomId,
 		HsetValue: &val,
 	}
 	if !f.IsEnabled {
-		val = plugnmeet.AnalyticsStatus_ANALYTICS_STATUS_ENDED.String()
-		d.EventName = plugnmeet.AnalyticsEvents_ANALYTICS_EVENT_ROOM_SPEECH_SERVICE_STATUS
+		val = wemeet.AnalyticsStatus_ANALYTICS_STATUS_ENDED.String()
+		d.EventName = wemeet.AnalyticsEvents_ANALYTICS_EVENT_ROOM_SPEECH_SERVICE_STATUS
 		d.HsetValue = &val
 	}
 	m.analyticsModel.HandleEvent(d)

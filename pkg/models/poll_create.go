@@ -6,13 +6,12 @@ import (
 
 	"github.com/goccy/go-json"
 	"github.com/google/uuid"
-	"github.com/mynaparrot/plugnmeet-protocol/plugnmeet"
-	"github.com/retawsolit/!we!meet-protocol/wemeet backup moi"
+	"github.com/retawsolit/WeMeet-protocol/wemeet"
 	log "github.com/sirupsen/logrus"
 	"google.golang.org/protobuf/encoding/protojson"
 )
 
-func (m *PollModel) CreatePoll(r *plugnmeet.CreatePollReq) (string, error) {
+func (m *PollModel) CreatePoll(r *wemeet.CreatePollReq) (string, error) {
 	r.PollId = uuid.NewString()
 
 	// first add to room
@@ -27,16 +26,16 @@ func (m *PollModel) CreatePoll(r *plugnmeet.CreatePollReq) (string, error) {
 		return "", err
 	}
 
-	err = m.natsService.BroadcastSystemEventToEveryoneExceptUserId(plugnmeet.NatsMsgServerToClientEvents_POLL_CREATED, r.RoomId, r.PollId, r.UserId)
+	err = m.natsService.BroadcastSystemEventToEveryoneExceptUserId(wemeet.NatsMsgServerToClientEvents_POLL_CREATED, r.RoomId, r.PollId, r.UserId)
 	if err != nil {
 		log.Errorln(err)
 	}
 
 	// send analytics
 	toRecord := struct {
-		PollId   string                         `json:"poll_id"`
-		Question string                         `json:"question"`
-		Options  []*plugnmeet.CreatePollOptions `json:"options"`
+		PollId   string                      `json:"poll_id"`
+		Question string                      `json:"question"`
+		Options  []*wemeet.CreatePollOptions `json:"options"`
 	}{
 		PollId:   r.PollId,
 		Question: r.Question,
@@ -48,8 +47,8 @@ func (m *PollModel) CreatePoll(r *plugnmeet.CreatePollReq) (string, error) {
 	}
 	val := string(marshal)
 	m.analyticsModel.HandleEvent(&wemeet.AnalyticsDataMsg{
-		EventType: plugnmeet.AnalyticsEventType_ANALYTICS_EVENT_TYPE_ROOM,
-		EventName: plugnmeet.AnalyticsEvents_ANALYTICS_EVENT_ROOM_POLL_ADDED,
+		EventType: wemeet.AnalyticsEventType_ANALYTICS_EVENT_TYPE_ROOM,
+		EventName: wemeet.AnalyticsEvents_ANALYTICS_EVENT_ROOM_POLL_ADDED,
 		RoomId:    r.RoomId,
 		HsetValue: &val,
 	})
@@ -58,7 +57,7 @@ func (m *PollModel) CreatePoll(r *plugnmeet.CreatePollReq) (string, error) {
 }
 
 // createRoomPollHash will insert the poll to room hash
-func (m *PollModel) createRoomPollHash(r *plugnmeet.CreatePollReq) error {
+func (m *PollModel) createRoomPollHash(r *wemeet.CreatePollReq) error {
 	p := &wemeet.PollInfo{
 		Id:        r.PollId,
 		RoomId:    r.RoomId,
@@ -82,7 +81,7 @@ func (m *PollModel) createRoomPollHash(r *plugnmeet.CreatePollReq) error {
 
 // createRespondentHash will create initial hash
 // format for all_respondents array value = userId:option_id
-func (m *PollModel) createRespondentHash(r *plugnmeet.CreatePollReq) error {
+func (m *PollModel) createRespondentHash(r *wemeet.CreatePollReq) error {
 	v := make(map[string]interface{})
 	v["total_resp"] = 0
 	v["all_respondents"] = nil
@@ -95,7 +94,7 @@ func (m *PollModel) createRespondentHash(r *plugnmeet.CreatePollReq) error {
 	return m.rs.CreatePollResponseHash(r.RoomId, r.PollId, v)
 }
 
-func (m *PollModel) UserSubmitResponse(r *plugnmeet.SubmitPollResponseReq) error {
+func (m *PollModel) UserSubmitResponse(r *wemeet.SubmitPollResponseReq) error {
 	err := m.rs.AddPollResponse(r)
 	if err != nil {
 		return err
@@ -115,8 +114,8 @@ func (m *PollModel) UserSubmitResponse(r *plugnmeet.SubmitPollResponseReq) error
 	}
 	val := string(marshal)
 	m.analyticsModel.HandleEvent(&wemeet.AnalyticsDataMsg{
-		EventType: plugnmeet.AnalyticsEventType_ANALYTICS_EVENT_TYPE_USER,
-		EventName: plugnmeet.AnalyticsEvents_ANALYTICS_EVENT_USER_VOTED_POLL,
+		EventType: wemeet.AnalyticsEventType_ANALYTICS_EVENT_TYPE_USER,
+		EventName: wemeet.AnalyticsEvents_ANALYTICS_EVENT_USER_VOTED_POLL,
 		RoomId:    r.RoomId,
 		UserId:    &r.UserId,
 		HsetValue: &val,

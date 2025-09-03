@@ -3,13 +3,14 @@ package models
 import (
 	"errors"
 	"fmt"
-	"github.com/mynaparrot/plugnmeet-protocol/plugnmeet"
-	"github.com/mynaparrot/plugnmeet-server/pkg/config"
-	natsservice "github.com/mynaparrot/plugnmeet-server/pkg/services/nats"
+
+	"github.com/retawsolit/WeMeet-protocol/wemeet"
+	"github.com/retawsolit/WeMeet-server/pkg/config"
+	natsservice "github.com/retawsolit/WeMeet-server/pkg/services/nats"
 	log "github.com/sirupsen/logrus"
 )
 
-func (m *UserModel) RemoveParticipant(r *plugnmeet.RemoveParticipantReq) error {
+func (m *UserModel) RemoveParticipant(r *wemeet.RemoveParticipantReq) error {
 	status, err := m.natsService.GetRoomUserStatus(r.RoomId, r.UserId)
 	if err != nil {
 		log.Errorln(fmt.Sprintf("error GetRoomUserStatus roomId %s; userId: %s; msg: %s", r.GetRoomId(), r.GetUserId(), err))
@@ -26,7 +27,7 @@ func (m *UserModel) RemoveParticipant(r *plugnmeet.RemoveParticipantReq) error {
 	}
 
 	// send notification to be disconnected
-	err = m.natsService.BroadcastSystemEventToRoom(plugnmeet.NatsMsgServerToClientEvents_SESSION_ENDED, r.GetRoomId(), "notifications.room-disconnected-participant-removed", &r.UserId)
+	err = m.natsService.BroadcastSystemEventToRoom(wemeet.NatsMsgServerToClientEvents_SESSION_ENDED, r.GetRoomId(), "notifications.room-disconnected-participant-removed", &r.UserId)
 	if err != nil {
 		log.Errorln(fmt.Sprintf("error broadcasting SESSION_ENDED event roomId %s; userId: %s; msg: %s", r.GetRoomId(), r.GetUserId(), err))
 	}
@@ -67,9 +68,9 @@ func (m *UserModel) RaisedHand(roomId, userId, msg string) {
 
 	if metadata.RaisedHand {
 		analyticsModel := NewAnalyticsModel(m.app, m.ds, m.rs)
-		analyticsModel.HandleEvent(&plugnmeet.AnalyticsDataMsg{
-			EventType: plugnmeet.AnalyticsEventType_ANALYTICS_EVENT_TYPE_USER,
-			EventName: plugnmeet.AnalyticsEvents_ANALYTICS_EVENT_USER_RAISE_HAND,
+		analyticsModel.HandleEvent(&wemeet.AnalyticsDataMsg{
+			EventType: wemeet.AnalyticsEventType_ANALYTICS_EVENT_TYPE_USER,
+			EventName: wemeet.AnalyticsEvents_ANALYTICS_EVENT_USER_RAISE_HAND,
 			RoomId:    roomId,
 			UserId:    &userId,
 		})

@@ -3,12 +3,13 @@ package models
 import (
 	"context"
 	"fmt"
-	"github.com/mynaparrot/plugnmeet-protocol/plugnmeet"
-	"github.com/mynaparrot/plugnmeet-server/pkg/config"
-	natsservice "github.com/mynaparrot/plugnmeet-server/pkg/services/nats"
-	log "github.com/sirupsen/logrus"
 	"strings"
 	"time"
+
+	"github.com/retawsolit/WeMeet-protocol/wemeet"
+	"github.com/retawsolit/WeMeet-server/pkg/config"
+	natsservice "github.com/retawsolit/WeMeet-server/pkg/services/nats"
+	log "github.com/sirupsen/logrus"
 )
 
 // checkOnlineUsersStatus will compare last ping result
@@ -61,6 +62,6 @@ func (m *SchedulerModel) changeUserStatus(roomId, userId string) {
 
 	if info, err := m.natsService.GetUserInfo(roomId, userId); err == nil && info != nil {
 		// notify to the room
-		m.natsService.BroadcastUserInfoToRoom(plugnmeet.NatsMsgServerToClientEvents_USER_OFFLINE, roomId, userId, info)
+		m.natsService.BroadcastUserInfoToRoom(wemeet.NatsMsgServerToClientEvents_USER_OFFLINE, roomId, userId, info)
 	}
 }

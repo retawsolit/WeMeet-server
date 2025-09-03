@@ -3,18 +3,19 @@ package models
 import (
 	"errors"
 	"fmt"
-	"github.com/mynaparrot/plugnmeet-protocol/plugnmeet"
-	"github.com/mynaparrot/plugnmeet-server/pkg/config"
-	log "github.com/sirupsen/logrus"
 	"io"
 	"io/fs"
 	"os"
 	"path"
 	"strings"
 	"time"
+
+	"github.com/retawsolit/WeMeet-protocol/wemeet"
+	"github.com/retawsolit/WeMeet-server/pkg/config"
+	log "github.com/sirupsen/logrus"
 )
 
-func (m *RecordingModel) DeleteRecording(r *plugnmeet.DeleteRecordingReq) error {
+func (m *RecordingModel) DeleteRecording(r *wemeet.DeleteRecordingReq) error {
 	recording, err := m.FetchRecording(r.RecordId)
 	if err != nil {
 		return err

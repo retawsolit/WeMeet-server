@@ -2,11 +2,12 @@ package models
 
 import (
 	"errors"
-	"github.com/mynaparrot/plugnmeet-protocol/plugnmeet"
-	"github.com/mynaparrot/plugnmeet-server/pkg/config"
-	"github.com/mynaparrot/plugnmeet-server/pkg/services/db"
-	natsservice "github.com/mynaparrot/plugnmeet-server/pkg/services/nats"
-	"github.com/mynaparrot/plugnmeet-server/pkg/services/redis"
+
+	"github.com/retawsolit/WeMeet-protocol/wemeet"
+	"github.com/retawsolit/WeMeet-server/pkg/config"
+	dbservice "github.com/retawsolit/WeMeet-server/pkg/services/db"
+	natsservice "github.com/retawsolit/WeMeet-server/pkg/services/nats"
+	redisservice "github.com/retawsolit/WeMeet-server/pkg/services/redis"
 )
 
 type PollModel struct {
@@ -37,7 +38,7 @@ func NewPollModel(app *config.AppConfig, ds *dbservice.DatabaseService, rs *redi
 	}
 }
 
-func (m *PollModel) ManageActivation(req *plugnmeet.ActivatePollsReq) error {
+func (m *PollModel) ManageActivation(req *wemeet.ActivatePollsReq) error {
 	roomMeta, err := m.natsService.GetRoomMetadataStruct(req.GetRoomId())
 	if err != nil {
 		return err

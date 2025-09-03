@@ -1,26 +1,25 @@
 package models
 
 import (
-	"github.com/mynaparrot/plugnmeet-protocol/plugnmeet"
 	"github.com/retawsolit/WeMeet-protocol/wemeet"
 	log "github.com/sirupsen/logrus"
 )
 
-func (m *PollModel) ClosePoll(r *plugnmeet.ClosePollReq) error {
+func (m *PollModel) ClosePoll(r *wemeet.ClosePollReq) error {
 	err := m.rs.ClosePoll(r)
 	if err != nil {
 		return err
 	}
 
-	err = m.natsService.BroadcastSystemEventToRoom(plugnmeet.NatsMsgServerToClientEvents_POLL_CLOSED, r.RoomId, r.PollId, nil)
+	err = m.natsService.BroadcastSystemEventToRoom(wemeet.NatsMsgServerToClientEvents_POLL_CLOSED, r.RoomId, r.PollId, nil)
 	if err != nil {
 		log.Errorln(err)
 	}
 
 	// send analytics
 	m.analyticsModel.HandleEvent(&wemeet.AnalyticsDataMsg{
-		EventType: plugnmeet.AnalyticsEventType_ANALYTICS_EVENT_TYPE_ROOM,
-		EventName: plugnmeet.AnalyticsEvents_ANALYTICS_EVENT_ROOM_POLL_ENDED,
+		EventType: wemeet.AnalyticsEventType_ANALYTICS_EVENT_TYPE_ROOM,
+		EventName: wemeet.AnalyticsEvents_ANALYTICS_EVENT_ROOM_POLL_ENDED,
 		RoomId:    r.RoomId,
 		HsetValue: &r.PollId,
 	})

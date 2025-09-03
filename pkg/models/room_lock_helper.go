@@ -4,9 +4,10 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	redisservice "github.com/mynaparrot/plugnmeet-server/pkg/services/redis"
-	log "github.com/sirupsen/logrus"
 	"time"
+
+	redisservice "github.com/retawsolit/WeMeet-server/pkg/services/redis"
+	log "github.com/sirupsen/logrus"
 )
 
 const (

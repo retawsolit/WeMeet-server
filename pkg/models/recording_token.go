@@ -3,19 +3,20 @@ package models
 import (
 	"errors"
 	"fmt"
-	"github.com/go-jose/go-jose/v4"
-	"github.com/go-jose/go-jose/v4/jwt"
-	"github.com/gofiber/fiber/v2"
-	"github.com/mynaparrot/plugnmeet-protocol/auth"
-	"github.com/mynaparrot/plugnmeet-protocol/plugnmeet"
-	"github.com/mynaparrot/plugnmeet-server/pkg/config"
 	"os"
 	"strings"
 	"time"
+
+	"github.com/go-jose/go-jose/v4"
+	"github.com/go-jose/go-jose/v4/jwt"
+	"github.com/gofiber/fiber/v2"
+	"github.com/retawsolit/WeMeet-protocol/auth"
+	"github.com/retawsolit/WeMeet-protocol/wemeet"
+	"github.com/retawsolit/WeMeet-server/pkg/config"
 )
 
-// GetDownloadToken will use the same JWT token generator as plugNmeet is using
-func (m *RecordingModel) GetDownloadToken(r *plugnmeet.GetDownloadTokenReq) (string, error) {
+// GetDownloadToken will use the same JWT token generator as WeMeet is using
+func (m *RecordingModel) GetDownloadToken(r *wemeet.GetDownloadTokenReq) (string, error) {
 	recording, err := m.FetchRecording(r.RecordId)
 	if err != nil {
 		return "", err
