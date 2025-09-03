@@ -1,10 +1,17 @@
-
+api_key: APIiYAA5w37Cfo2
+api_secret: 6aNur7qqupeZhFYNOJVUyeXxXhVw8f4lm13pEDUx8SgB
+ws_url: http://host.docker.internal:7880
 rtmp_port: 1935
 health_port: 8088
 whip_port: 8089
+redis:
+  address: host.docker.internal:6379
+  username: ""
+  password: ""
+  db: 0
 #  use_tls: false
 #  To use sentinel remove the host key above and add the following
-#  sentinel_master_name: plugnmeet
+#  sentinel_master_name: wemeet
 #  sentinel_addresses:
 #    - redis-sentinel-host-1:26379
 #    - redis-sentinel-host-2:26379

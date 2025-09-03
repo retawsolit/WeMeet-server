@@ -3,98 +3,83 @@ package main
 import (
 	"context"
 	"fmt"
-	"log"
-	"net/http"
 	"os"
 	"os/signal"
 	"syscall"
-	"time"
 
+	"github.com/retawsolit/WeMeet-server/helpers"
 	"github.com/retawsolit/WeMeet-server/pkg/config"
-	"github.com/retawsolit/WeMeet-server/pkg/controllers"
 	"github.com/retawsolit/WeMeet-server/pkg/factory"
-	"github.com/retawsolit/WeMeet-server/pkg/services"
+	"github.com/retawsolit/WeMeet-server/pkg/routers"
+	"github.com/retawsolit/WeMeet-server/version"
+	log "github.com/sirupsen/logrus"
+	"github.com/urfave/cli/v3"
 )
 
 func main() {
-	// Load config
-	cfg, err := config.Load("config.yaml")
+	cli.VersionPrinter = func(c *cli.Command) {
+		fmt.Printf("%s\n", c.Version)
+	}
+
+	app := &cli.Command{
+		Name:        "WeMeet-server",
+		Usage:       "Scalable, Open source web conference system",
+		Description: "without option will start server",
+		Flags: []cli.Flag{
+			&cli.StringFlag{
+				Name:        "config",
+				Usage:       "Configuration file",
+				DefaultText: "config.yaml",
+				Value:       "config.yaml",
+			},
+		},
+		Action:  startServer,
+		Version: version.Version,
+	}
+	err := app.Run(context.Background(), os.Args)
 	if err != nil {
-		log.Fatal("Failed to load config:", err)
+		log.Fatalln(err)
+	}
+}
+
+func startServer(ctx context.Context, c *cli.Command) error {
+	appCnf, err := helpers.ReadYamlConfigFile(c.String("config"))
+	if err != nil {
+		panic(err)
+	}
+	// set this config for global usage
+	config.New(appCnf)
+
+	// now prepare our server
+	err = helpers.PrepareServer(config.GetConfig())
+	if err != nil {
+		log.Fatalln(err)
 	}
 
-	// Initialize connections
-	if err := factory.NewDatabaseConnection(cfg); err != nil {
-		log.Fatal("Failed to connect database:", err)
+	appFactory, err := factory.NewAppFactory(appCnf)
+	if err != nil {
+		log.Fatalln(err)
 	}
 
-	if err := factory.NewRedisConnection(cfg); err != nil {
-		log.Fatal("Failed to connect redis:", err)
-	}
+	// boot up some services
+	appFactory.Boot()
 
-	if err := factory.NewNatsConnection(cfg); err != nil {
-		log.Fatal("Failed to connect NATS:", err)
-	}
+	// defer close connections
+	defer helpers.HandleCloseConnections()
 
-	// Initialize services
-	roomService := services.NewRoomService(cfg)
+	rt := routers.New(appFactory.AppConfig, appFactory.Controllers)
+	sigChan := make(chan os.Signal, 1)
+	signal.Notify(sigChan, syscall.SIGINT, syscall.SIGTERM, syscall.SIGQUIT)
 
-	// Initialize controllers
-	roomController := controllers.NewRoomController(roomService)
-	healthController := controllers.NewHealthController(cfg)
-
-	// Setup routes
-	mux := http.NewServeMux()
-
-	// API routes
-	mux.HandleFunc("/health", healthController.Health)
-	mux.HandleFunc("/api/room", roomController.CreateRoom)
-	mux.HandleFunc("/api/room/", roomController.GetRoom)
-	mux.HandleFunc("/api/rooms", roomController.ListRooms)
-
-	// Static files
-	if cfg.Client.Path != "" {
-		fs := http.FileServer(http.Dir(cfg.Client.Path))
-		mux.Handle("/", fs)
-	}
-
-	server := &http.Server{
-		Addr:    fmt.Sprintf(":%d", cfg.Client.Port),
-		Handler: mux,
-	}
-
-	// Graceful shutdown
 	go func() {
-		sigChan := make(chan os.Signal, 1)
-		signal.Notify(sigChan, syscall.SIGINT, syscall.SIGTERM)
-		<-sigChan
-
-		log.Println("Shutting down server...")
-		ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
-		defer cancel()
-
-		if err := server.Shutdown(ctx); err != nil {
-			log.Printf("Server shutdown error: %v", err)
-		}
-
-		// Close connections
-		if cfg.DB != nil {
-			if sqlDB, err := cfg.DB.DB(); err == nil {
-				sqlDB.Close()
-			}
-		}
-		if cfg.RDS != nil {
-			cfg.RDS.Close()
-		}
-		if cfg.NatsConn != nil {
-			cfg.NatsConn.Close()
-		}
+		sig := <-sigChan
+		log.Infoln("exit requested, shutting down", "signal", sig)
+		_ = rt.Shutdown()
 	}()
 
-	log.Printf("Server starting on port %d", cfg.Client.Port)
-	log.Printf("Serving static from: %s", cfg.Client.Path)
-
-	if err := server.ListenAndServe(); err != http.ErrServerClosed {
-		log.Fatal("Server error:", err)
+	err = rt.Listen(fmt.Sprintf(":%d", appCnf.Client.Port))
+	if err != nil {
+		log.Fatalln(err)
 	}
+	return nil
 }

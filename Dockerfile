@@ -27,7 +27,7 @@ RUN export DEBIAN_FRONTEND=noninteractive; \
     apt clean && \
     rm -rf /var/lib/apt/lists/*
 
-COPY --from=builder /go/src/app/plugnmeet-server /usr/bin/plugnmeet-server
+COPY --from=builder /go/src/app/WeMeet-server /usr/bin/WeMeet-server
 
 # Run the binary.
-ENTRYPOINT ["plugnmeet-server"]
+ENTRYPOINT ["WeMeet-server"]
