@@ -10,10 +10,10 @@ import (
 	"time"
 
 	"github.com/redis/go-redis/v9"
-	"github.com/retawsolit/WeMeet-protocol/wemeet"
 	"github.com/retawsolit/WeMeet-server/pkg/config"
 	"github.com/retawsolit/WeMeet-server/pkg/dbmodels"
 	"github.com/retawsolit/WeMeet-server/pkg/helpers"
+	"github.com/retawsolit/wemeet-protocol/wemeet"
 	log "github.com/sirupsen/logrus"
 	"google.golang.org/protobuf/encoding/protojson"
 )

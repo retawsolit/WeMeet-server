@@ -4,9 +4,9 @@ import (
 	"context"
 	"time"
 
-	"github.com/retawsolit/WeMeet-protocol/wemeet"
 	"github.com/retawsolit/WeMeet-server/pkg/dbmodels"
 	natsservice "github.com/retawsolit/WeMeet-server/pkg/services/nats"
+	"github.com/retawsolit/wemeet-protocol/wemeet"
 )
 
 func (m *RoomModel) IsRoomActive(ctx context.Context, r *wemeet.IsRoomActiveReq) (*wemeet.IsRoomActiveRes, *dbmodels.RoomInfo, *wemeet.NatsKvRoomInfo, *wemeet.RoomMetadata) {

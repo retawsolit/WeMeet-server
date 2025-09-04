@@ -3,8 +3,8 @@ package models
 import (
 	"errors"
 
-	"github.com/retawsolit/WeMeet-protocol/wemeet"
 	"github.com/retawsolit/WeMeet-server/pkg/config"
+	"github.com/retawsolit/wemeet-protocol/wemeet"
 )
 
 func (m *SpeechToTextModel) SpeechToTextTranslationServiceStart(r *wemeet.SpeechToTextTranslationReq) error {

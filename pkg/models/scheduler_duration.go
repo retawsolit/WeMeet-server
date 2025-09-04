@@ -4,7 +4,7 @@ import (
 	"context"
 	"time"
 
-	"github.com/retawsolit/WeMeet-protocol/wemeet"
+	"github.com/retawsolit/wemeet-protocol/wemeet"
 )
 
 func (m *SchedulerModel) checkRoomWithDuration() {

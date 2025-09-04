@@ -4,12 +4,12 @@ import (
 	"context"
 
 	"github.com/livekit/protocol/livekit"
-	"github.com/retawsolit/WeMeet-protocol/utils"
 	"github.com/retawsolit/WeMeet-server/pkg/config"
 	"github.com/retawsolit/WeMeet-server/pkg/helpers"
 	dbservice "github.com/retawsolit/WeMeet-server/pkg/services/db"
 	natsservice "github.com/retawsolit/WeMeet-server/pkg/services/nats"
 	redisservice "github.com/retawsolit/WeMeet-server/pkg/services/redis"
+	"github.com/retawsolit/wemeet-protocol/utils"
 	log "github.com/sirupsen/logrus"
 )
 

@@ -4,8 +4,8 @@ import (
 	"errors"
 
 	"github.com/livekit/protocol/livekit"
-	"github.com/retawsolit/WeMeet-protocol/wemeet"
 	"github.com/retawsolit/WeMeet-server/pkg/config"
+	"github.com/retawsolit/wemeet-protocol/wemeet"
 )
 
 type MuteUnMuteTrackReq struct {

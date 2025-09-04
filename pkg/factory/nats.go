@@ -5,8 +5,8 @@ import (
 
 	"github.com/nats-io/nats.go"
 	"github.com/nats-io/nats.go/jetstream"
-	"github.com/retawsolit/WeMeet-protocol/utils"
 	"github.com/retawsolit/WeMeet-server/pkg/config"
+	"github.com/retawsolit/wemeet-protocol/utils"
 )
 
 func NewNatsConnection(appCnf *config.AppConfig) error {

@@ -3,12 +3,12 @@ package models
 import (
 	"errors"
 
-	"github.com/retawsolit/WeMeet-protocol/wemeet"
 	"github.com/retawsolit/WeMeet-server/pkg/config"
 	dbservice "github.com/retawsolit/WeMeet-server/pkg/services/db"
 	livekitservice "github.com/retawsolit/WeMeet-server/pkg/services/livekit"
 	natsservice "github.com/retawsolit/WeMeet-server/pkg/services/nats"
 	redisservice "github.com/retawsolit/WeMeet-server/pkg/services/redis"
+	"github.com/retawsolit/wemeet-protocol/wemeet"
 )
 
 type ExDisplayModel struct {

@@ -3,7 +3,7 @@ package models
 import (
 	"errors"
 
-	"github.com/retawsolit/WeMeet-protocol/wemeet"
+	"github.com/retawsolit/wemeet-protocol/wemeet"
 )
 
 func (m *RecordingModel) FetchRecordings(r *wemeet.FetchRecordingsReq) (*wemeet.FetchRecordingsResult, error) {

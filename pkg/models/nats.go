@@ -1,11 +1,11 @@
 package models
 
 import (
-	"github.com/retawsolit/WeMeet-protocol/wemeet"
 	"github.com/retawsolit/WeMeet-server/pkg/config"
 	dbservice "github.com/retawsolit/WeMeet-server/pkg/services/db"
 	natsservice "github.com/retawsolit/WeMeet-server/pkg/services/nats"
 	redisservice "github.com/retawsolit/WeMeet-server/pkg/services/redis"
+	"github.com/retawsolit/wemeet-protocol/wemeet"
 	log "github.com/sirupsen/logrus"
 	"google.golang.org/protobuf/encoding/protojson"
 )

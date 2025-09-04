@@ -5,7 +5,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/retawsolit/WeMeet-protocol/bbbapiwrapper"
+	"github.com/retawsolit/wemeet-protocol/bbbapiwrapper"
 	log "github.com/sirupsen/logrus"
 )
 

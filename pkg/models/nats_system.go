@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/retawsolit/WeMeet-protocol/auth"
-	"github.com/retawsolit/WeMeet-protocol/wemeet"
 	natsservice "github.com/retawsolit/WeMeet-server/pkg/services/nats"
+	"github.com/retawsolit/wemeet-protocol/auth"
+	"github.com/retawsolit/wemeet-protocol/wemeet"
 	log "github.com/sirupsen/logrus"
 )
 

@@ -3,7 +3,7 @@ package models
 import (
 	"errors"
 
-	"github.com/retawsolit/WeMeet-protocol/wemeet"
+	"github.com/retawsolit/wemeet-protocol/wemeet"
 )
 
 func (m *ExMediaModel) startPlayBack(req *wemeet.ExternalMediaPlayerReq) error {

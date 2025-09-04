@@ -4,8 +4,8 @@ import (
 	"context"
 	"errors"
 
-	"github.com/retawsolit/!WeMeet-protocol/wemeet"
-	"github.com/retawsolit/WeMeet-protocol/utils"
+	"github.com/retawsolit/wemeet-protocol/utils"
+	"github.com/retawsolit/wemeet-protocol/wemeet"
 )
 
 func (m *LtiV1Model) LTIV1JoinRoom(ctx context.Context, c *wemeet.LtiClaims) (string, error) {

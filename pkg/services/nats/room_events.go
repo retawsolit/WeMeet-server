@@ -3,7 +3,7 @@ package natsservice
 import (
 	"errors"
 
-	"github.com/retawsolit/WeMeet-protocol/wemeet"
+	"github.com/retawsolit/wemeet-protocol/wemeet"
 )
 
 func (s *NatsService) BroadcastRoomMetadata(roomId string, metadata, userId *string) error {

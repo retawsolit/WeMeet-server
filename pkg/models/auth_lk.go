@@ -1,7 +1,7 @@
 package models
 
 import (
-	"github.com/retawsolit/WeMeet-protocol/webhook"
+	"github.com/retawsolit/wemeet-protocol/webhook"
 )
 
 func (m *AuthModel) ValidateLivekitWebhookToken(body []byte, token string) (bool, error) {

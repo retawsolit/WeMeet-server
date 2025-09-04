@@ -4,12 +4,12 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/retawsolit/WeMeet-protocol/wemeet"
 	"github.com/retawsolit/WeMeet-server/pkg/config"
 	"github.com/retawsolit/WeMeet-server/pkg/helpers"
 	dbservice "github.com/retawsolit/WeMeet-server/pkg/services/db"
 	natsservice "github.com/retawsolit/WeMeet-server/pkg/services/nats"
 	redisservice "github.com/retawsolit/WeMeet-server/pkg/services/redis"
+	"github.com/retawsolit/wemeet-protocol/wemeet"
 	log "github.com/sirupsen/logrus"
 )
 

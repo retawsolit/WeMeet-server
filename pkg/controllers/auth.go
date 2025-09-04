@@ -8,12 +8,12 @@ import (
 	"strings"
 
 	"github.com/gofiber/fiber/v2"
-	"github.com/retawsolit/WeMeet-protocol/utils"
-	"github.com/retawsolit/WeMeet-protocol/wemeet"
 	"github.com/retawsolit/WeMeet-server/pkg/config"
 	"github.com/retawsolit/WeMeet-server/pkg/models"
 	natsservice "github.com/retawsolit/WeMeet-server/pkg/services/nats"
 	"github.com/retawsolit/WeMeet-server/version"
+	"github.com/retawsolit/wemeet-protocol/utils"
+	"github.com/retawsolit/wemeet-protocol/wemeet"
 	"google.golang.org/protobuf/proto"
 )
 

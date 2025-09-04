@@ -3,7 +3,7 @@ package natsservice
 import (
 	"fmt"
 
-	"github.com/retawsolit/WeMeet-protocol/wemeet"
+	"github.com/retawsolit/wemeet-protocol/wemeet"
 )
 
 // GetRoomInfo retrieves the room information for the given roomId

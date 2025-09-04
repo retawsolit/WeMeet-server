@@ -6,7 +6,7 @@ import (
 	"strconv"
 
 	"github.com/nats-io/nats.go/jetstream"
-	"github.com/retawsolit/WeMeet-protocol/wemeet"
+	"github.com/retawsolit/wemeet-protocol/wemeet"
 )
 
 // GetRoomUserStatus retrieves the status of a user in a specific room.

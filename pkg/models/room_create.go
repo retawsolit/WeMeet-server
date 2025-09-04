@@ -7,11 +7,11 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	"github.com/retawsolit/WeMeet-protocol/utils"
-	"github.com/retawsolit/WeMeet-protocol/wemeet"
 	"github.com/retawsolit/WeMeet-server/pkg/dbmodels"
 	"github.com/retawsolit/WeMeet-server/pkg/helpers"
 	natsservice "github.com/retawsolit/WeMeet-server/pkg/services/nats"
+	"github.com/retawsolit/wemeet-protocol/utils"
+	"github.com/retawsolit/wemeet-protocol/wemeet"
 	log "github.com/sirupsen/logrus"
 )
 

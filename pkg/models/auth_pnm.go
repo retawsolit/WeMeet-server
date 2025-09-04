@@ -5,8 +5,8 @@ import (
 
 	"github.com/go-jose/go-jose/v4"
 	"github.com/go-jose/go-jose/v4/jwt"
-	"github.com/retawsolit/WeMeet-protocol/auth"
-	"github.com/retawsolit/WeMeet-protocol/wemeet"
+	"github.com/retawsolit/wemeet-protocol/auth"
+	"github.com/retawsolit/wemeet-protocol/wemeet"
 )
 
 func (m *AuthModel) GeneratePNMJoinToken(c *wemeet.WeMeetTokenClaims) (string, error) {

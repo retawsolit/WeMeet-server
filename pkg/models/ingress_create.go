@@ -6,8 +6,8 @@ import (
 	"time"
 
 	"github.com/livekit/protocol/livekit"
-	"github.com/retawsolit/WeMeet-protocol/wemeet"
 	"github.com/retawsolit/WeMeet-server/pkg/config"
+	"github.com/retawsolit/wemeet-protocol/wemeet"
 )
 
 func (m *IngressModel) CreateIngress(r *wemeet.CreateIngressReq) (*livekit.IngressInfo, error) {

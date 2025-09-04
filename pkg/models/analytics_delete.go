@@ -6,8 +6,8 @@ import (
 	"os"
 	"strings"
 
-	"github.com/retawsolit/WeMeet-protocol/wemeet"
 	"github.com/retawsolit/WeMeet-server/pkg/config"
+	"github.com/retawsolit/wemeet-protocol/wemeet"
 )
 
 func (m *AnalyticsModel) DeleteAnalytics(r *wemeet.DeleteAnalyticsReq) error {

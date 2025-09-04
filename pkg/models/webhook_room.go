@@ -5,10 +5,10 @@ import (
 	"time"
 
 	"github.com/livekit/protocol/livekit"
-	"github.com/retawsolit/WeMeet-protocol/wemeet"
 	"github.com/retawsolit/WeMeet-server/pkg/config"
 	livekitservice "github.com/retawsolit/WeMeet-server/pkg/services/livekit"
 	natsservice "github.com/retawsolit/WeMeet-server/pkg/services/nats"
+	"github.com/retawsolit/wemeet-protocol/wemeet"
 	log "github.com/sirupsen/logrus"
 )
 

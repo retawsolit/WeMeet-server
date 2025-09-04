@@ -3,7 +3,7 @@ package models
 import (
 	"errors"
 
-	"github.com/retawsolit/WeMeet-protocol/wemeet"
+	"github.com/retawsolit/wemeet-protocol/wemeet"
 )
 
 func (m *AnalyticsModel) FetchAnalytics(r *wemeet.FetchAnalyticsReq) (*wemeet.FetchAnalyticsResult, error) {

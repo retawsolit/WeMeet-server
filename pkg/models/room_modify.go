@@ -1,6 +1,6 @@
 package models
 
-import "github.com/retawsolit/WeMeet-protocol/wemeet"
+import "github.com/retawsolit/wemeet-protocol/wemeet"
 
 func (m *RoomModel) ChangeVisibility(r *wemeet.ChangeVisibilityRes) (bool, string) {
 	roomMeta, err := m.natsService.GetRoomMetadataStruct(r.RoomId)

@@ -9,7 +9,7 @@ import (
 	"strings"
 
 	"github.com/gabriel-vasile/mimetype"
-	"github.com/retawsolit/WeMeet-protocol/wemeet"
+	"github.com/retawsolit/wemeet-protocol/wemeet"
 )
 
 func (m *FileModel) UploadBase64EncodedData(req *wemeet.UploadBase64EncodedDataReq) (*wemeet.UploadBase64EncodedDataRes, error) {

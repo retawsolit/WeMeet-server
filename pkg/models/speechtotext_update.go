@@ -1,7 +1,7 @@
 package models
 
 import (
-	"github.com/retawsolit/WeMeet-protocol/wemeet"
+	"github.com/retawsolit/wemeet-protocol/wemeet"
 )
 
 func (m *SpeechToTextModel) SpeechServiceUsersUsage(roomId, rSid, userId string, task wemeet.SpeechServiceUserStatusTasks) error {

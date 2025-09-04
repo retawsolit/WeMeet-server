@@ -4,9 +4,9 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/retawsolit/WeMeet-protocol/wemeet"
 	"github.com/retawsolit/WeMeet-server/pkg/config"
 	natsservice "github.com/retawsolit/WeMeet-server/pkg/services/nats"
+	"github.com/retawsolit/wemeet-protocol/wemeet"
 	log "github.com/sirupsen/logrus"
 )
 

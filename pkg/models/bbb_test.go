@@ -3,7 +3,7 @@ package models
 import (
 	"testing"
 
-	"github.com/retawsolit/WeMeet-protocol/bbbapiwrapper"
+	"github.com/retawsolit/wemeet-protocol/bbbapiwrapper"
 )
 
 func TestBBBApiWrapperModel_GetRecordings(t *testing.T) {

@@ -4,8 +4,8 @@ import (
 	"context"
 	"errors"
 
-	"github.com/retawsolit/WeMeet-protocol/wemeet"
 	natsservice "github.com/retawsolit/WeMeet-server/pkg/services/nats"
+	"github.com/retawsolit/wemeet-protocol/wemeet"
 )
 
 func (m *BreakoutRoomModel) JoinBreakoutRoom(ctx context.Context, r *wemeet.JoinBreakoutRoomReq) (string, error) {

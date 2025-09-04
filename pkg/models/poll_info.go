@@ -7,7 +7,7 @@ import (
 	"strings"
 
 	"github.com/goccy/go-json"
-	"github.com/retawsolit/WeMeet-protocol/wemeet"
+	"github.com/retawsolit/wemeet-protocol/wemeet"
 	"google.golang.org/protobuf/encoding/protojson"
 )
 
