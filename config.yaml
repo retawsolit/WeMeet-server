@@ -35,7 +35,7 @@ client:
     # Keep the text concise; only limited HTML tags are supported: 'b', 'i', 'em', 'strong', 'a'
     text: 'Powered by <a href="https://www.wemeet.org" target="_blank">WeMeet</a>'
   # Specify host information for accurate BBB join URLs when behind a load balancer.
-  bbb_join_host: "http://10.238.51.41:8080"
+  bbb_join_host: "http://192.168.2.19:8080"
 
 room_default_settings:
   max_duration: 0 # Duration in minutes. 0 means unlimited.
@@ -55,7 +55,7 @@ log_settings:
   log_level: "info"
 
 livekit_info:
-  host: "http://10.238.51.41:7880"
+  host: "http://192.168.2.19:7880"
   api_key: "APIiYAA5w37Cfo2"
   secret: "6aNur7qqupeZhFYNOJVUyeXxXhVw8f4lm13pEDUx8SgB"
 
@@ -99,7 +99,7 @@ nats_info:
   # WebSocket URL required for WeMeet client connectivity.
   # If the client cannot connect, users will be unable to join.
   nats_ws_urls:
-    - "ws://10.238.51.41:8222"
+    - "ws://192.168.2.19:8222"
   account: PNM
   nkey: "SUAGSRI6D537QEHEK7G5KAN4KINSL77FTRTAJGA2KTFRR7AIOMA43P4PRE"
   auth_callout_issuer_private: "SAAMTMBUANSRW3XDXZBIBF4JYRRUMWGV2GZT5MQ54VNWNRPN2Y4J46NQSA"
@@ -163,7 +163,7 @@ shared_notepad:
   etherpad_hosts:
     -
       id: "node_01"
-      host: "http://10.238.51.41:9001"
+      host: "http://192.168.2.19:9001"
       client_id: "WeMeet"
       client_secret: "lmpGEH0MxrBg7ymsbSh9TU1d6VHRMk"
       # api_key: "af7c82cb6f334726aaeee6346abbf20c"

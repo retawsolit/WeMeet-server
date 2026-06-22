@@ -31,7 +31,7 @@ services:
       - "7882:7882/udp" 
     volumes:
       - .:/app
-    command: --config "/app/livekit.yaml" --dev --node-ip 10.238.51.41
+    command: --config "/app/livekit.yaml" --dev --node-ip 192.168.2.19
     depends_on:
       - redis
   livekit-ingress:
