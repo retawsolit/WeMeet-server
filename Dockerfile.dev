@@ -6,16 +6,20 @@ ENV GO111MODULE=on \
     GOPROXY=https://proxy.golang.org,direct \
     GOSUMDB=sum.golang.org
 
-RUN export DEBIAN_FRONTEND=noninteractive; \
-    apt update && \
-    apt install --no-install-recommends -y build-essential libreoffice mupdf-tools && \
-    apt install --no-install-recommends -y fontconfig fonts-dejavu fonts-dejavu-extra \
-    fonts-noto fonts-noto-cjk fonts-liberation fonts-liberation2 fonts-linuxlibertine \
-    fonts-sil-gentium fonts-sil-gentium-basic && \
-    apt clean && \
-    rm -rf /var/lib/apt/lists/*
+# RUN export DEBIAN_FRONTEND=noninteractive; \
+#     apt update && \
+#     apt install --no-install-recommends -y build-essential libreoffice mupdf-tools && \
+#     apt install --no-install-recommends -y fontconfig fonts-dejavu fonts-dejavu-extra \
+#     fonts-noto fonts-noto-cjk fonts-liberation fonts-liberation2 fonts-linuxlibertine \
+#     fonts-sil-gentium fonts-sil-gentium-basic && \
+#     apt clean && \
+#     rm -rf /var/lib/apt/lists/*
     
 RUN go install github.com/air-verse/air@latest
+
+RUN apt update && \
+    apt install -y ca-certificates && \
+    apt clean && rm -rf /var/lib/apt/lists/*
 
 #COPY . .
 COPY go.mod go.mod

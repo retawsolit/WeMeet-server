@@ -1,4 +1,6 @@
 {
+  "apikey": "af7c82cb6f334726aaeee6346abbf20c",
+
   "title": "${TITLE:Etherpad}",
 
   "favicon": "${FAVICON:null}",

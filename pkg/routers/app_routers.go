@@ -1,7 +1,10 @@
 package routers
 
 import (
+	"os"
+	"path/filepath"
 	"runtime"
+	"strings"
 
 	"github.com/ansrivas/fiberprometheus/v2"
 	"github.com/goccy/go-json"
@@ -50,14 +53,54 @@ func New(appConfig *config.AppConfig, ctrl *factory.ApplicationControllers) *fib
 		AllowMethods: "POST,GET,OPTIONS",
 	}))
 
-	app.Static("/assets", config.GetConfig().Client.Path+"/assets")
-	app.Static("/favicon.ico", config.GetConfig().Client.Path+"/assets/imgs/favicon.ico")
+	clientPath := config.GetConfig().Client.Path
+	// Path for wemeet-client (old meeting room UI)
+	clientOldPath := "/app/client_old/dist"
 
+	// Serve Next.js static assets (_next folder) from wemeet-ui
+	app.Static("/_next", filepath.Join(clientPath, "_next"))
+
+	// Serve static files from wemeet-ui (images, icons, etc.)
+	app.Static("/apple-icon.png", filepath.Join(clientPath, "apple-icon.png"))
+	app.Static("/icon.svg", filepath.Join(clientPath, "icon.svg"))
+	app.Static("/icon-dark-32x32.png", filepath.Join(clientPath, "icon-dark-32x32.png"))
+	app.Static("/icon-light-32x32.png", filepath.Join(clientPath, "icon-light-32x32.png"))
+	app.Static("/placeholder-logo.png", filepath.Join(clientPath, "placeholder-logo.png"))
+	app.Static("/placeholder-logo.svg", filepath.Join(clientPath, "placeholder-logo.svg"))
+	app.Static("/placeholder-user.jpg", filepath.Join(clientPath, "placeholder-user.jpg"))
+	app.Static("/placeholder.jpg", filepath.Join(clientPath, "placeholder.jpg"))
+	app.Static("/placeholder.svg", filepath.Join(clientPath, "placeholder.svg"))
+
+	// Serve wemeet-client assets (for meeting room)
+	app.Static("/assets", filepath.Join(clientOldPath, "assets"))
+	app.Static("/favicon.ico", filepath.Join(clientOldPath, "assets/imgs/favicon.ico"))
+
+	// Serve root page - check for access_token to determine which UI to serve
 	app.Get("/", func(c *fiber.Ctx) error {
-		return c.Render("index", nil)
+		// If access_token is present, serve wemeet-client (meeting room UI)
+		if c.Query("access_token") != "" {
+			return c.SendFile(filepath.Join(clientOldPath, "index.html"))
+		}
+		// Otherwise serve wemeet-ui (Next.js dashboard)
+		return c.SendFile(filepath.Join(clientPath, "index.html"))
 	})
-	app.Get("/login*", func(c *fiber.Ctx) error {
-		return c.Render("login", nil)
+
+	// Serve login page - check if it's for wemeet-client or wemeet-ui
+	app.Get("/login", func(c *fiber.Ctx) error {
+		// If access_token is present, serve wemeet-client login
+		if c.Query("access_token") != "" {
+			loginPath := filepath.Join(clientOldPath, "login.html")
+			if _, err := os.Stat(loginPath); err == nil {
+				return c.SendFile(loginPath)
+			}
+		}
+		// Otherwise serve wemeet-ui login
+		loginPath := filepath.Join(clientPath, "login.html")
+		if _, err := os.Stat(loginPath); err == nil {
+			return c.SendFile(loginPath)
+		}
+		// Fallback to wemeet-ui index
+		return c.SendFile(filepath.Join(clientPath, "index.html"))
 	})
 	app.Post("/webhook", ctrl.WebhookController.HandleWebhook)
 	app.Get("/download/uploadedFile/:sid/*", ctrl.FileController.HandleDownloadUploadedFile)
@@ -194,9 +237,40 @@ func New(appConfig *config.AppConfig, ctrl *factory.ApplicationControllers) *fib
 	api.Post("/uploadedFileMerge", ctrl.FileController.HandleUploadedFileMerge)
 	api.Post("/uploadBase64EncodedData", ctrl.FileController.HandleUploadBase64EncodedData)
 
-	// last method
+	// SPA fallback: serve HTML files for UI routes, but not for API routes
 	app.Use(func(c *fiber.Ctx) error {
-		return c.Status(fiber.StatusNotFound).SendString("not found")
+		path := c.Path()
+
+		// Skip API routes, auth routes, download routes, webhook, healthCheck, BBB, and LTI
+		if strings.HasPrefix(path, "/api/") ||
+			strings.HasPrefix(path, "/auth/") ||
+			strings.HasPrefix(path, "/room/") ||
+			strings.HasPrefix(path, "/lti/") ||
+			strings.HasPrefix(path, "/webhook") ||
+			strings.HasPrefix(path, "/download/") ||
+			strings.HasPrefix(path, "/healthCheck") ||
+			strings.HasPrefix(path, "/:apiKey/") ||
+			strings.HasPrefix(path, "/_next/") ||
+			strings.HasPrefix(path, "/assets/") {
+			return c.Status(fiber.StatusNotFound).SendString("not found")
+		}
+
+		// Try to serve the corresponding HTML file for the route
+		// e.g., /dashboard -> dashboard.html, /login -> login.html
+		routePath := strings.TrimPrefix(path, "/")
+		if routePath == "" {
+			routePath = "index"
+		}
+
+		htmlPath := filepath.Join(clientPath, routePath+".html")
+		// Check if file exists before trying to serve it
+		if _, err := os.Stat(htmlPath); err == nil {
+			// File exists, serve it
+			return c.SendFile(htmlPath)
+		}
+
+		// Fallback to index.html for SPA routing (for dynamic routes)
+		return c.SendFile(filepath.Join(clientPath, "index.html"))
 	})
 
 	return app

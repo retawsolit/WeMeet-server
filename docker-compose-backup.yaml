@@ -31,7 +31,7 @@ services:
       - "7882:7882/udp" 
     volumes:
       - .:/app
-    command: --config "/app/livekit.yaml" --dev --node-ip 10.238.51.41
+    command: --config "/app/livekit.yaml" --dev --node-ip 192.168.2.22
     depends_on:
       - redis
   livekit-ingress:
@@ -46,14 +46,17 @@ services:
       - redis
       - livekit
   etherpad:
-    build: 
-      context: ../WeMeet-etherpad
-    # image: retawsolit/wemeet-etherpad
+    image: retawsolit/wemeet-etherpad
     ports:
       - "9001:9001/tcp"
     volumes:
       - ./etc/etherpad/settings.json:/opt/etherpad-lite/settings.json
       - ./etc/etherpad/APIKEY.txt:/opt/etherpad-lite/APIKEY.txt
+      # mount fonts as read only mood
+#      - /usr/share/fonts/:/usr/share/fonts/:ro
+#      - /etc/fonts/:/etc/fonts/:ro
+#      - /usr/share/fontconfig/:/usr/share/fontconfig/:ro
+#      - /var/cache/fontconfig/:/var/cache/fontconfig/:ro   
     depends_on:
       - redis
   wemeet-api:
@@ -64,9 +67,13 @@ services:
       - "8080:8080/tcp"
     volumes:
       - .:/app
-      - ../wemeet-ui/out:/app/client/dist 
-      - ../WeMeet-client/dist:/app/client_old/dist
+      - ../WeMeet-client/dist:/app/client/dist 
       - ../recording_files:/app/recording_files
+      # mount fonts as read only mood
+#      - /usr/share/fonts/:/usr/share/fonts/:ro
+#      - /etc/fonts/:/etc/fonts/:ro
+#      - /usr/share/fontconfig/:/usr/share/fontconfig/:ro
+#      - /var/cache/fontconfig/:/var/cache/fontconfig/:ro
     depends_on:
       - nats
       - redis

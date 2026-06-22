@@ -118,6 +118,7 @@ func (m *EtherpadModel) selectHost() error {
 	selectedHost := m.app.SharedNotePad.EtherpadHosts[hosts[0].i]
 	m.NodeId = selectedHost.Id
 	m.Host = selectedHost.Host
+	m.ApiKey = selectedHost.ApiKey
 	m.ClientId = selectedHost.ClientId
 	m.ClientSecret = selectedHost.ClientSecret
 
@@ -127,6 +128,7 @@ func (m *EtherpadModel) selectHost() error {
 func (m *EtherpadModel) checkStatus(h config.EtherpadInfo) bool {
 	m.NodeId = h.Id
 	m.Host = h.Host
+	m.ApiKey = h.ApiKey
 	m.ClientId = h.ClientId
 	m.ClientSecret = h.ClientSecret
 

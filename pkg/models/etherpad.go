@@ -32,6 +32,7 @@ type EtherpadDataTypes struct {
 type EtherpadModel struct {
 	NodeId       string
 	Host         string
+	ApiKey       string // Etherpad HTTP API key (when not using OIDC)
 	ClientId     string
 	ClientSecret string
 

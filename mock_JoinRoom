@@ -1,0 +1,58 @@
+package controllers
+
+import (
+	"net/http"
+	"time"
+
+	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
+	"github.com/livekit/protocol/auth"
+)
+
+func (c *RoomController) HandleJoinRoom(ctx *gin.Context) {
+	var req struct {
+		RoomID string `json:"roomId"`
+	}
+	if err := ctx.ShouldBindJSON(&req); err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request body"})
+		return
+	}
+
+	authToken := ctx.GetHeader("Authorization")
+	userId, err := c.authService.VerifySupabaseToken(authToken)
+	if err != nil {
+		ctx.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized: Invalid Token"})
+		return
+	}
+
+	roomInfo, err := c.roomModel.GetRoomInfo(req.RoomID)
+	if err != nil {
+		ctx.JSON(http.StatusNotFound, gin.H{"error": "Room not found"})
+		return
+	}
+
+	if roomInfo.IsRunning == 0 {
+		newSid := uuid.NewString()
+		c.roomModel.UpdateRoomStatus(req.RoomID, 1, newSid)
+		roomInfo.Sid = newSid
+	}
+
+	at := auth.NewAccessToken(c.LiveKitKey, c.LiveKitSecret)
+
+	grant := &auth.VideoGrant{
+		RoomJoin:     true,
+		Room:         req.RoomID,
+		CanPublish:   true,
+		CanSubscribe: true,
+	}
+
+	at.AddGrant(grant).SetIdentity(userId).SetValidFor(time.Hour)
+
+	jwtToken, _ := at.ToJWT()
+
+	ctx.JSON(http.StatusOK, gin.H{
+		"token":   jwtToken,
+		"roomSid": roomInfo.Sid,
+		"url":     c.LiveKitUrl,
+	})
+}

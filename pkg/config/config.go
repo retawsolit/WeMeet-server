@@ -103,8 +103,9 @@ type SharedNotePad struct {
 type EtherpadInfo struct {
 	Id           string `yaml:"id"`
 	Host         string `yaml:"host"`
-	ClientId     string `yaml:"client_id"`
-	ClientSecret string `yaml:"client_secret"`
+	ApiKey       string `yaml:"api_key"`        // Etherpad HTTP API key (query param); used when client_id/secret not set
+	ClientId     string `yaml:"client_id"`      // OIDC client_id (optional)
+	ClientSecret string `yaml:"client_secret"`   // OIDC client_secret (optional)
 }
 
 type AzureCognitiveServicesSpeech struct {

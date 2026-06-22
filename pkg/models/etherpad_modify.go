@@ -87,21 +87,49 @@ func (m *EtherpadModel) postToEtherpad(method string, vals url.Values) (*Etherpa
 	if m.NodeId == "" {
 		return nil, errors.New("no notepad nodeId found")
 	}
-	token, err := m.getAccessToken()
-	if err != nil {
-		return nil, err
-	}
 
 	client := &http.Client{}
 	en := vals.Encode()
 	endPoint := fmt.Sprintf("%s/api/%s/%s?%s", m.Host, APIVersion, method, en)
 
+	// Use API key in query (Etherpad standard) when set; otherwise OIDC Bearer token
+	if m.ApiKey != "" {
+		endPoint = fmt.Sprintf("%s&apikey=%s", endPoint, url.QueryEscape(m.ApiKey))
+	} else {
+		token, err := m.getAccessToken()
+		if err != nil {
+			return nil, err
+		}
+		req, err := http.NewRequest("GET", endPoint, nil)
+		if err != nil {
+			return nil, err
+		}
+		req.Header.Add("Authorization", "Bearer "+token)
+		res, err := client.Do(req)
+		if err != nil {
+			return nil, err
+		}
+		if res.StatusCode != 200 {
+			return nil, errors.New("error code: " + res.Status)
+		}
+		defer res.Body.Close()
+		body, err := io.ReadAll(res.Body)
+		if err != nil {
+			return nil, err
+		}
+		mar := new(EtherpadHttpRes)
+		err = json.Unmarshal(body, mar)
+		if err != nil {
+			log.Errorln(err)
+			return nil, err
+		}
+		return mar, nil
+	}
+
 	req, err := http.NewRequest("GET", endPoint, nil)
 	if err != nil {
 		return nil, err
 	}
-
-	req.Header.Add("Authorization", "Bearer "+token)
 	res, err := client.Do(req)
 	if err != nil {
 		return nil, err
